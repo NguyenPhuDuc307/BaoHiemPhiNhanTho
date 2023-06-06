@@ -11,6 +11,7 @@ public class Collateral
     public string? AddressCollateral { get; set; }
     public string? Relationship { get; set; }
     public string? PropertyType { get; set; }
+    public ICollection<InsuranceContract>? InsuranceContracts { set; get; }
 }
 
 public class CollateralConfiguration : IEntityTypeConfiguration<Collateral>
@@ -22,26 +23,26 @@ public class CollateralConfiguration : IEntityTypeConfiguration<Collateral>
         builder.HasKey(x => x.Ref);
 
         builder.Property(x => x.Ref)
-               .IsRequired()
-               .HasMaxLength(50);
+              .IsRequired()
+              .HasMaxLength(50);
 
         builder.Property(x => x.StatusCollateral)
-               .IsRequired()
-               .HasMaxLength(50);
+              .IsRequired()
+              .HasMaxLength(50);
 
         builder.Property(x => x.ValueCollateral)
-               .IsRequired();
+              .IsRequired().HasColumnType("decimal(18,2)");
 
         builder.Property(x => x.AddressCollateral)
-               .IsRequired()
-               .HasMaxLength(255);
+              .IsRequired()
+              .HasMaxLength(255);
 
         builder.Property(x => x.Relationship)
-               .IsRequired()
-               .HasMaxLength(50);
+              .IsRequired()
+              .HasMaxLength(50);
 
         builder.Property(x => x.PropertyType)
-               .IsRequired()
-               .HasMaxLength(50);
+              .IsRequired()
+              .HasMaxLength(50);
     }
 }

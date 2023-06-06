@@ -36,11 +36,10 @@ public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract
                .IsRequired();
 
         builder.Property(x => x.STBH)
-               .IsRequired()
-               .HasMaxLength(255);
+               .IsRequired().HasColumnType("decimal(18,2)");
 
         builder.Property(x => x.InsuranceFee)
-               .IsRequired();
+               .IsRequired().HasColumnType("decimal(18,2)");
 
         builder.Property(x => x.FromDate)
                .IsRequired();

@@ -36,10 +36,10 @@ public class PaymentPeriodConfiguration : IEntityTypeConfiguration<PaymentPeriod
                .IsRequired();
 
         builder.Property(x => x.Money)
-               .IsRequired();
+               .IsRequired().HasColumnType("decimal(18,2)");
 
         builder.HasOne(x => x.InsuranceContract)
-                   .WithMany(x => x.PaymentPeriods)
-                   .HasForeignKey(x => x.HDBH);
+              .WithMany(x => x.PaymentPeriods)
+              .HasForeignKey(x => x.HDBH);
     }
 }

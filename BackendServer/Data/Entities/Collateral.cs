@@ -7,7 +7,7 @@ public class Collateral
 {
     public string? Ref { get; set; }
     public string? StatusCollateral { get; set; }
-    public float? ValueCollateral { get; set; }
+    public decimal? ValueCollateral { get; set; }
     public string? AddressCollateral { get; set; }
     public string? Relationship { get; set; }
     public string? PropertyType { get; set; }

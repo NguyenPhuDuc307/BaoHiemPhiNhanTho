@@ -6,11 +6,10 @@ namespace BaoHiemPhiNhanTho.BackendServer.Models;
 public class PaymentPeriod
 {
     public string? Id { get; set; }
-    public string? TotalAmount { get; set; }
+    public int? TotalAmount { get; set; }
     public string? Period { get; set; }
     public DateTime? FeePaymentDate { get; set; }
-    public float? Money { get; set; }
-
+    public decimal? Money { get; set; }
     public string? HDBH { get; set; }
     public InsuranceContract? InsuranceContract { set; get; }
 }

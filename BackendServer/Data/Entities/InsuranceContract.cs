@@ -7,8 +7,8 @@ public class InsuranceContract
 {
     public string? HDBH { get; set; }
     public string? NewOrRenewed { get; set; }
-    public float? STBH { get; set; }
-    public float? InsuranceFee { get; set; }
+    public decimal? STBH { get; set; }
+    public decimal? InsuranceFee { get; set; }
     public int? NumberOfPayments { get; set; }
     public DateTime? FromDate { get; set; }
     public DateTime? ToDate { get; set; }
@@ -19,9 +19,8 @@ public class InsuranceContract
     public Customer? Customer { set; get; }
     public string? TVTTCode { get; set; }
     public InfoCBNV? InfoCBNV { set; get; }
-    public ICollection<AnnexContract>? AnnexContracts{ set; get; }
-    public ICollection<PaymentPeriod>? PaymentPeriods{ set; get; }
-
+    public ICollection<AnnexContract>? AnnexContracts { set; get; }
+    public ICollection<PaymentPeriod>? PaymentPeriods { set; get; }
 }
 
 public class InsuranceContractConfiguration : IEntityTypeConfiguration<InsuranceContract>

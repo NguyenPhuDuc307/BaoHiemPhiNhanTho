@@ -7,19 +7,17 @@ public class AnnexContract
 {
     public string? HDPL { get; set; }
     public bool? NewOrRenewed { get; set; }
-    public string? STBH { get; set; }
-    public float? InsuranceFee { get; set; }
+    public decimal? STBH { get; set; }
+    public decimal? InsuranceFee { get; set; }
     public string? NumberOfPayments { get; set; }
     public DateTime? FromDate { get; set; }
     public DateTime? ToDate { get; set; }
     public string? Exception { get; set; }
-
     public string? HDBH { get; set; }
     public InsuranceContract? InsuranceContract { set; get; }
-
     public string? TVTTCode { get; set; }
     public InfoCBNV? InfoCBNV { set; get; }
-
+    public string? Status { get; set; }
 }
 
 public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract>
@@ -49,10 +47,13 @@ public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract
 
         builder.Property(x => x.ToDate)
                .IsRequired();
-        
+
         builder.Property(x => x.Exception)
                .IsRequired()
                .HasMaxLength(255);
+
+        builder.Property(x => x.Status)
+               .IsRequired();
 
         builder.HasOne(x => x.InsuranceContract)
                    .WithMany(x => x.AnnexContracts)

@@ -7,7 +7,7 @@ public class Branch
 {
     public string? BranchCode { get; set; }
     public string? BranchName { get; set; }
-    public ICollection<InfoCBNV>? InfoCBNVs{ set; get; }
+    public ICollection<InfoCBNV>? InfoCBNVs { set; get; }
 }
 
 public class BranchConfiguration : IEntityTypeConfiguration<Branch>
@@ -18,7 +18,7 @@ public class BranchConfiguration : IEntityTypeConfiguration<Branch>
 
         builder.HasKey(x => x.BranchCode);
 
-        builder.Property(x => x.BranchName)
+        builder.Property(x => x.BranchCode)
                .IsRequired()
                .HasMaxLength(50);
 

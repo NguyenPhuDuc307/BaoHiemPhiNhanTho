@@ -9,8 +9,7 @@ public class PaymentPeriod
     public string? TotalAmount { get; set; }
     public string? Period { get; set; }
     public DateTime? FeePaymentDate { get; set; }
-    public float? Money { get; set; }
-
+    public decimal? Money { get; set; }
     public string? HDBH { get; set; }
     public InsuranceContract? InsuranceContract { set; get; }
 }
@@ -37,10 +36,10 @@ public class PaymentPeriodConfiguration : IEntityTypeConfiguration<PaymentPeriod
                .IsRequired();
 
         builder.Property(x => x.Money)
-               .IsRequired();
+               .IsRequired().HasColumnType("decimal(18,2)");
 
         builder.HasOne(x => x.InsuranceContract)
-                   .WithMany(x => x.PaymentPeriods)
-                   .HasForeignKey(x => x.HDBH);
+              .WithMany(x => x.PaymentPeriods)
+              .HasForeignKey(x => x.HDBH);
     }
 }

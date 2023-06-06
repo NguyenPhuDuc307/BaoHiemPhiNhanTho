@@ -5,8 +5,9 @@ namespace BaoHiemPhiNhanTho.BackendServer.Models;
 
 public class Partner
 {
-    public string? PartnersCode { get; set; }
+    public string? PartnerCode { get; set; }
     public string? Name { get; set; }
+    public ICollection<InsuranceContract>? InsuranceContracts { set; get; }
 }
 
 public class PartnerConfiguration : IEntityTypeConfiguration<Partner>
@@ -15,9 +16,9 @@ public class PartnerConfiguration : IEntityTypeConfiguration<Partner>
     {
         builder.ToTable("Partners");
 
-        builder.HasKey(x => x.PartnersCode);
+        builder.HasKey(x => x.PartnerCode);
 
-        builder.Property(x => x.PartnersCode)
+        builder.Property(x => x.PartnerCode)
                .IsRequired()
                .HasMaxLength(50);
 

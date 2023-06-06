@@ -19,8 +19,15 @@ public class InsuranceContract
     public Customer? Customer { set; get; }
     public string? TVTTCode { get; set; }
     public InfoCBNV? InfoCBNV { set; get; }
-    public ICollection<AnnexContract>? AnnexContracts{ set; get; }
-    public ICollection<PaymentPeriod>? PaymentPeriods{ set; get; }
+
+    public string? PartnerCode { get; set; }
+    public Partner? Partner { set; get; }
+
+    public string? CollateralRef { get; set; }
+    public Collateral? Collateral { set; get; }
+
+    public ICollection<AnnexContract>? AnnexContracts { set; get; }
+    public ICollection<PaymentPeriod>? PaymentPeriods { set; get; }
 
 }
 
@@ -35,6 +42,14 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
         builder.Property(x => x.HDBH)
                .IsRequired()
                .HasMaxLength(50);
+
+        builder.Property(x => x.CollateralRef)
+              .IsRequired()
+              .HasMaxLength(50);
+
+        builder.Property(x => x.PartnerCode)
+              .IsRequired()
+              .HasMaxLength(50);
 
         builder.Property(x => x.NewOrRenewed)
                .IsRequired();
@@ -63,11 +78,19 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
                .HasMaxLength(50);
 
         builder.HasOne(x => x.Customer)
-                   .WithMany(x => x.InsuranceContracts)
-                   .HasForeignKey(x => x.Cif);
+              .WithMany(x => x.InsuranceContracts)
+              .HasForeignKey(x => x.Cif);
 
         builder.HasOne(x => x.InfoCBNV)
-                   .WithMany(x => x.InsuranceContracts)
-                   .HasForeignKey(x => x.TVTTCode);
+              .WithMany(x => x.InsuranceContracts)
+              .HasForeignKey(x => x.TVTTCode);
+
+        builder.HasOne(x => x.Partner)
+              .WithMany(x => x.InsuranceContracts)
+              .HasForeignKey(x => x.PartnerCode);
+
+        builder.HasOne(x => x.Collateral)
+              .WithMany(x => x.InsuranceContracts)
+              .HasForeignKey(x => x.CollateralRef);
     }
 }

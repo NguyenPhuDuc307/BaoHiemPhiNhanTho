@@ -7,9 +7,9 @@ public class AnnexContract
 {
     public string? HDPL { get; set; }
     public bool? NewOrRenewed { get; set; }
-    public string? STBH { get; set; }
-    public float? InsuranceFee { get; set; }
-    public string? NumberOfPayments { get; set; }
+    public decimal? STBH { get; set; }
+    public decimal? InsuranceFee { get; set; }
+    public int? NumberOfPayments { get; set; }
     public DateTime? FromDate { get; set; }
     public DateTime? ToDate { get; set; }
     public string? Exception { get; set; }
@@ -38,18 +38,17 @@ public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract
                .IsRequired();
 
         builder.Property(x => x.STBH)
-               .IsRequired()
-               .HasMaxLength(255);
+               .IsRequired().HasColumnType("decimal(18,2)");
 
         builder.Property(x => x.InsuranceFee)
-               .IsRequired();
+               .IsRequired().HasColumnType("decimal(18,2)");
 
         builder.Property(x => x.FromDate)
                .IsRequired();
 
         builder.Property(x => x.ToDate)
                .IsRequired();
-        
+
         builder.Property(x => x.Exception)
                .IsRequired()
                .HasMaxLength(255);

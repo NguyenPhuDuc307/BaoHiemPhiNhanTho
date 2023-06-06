@@ -1,16 +1,17 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace BackendServer.Migrations
 {
-    public partial class createNewTablee : Migration
+    public partial class initData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Branchs",
+                name: "Branches",
                 columns: table => new
                 {
                     BranchCode = table.Column<string>(type: "text", nullable: false),
@@ -18,7 +19,7 @@ namespace BackendServer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Branchs", x => x.BranchCode);
+                    table.PrimaryKey("PK_Branches", x => x.BranchCode);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,7 +44,7 @@ namespace BackendServer.Migrations
                 {
                     Cif = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    CustomerType = table.Column<string>(type: "text", nullable: true),
+                    CustomerType = table.Column<int>(type: "integer", nullable: false),
                     Gender = table.Column<string>(type: "text", nullable: true),
                     CCCD = table.Column<string>(type: "text", nullable: true)
                 },
@@ -56,12 +57,12 @@ namespace BackendServer.Migrations
                 name: "Partners",
                 columns: table => new
                 {
-                    PartnersCode = table.Column<string>(type: "text", nullable: false),
+                    PartnerCode = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Partners", x => x.PartnersCode);
+                    table.PrimaryKey("PK_Partners", x => x.PartnerCode);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,16 +71,16 @@ namespace BackendServer.Migrations
                 {
                     TVTTCode = table.Column<string>(type: "text", nullable: false),
                     NameTVTT = table.Column<string>(type: "text", nullable: true),
-                    Cif = table.Column<string>(type: "text", nullable: true),
-                    BranchCode = table.Column<string>(type: "text", nullable: true)
+                    BranchCode = table.Column<string>(type: "text", nullable: true),
+                    BranchCode1 = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InfoCBNVs", x => x.TVTTCode);
                     table.ForeignKey(
-                        name: "FK_InfoCBNVs_Branchs_BranchCode",
-                        column: x => x.BranchCode,
-                        principalTable: "Branchs",
+                        name: "FK_InfoCBNVs_Branches_BranchCode1",
+                        column: x => x.BranchCode1,
+                        principalTable: "Branches",
                         principalColumn: "BranchCode");
                 });
 
@@ -100,11 +101,19 @@ namespace BackendServer.Migrations
                     Cif = table.Column<string>(type: "text", nullable: true),
                     CustomerCif = table.Column<string>(type: "text", nullable: true),
                     TVTTCode = table.Column<string>(type: "text", nullable: true),
-                    InfoCBNVTVTTCode = table.Column<string>(type: "text", nullable: true)
+                    InfoCBNVTVTTCode = table.Column<string>(type: "text", nullable: true),
+                    PartnerCode = table.Column<string>(type: "text", nullable: true),
+                    PartnerCode1 = table.Column<string>(type: "text", nullable: true),
+                    CollateralRef = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InsuranceContracts", x => x.HDBH);
+                    table.ForeignKey(
+                        name: "FK_InsuranceContracts_Collaterals_CollateralRef",
+                        column: x => x.CollateralRef,
+                        principalTable: "Collaterals",
+                        principalColumn: "Ref");
                     table.ForeignKey(
                         name: "FK_InsuranceContracts_Customers_CustomerCif",
                         column: x => x.CustomerCif,
@@ -115,6 +124,11 @@ namespace BackendServer.Migrations
                         column: x => x.InfoCBNVTVTTCode,
                         principalTable: "InfoCBNVs",
                         principalColumn: "TVTTCode");
+                    table.ForeignKey(
+                        name: "FK_InsuranceContracts_Partners_PartnerCode1",
+                        column: x => x.PartnerCode1,
+                        principalTable: "Partners",
+                        principalColumn: "PartnerCode");
                 });
 
             migrationBuilder.CreateTable(
@@ -125,13 +139,14 @@ namespace BackendServer.Migrations
                     NewOrRenewed = table.Column<bool>(type: "boolean", nullable: true),
                     STBH = table.Column<decimal>(type: "numeric", nullable: true),
                     InsuranceFee = table.Column<decimal>(type: "numeric", nullable: true),
-                    NumberOfPayments = table.Column<string>(type: "text", nullable: true),
+                    NumberOfPayments = table.Column<int>(type: "integer", nullable: true),
                     FromDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ToDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Exception = table.Column<string>(type: "text", nullable: true),
                     HDBH = table.Column<string>(type: "text", nullable: true),
                     InsuranceContractHDBH = table.Column<string>(type: "text", nullable: true),
-                    TVTTCode = table.Column<string>(type: "text", nullable: true)
+                    TVTTCode = table.Column<string>(type: "text", nullable: true),
+                    Status = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -152,7 +167,8 @@ namespace BackendServer.Migrations
                 name: "PaymentPeriods",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TotalAmount = table.Column<int>(type: "integer", nullable: true),
                     Period = table.Column<string>(type: "text", nullable: true),
                     FeePaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -181,9 +197,14 @@ namespace BackendServer.Migrations
                 column: "TVTTCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InfoCBNVs_BranchCode",
+                name: "IX_InfoCBNVs_BranchCode1",
                 table: "InfoCBNVs",
-                column: "BranchCode");
+                column: "BranchCode1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InsuranceContracts_CollateralRef",
+                table: "InsuranceContracts",
+                column: "CollateralRef");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InsuranceContracts_CustomerCif",
@@ -194,6 +215,11 @@ namespace BackendServer.Migrations
                 name: "IX_InsuranceContracts_InfoCBNVTVTTCode",
                 table: "InsuranceContracts",
                 column: "InfoCBNVTVTTCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InsuranceContracts_PartnerCode1",
+                table: "InsuranceContracts",
+                column: "PartnerCode1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentPeriods_InsuranceContractHDBH",
@@ -207,16 +233,13 @@ namespace BackendServer.Migrations
                 name: "AnnexContracts");
 
             migrationBuilder.DropTable(
-                name: "Collaterals");
-
-            migrationBuilder.DropTable(
-                name: "Partners");
-
-            migrationBuilder.DropTable(
                 name: "PaymentPeriods");
 
             migrationBuilder.DropTable(
                 name: "InsuranceContracts");
+
+            migrationBuilder.DropTable(
+                name: "Collaterals");
 
             migrationBuilder.DropTable(
                 name: "Customers");
@@ -225,7 +248,10 @@ namespace BackendServer.Migrations
                 name: "InfoCBNVs");
 
             migrationBuilder.DropTable(
-                name: "Branchs");
+                name: "Partners");
+
+            migrationBuilder.DropTable(
+                name: "Branches");
         }
     }
 }

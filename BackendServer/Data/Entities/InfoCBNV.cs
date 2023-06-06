@@ -9,7 +9,7 @@ public class InfoCBNV
     public string? NameTVTT { get; set; }
     public ICollection<InsuranceContract>? InsuranceContracts { set; get; }
     public ICollection<AnnexContract>? AnnexContracts { set; get; }
-    public string? Cif { get; set; }
+    public string? BranchCode { get; set; }
     public Branch? Branch { set; get; }
 }
 

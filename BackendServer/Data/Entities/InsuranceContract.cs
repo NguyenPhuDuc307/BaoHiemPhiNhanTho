@@ -19,6 +19,13 @@ public class InsuranceContract
     public Customer? Customer { set; get; }
     public string? TVTTCode { get; set; }
     public InfoCBNV? InfoCBNV { set; get; }
+
+    public string? PartnerCode { get; set; }
+    public Partner? Partner { set; get; }
+
+    public string? CollateralRef { get; set; }
+    public Collateral? Collateral { set; get; }
+
     public ICollection<AnnexContract>? AnnexContracts { set; get; }
     public ICollection<PaymentPeriod>? PaymentPeriods { set; get; }
 }

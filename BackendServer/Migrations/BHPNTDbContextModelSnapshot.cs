@@ -45,8 +45,8 @@ namespace BackendServer.Migrations
                     b.Property<bool?>("NewOrRenewed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("NumberOfPayments")
-                        .HasColumnType("text");
+                    b.Property<int?>("NumberOfPayments")
+                        .HasColumnType("integer");
 
                     b.Property<decimal?>("STBH")
                         .HasColumnType("numeric");
@@ -79,7 +79,7 @@ namespace BackendServer.Migrations
 
                     b.HasKey("BranchCode");
 
-                    b.ToTable("Branchs");
+                    b.ToTable("Branches");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Collateral", b =>
@@ -115,8 +115,8 @@ namespace BackendServer.Migrations
                     b.Property<string>("CCCD")
                         .HasColumnType("text");
 
-                    b.Property<string>("CustomerType")
-                        .HasColumnType("text");
+                    b.Property<int>("CustomerType")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Gender")
                         .HasColumnType("text");
@@ -137,7 +137,7 @@ namespace BackendServer.Migrations
                     b.Property<string>("BranchCode")
                         .HasColumnType("text");
 
-                    b.Property<string>("Cif")
+                    b.Property<string>("BranchCode1")
                         .HasColumnType("text");
 
                     b.Property<string>("NameTVTT")
@@ -145,7 +145,7 @@ namespace BackendServer.Migrations
 
                     b.HasKey("TVTTCode");
 
-                    b.HasIndex("BranchCode");
+                    b.HasIndex("BranchCode1");
 
                     b.ToTable("InfoCBNVs");
                 });
@@ -159,6 +159,9 @@ namespace BackendServer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Cif")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CollateralRef")
                         .HasColumnType("text");
 
                     b.Property<string>("CustomerCif")
@@ -185,6 +188,12 @@ namespace BackendServer.Migrations
                     b.Property<int?>("NumberOfPayments")
                         .HasColumnType("integer");
 
+                    b.Property<string>("PartnerCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PartnerCode1")
+                        .HasColumnType("text");
+
                     b.Property<decimal?>("STBH")
                         .HasColumnType("numeric");
 
@@ -196,30 +205,37 @@ namespace BackendServer.Migrations
 
                     b.HasKey("HDBH");
 
+                    b.HasIndex("CollateralRef");
+
                     b.HasIndex("CustomerCif");
 
                     b.HasIndex("InfoCBNVTVTTCode");
+
+                    b.HasIndex("PartnerCode1");
 
                     b.ToTable("InsuranceContracts");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Partner", b =>
                 {
-                    b.Property<string>("PartnersCode")
+                    b.Property<string>("PartnerCode")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("PartnersCode");
+                    b.HasKey("PartnerCode");
 
                     b.ToTable("Partners");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.PaymentPeriod", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
                     b.Property<DateTime?>("FeePaymentDate")
                         .HasColumnType("timestamp with time zone");
@@ -265,13 +281,17 @@ namespace BackendServer.Migrations
                 {
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Branch", "Branch")
                         .WithMany("InfoCBNVs")
-                        .HasForeignKey("BranchCode");
+                        .HasForeignKey("BranchCode1");
 
                     b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", b =>
                 {
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Collateral", "Collateral")
+                        .WithMany("InsuranceContracts")
+                        .HasForeignKey("CollateralRef");
+
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Customer", "Customer")
                         .WithMany("InsuranceContracts")
                         .HasForeignKey("CustomerCif");
@@ -280,9 +300,17 @@ namespace BackendServer.Migrations
                         .WithMany("InsuranceContracts")
                         .HasForeignKey("InfoCBNVTVTTCode");
 
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Partner", "Partner")
+                        .WithMany("InsuranceContracts")
+                        .HasForeignKey("PartnerCode1");
+
+                    b.Navigation("Collateral");
+
                     b.Navigation("Customer");
 
                     b.Navigation("InfoCBNV");
+
+                    b.Navigation("Partner");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.PaymentPeriod", b =>
@@ -297,6 +325,11 @@ namespace BackendServer.Migrations
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Branch", b =>
                 {
                     b.Navigation("InfoCBNVs");
+                });
+
+            modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Collateral", b =>
+                {
+                    b.Navigation("InsuranceContracts");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Customer", b =>
@@ -316,6 +349,11 @@ namespace BackendServer.Migrations
                     b.Navigation("AnnexContracts");
 
                     b.Navigation("PaymentPeriods");
+                });
+
+            modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Partner", b =>
+                {
+                    b.Navigation("InsuranceContracts");
                 });
 #pragma warning restore 612, 618
         }

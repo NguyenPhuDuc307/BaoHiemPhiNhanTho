@@ -17,8 +17,7 @@ public class BHPNTDbContext : DbContext
         modelBuilder.Entity<Customer>().HasKey(ac => ac.Cif);
         modelBuilder.Entity<InfoCBNV>().HasKey(ac => ac.TVTTCode);
         modelBuilder.Entity<InsuranceContract>().HasKey(ac => ac.HDBH);
-        modelBuilder.Entity<Partner>().HasKey(ac => ac.PartnersCode);
-        modelBuilder.Entity<PaymentPeriod>().HasKey(ac => ac.Id);
+        modelBuilder.Entity<Partner>().HasKey(ac => ac.PartnerCode);
         modelBuilder.Entity<InfoCBNV>()
         .HasMany(i => i.AnnexContracts)
         .WithOne(ac => ac.InfoCBNV)
@@ -26,7 +25,7 @@ public class BHPNTDbContext : DbContext
     }
 
     public DbSet<AnnexContract> AnnexContracts { get; set; }
-    public DbSet<Branch> Branchs { get; set; }
+    public DbSet<Branch> Branches { get; set; }
     public DbSet<Collateral> Collaterals { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<InfoCBNV> InfoCBNVs { get; set; }

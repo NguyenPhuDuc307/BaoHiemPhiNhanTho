@@ -9,7 +9,7 @@ public class AnnexContract
     public bool? NewOrRenewed { get; set; }
     public decimal? STBH { get; set; }
     public decimal? InsuranceFee { get; set; }
-    public string? NumberOfPayments { get; set; }
+    public int? NumberOfPayments { get; set; }
     public DateTime? FromDate { get; set; }
     public DateTime? ToDate { get; set; }
     public string? Exception { get; set; }

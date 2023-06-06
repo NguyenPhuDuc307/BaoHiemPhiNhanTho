@@ -5,7 +5,7 @@ namespace BaoHiemPhiNhanTho.BackendServer.Models;
 
 public class PaymentPeriod
 {
-    public string? Id { get; set; }
+    public int? Id { get; set; }
     public int? TotalAmount { get; set; }
     public string? Period { get; set; }
     public DateTime? FeePaymentDate { get; set; }
@@ -23,8 +23,7 @@ public class PaymentPeriodConfiguration : IEntityTypeConfiguration<PaymentPeriod
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
-               .IsRequired()
-               .HasMaxLength(50);
+               .IsRequired().UseIdentityColumn();
 
         builder.Property(x => x.TotalAmount)
                .IsRequired();

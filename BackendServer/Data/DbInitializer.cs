@@ -59,7 +59,6 @@ public class DbInitializer
                 new Customer(){Cif = "987654322", Name = "Customer2", CustomerType=CustomerType.KHDN, Gender = "Nam", CCCD="125087654322"},
                 new Customer(){Cif = "987654323", Name = "Customer3", CustomerType=CustomerType.KHCN, Gender = "Nam", CCCD="125087654323"},
                 new Customer(){Cif = "987654324", Name = "Customer4", CustomerType=CustomerType.KHCN, Gender = "Nam", CCCD="125087654324"},
-
             });
         }
 
@@ -123,7 +122,6 @@ public class DbInitializer
                 TVTTCode = "001",
                 PartnerCode="001",
                 CollateralRef = "987654321"},
-
             });
         }
 
@@ -138,7 +136,9 @@ public class DbInitializer
                 FromDate=DateTime.UtcNow.AddDays(-100),
                 ToDate=DateTime.UtcNow.AddDays(-10),
                 Exception = "",
-                HDBH = "987654321",TVTTCode = "001"},
+                HDBH = "987654321",
+                TVTTCode = "001",
+                Status = "chưa chuyển duyệt"},
 
                 new AnnexContract(){HDPL = "987654322",
                 NewOrRenewed = true, STBH=100000000,
@@ -148,7 +148,8 @@ public class DbInitializer
                 ToDate=DateTime.UtcNow.AddDays(-10),
                 Exception = "",
                 HDBH = "987654321",
-                TVTTCode = "001"},
+                TVTTCode = "001",
+                Status = "chưa chuyển duyệt"},
 
                 new AnnexContract(){HDPL = "987654323",
                 NewOrRenewed = true,
@@ -159,7 +160,8 @@ public class DbInitializer
                 ToDate=DateTime.UtcNow.AddDays(-10),
                 Exception = "",
                 HDBH = "987654321",
-                TVTTCode = "001"}
+                TVTTCode = "001",
+                Status = "chưa chuyển duyệt"}
             });
         }
 

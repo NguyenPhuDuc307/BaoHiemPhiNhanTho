@@ -62,6 +62,8 @@ namespace BackendServer.Controllers
                 return BadRequest(ModelState);
             }
 
+            var customerName = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
+
             var insurance = new InsuranceContract()
             {
                 HDBH = request.HDBH,
@@ -80,6 +82,7 @@ namespace BackendServer.Controllers
                 TVTTCode = request.TVTTCode,
                 PartnerCode = request.PartnerCode,
                 CollateralRef = request.CollateralRef,
+                Name = customerName.Name,
             };
 
             _context.InsuranceContracts.Add(insurance);
@@ -87,6 +90,12 @@ namespace BackendServer.Controllers
 
             return Ok(insurance);
         }
-    }
 
+        [HttpGet("GetListPartner")]
+        public async Task<IActionResult> GetListPartner(int productPage = 1, int pageSize = 10)
+        {
+            var partner = await _context.Partners.Skip((productPage - 1) * pageSize).Take(pageSize).ToListAsync();
+            return Ok(partner);
+        }
+    }
 }

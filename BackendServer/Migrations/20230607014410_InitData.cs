@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BackendServer.Data.Migrations
+namespace BackendServer.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -88,7 +88,7 @@ namespace BackendServer.Data.Migrations
                 columns: table => new
                 {
                     HDBH = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    NewOrRenewed = table.Column<string>(type: "text", nullable: false),
+                    NewOrRenewed = table.Column<bool>(type: "boolean", nullable: false),
                     STBH = table.Column<float>(type: "real", nullable: false),
                     InsuranceFee = table.Column<float>(type: "real", nullable: false),
                     NumberOfPayments = table.Column<int>(type: "integer", nullable: false),
@@ -96,7 +96,9 @@ namespace BackendServer.Data.Migrations
                     ToDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Exception = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Beneficiaries = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    InsuranceType = table.Column<string>(type: "text", nullable: true),
+                    InsuranceType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    OtherInsuranceType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    InsuranceBeneficiary = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Cif = table.Column<string>(type: "character varying(50)", nullable: true),
                     TVTTCode = table.Column<string>(type: "character varying(50)", nullable: true),
                     PartnerCode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),

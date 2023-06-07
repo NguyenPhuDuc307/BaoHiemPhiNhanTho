@@ -67,11 +67,11 @@ public class DbInitializer
         {
             _context.Collaterals.AddRange(new List<Collateral>()
             {
-                new Collateral(){Ref = "987654321", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "ABC", Relationship="Chủ sở hữu", PropertyType="Nhà phố"},
-                new Collateral(){Ref = "987654322", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF", Relationship="Chủ sở hữu", PropertyType="Xe"},
-                new Collateral(){Ref = "987654323", StatusCollateral = "Blank", ValueCollateral=100000000, AddressCollateral = "DEF2", Relationship="Chủ sở hữu", PropertyType="Xe"},
-                new Collateral(){Ref = "987654324", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF3", Relationship="Chủ sở hữu", PropertyType="Xe"},
-                new Collateral(){Ref = "987654325", StatusCollateral = "Blank", ValueCollateral=100000000, AddressCollateral = "ABC2", Relationship="Chủ sở hữu", PropertyType="Nhà phố"},
+                new Collateral(){Ref = "987654321", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "ABC", Relationship=Relationship.Relationship1, PropertyType="Nhà phố"},
+                new Collateral(){Ref = "987654322", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF", Relationship=Relationship.Relationship2, PropertyType="Xe"},
+                new Collateral(){Ref = "987654323", StatusCollateral = "Blank", ValueCollateral=100000000, AddressCollateral = "DEF2", Relationship=Relationship.Relationship2, PropertyType="Xe"},
+                new Collateral(){Ref = "987654324", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF3", Relationship=Relationship.Relationship2, PropertyType="Xe"},
+                new Collateral(){Ref = "987654325", StatusCollateral = "Blank", ValueCollateral=100000000, AddressCollateral = "ABC2", Relationship=Relationship.Relationship2, PropertyType="Nhà phố"},
             });
         }
 
@@ -80,7 +80,7 @@ public class DbInitializer
             _context.InsuranceContracts.AddRange(new List<InsuranceContract>()
             {
                 new InsuranceContract(){HDBH = "987654321",
-                NewOrRenewed = "New",
+                NewOrRenewed = true,
                 STBH=100000000,
                 InsuranceFee = 1000000000,
                 NumberOfPayments=1,
@@ -88,14 +88,16 @@ public class DbInitializer
                 ToDate=DateTime.UtcNow.AddDays(-10),
                 Exception = "",
                 Beneficiaries="Blank",
-                InsuranceType= "Bảo hảnh nhà tư nhân",
+                InsuranceType= InsuranceType.InsuranceType1,
+                OtherInsuranceType= "Khác",
+                InsuranceBeneficiary= InsuranceBeneficiary.InsuranceType1,
                 Cif = "987654321",
                 TVTTCode = "001",
                 PartnerCode="001",
                 CollateralRef = "987654321"},
 
                 new InsuranceContract(){HDBH = "987654322",
-                NewOrRenewed = "New",
+                NewOrRenewed = true,
                 STBH=100000000,
                 InsuranceFee = 1000000000,
                 NumberOfPayments=1,
@@ -103,14 +105,16 @@ public class DbInitializer
                 ToDate=DateTime.UtcNow.AddDays(-10),
                 Exception = "",
                 Beneficiaries="Blank",
-                InsuranceType= "Bảo hảnh nhà tư nhân",
+                InsuranceType= InsuranceType.InsuranceType2,
+                OtherInsuranceType= "Khác",
+                InsuranceBeneficiary= InsuranceBeneficiary.InsuranceType1,
                 Cif = "987654321",
                 TVTTCode = "001",
                 PartnerCode="001",
                 CollateralRef = "987654321"},
 
                 new InsuranceContract(){HDBH = "987654323",
-                NewOrRenewed = "New",
+                NewOrRenewed = false,
                 STBH=100000000,
                 InsuranceFee = 1000000000,
                 NumberOfPayments=1,
@@ -118,7 +122,9 @@ public class DbInitializer
                 ToDate=DateTime.UtcNow.AddDays(-10),
                 Exception = "",
                 Beneficiaries="Blank",
-                InsuranceType= "Bảo hảnh nhà tư nhân",
+                InsuranceType= InsuranceType.InsuranceType3,
+                OtherInsuranceType= "Khác",
+                InsuranceBeneficiary= InsuranceBeneficiary.InsuranceType1,
                 Cif = "987654321",
                 TVTTCode = "001",
                 PartnerCode="001",

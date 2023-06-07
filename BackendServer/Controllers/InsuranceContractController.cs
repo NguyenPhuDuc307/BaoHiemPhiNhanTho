@@ -1,5 +1,8 @@
 ﻿using BackendServer.Data.EF;
+<<<<<<< HEAD
 using BackendServer.Models.HopDongPhuLucVM;
+=======
+>>>>>>> 0d11d8e7551beb8ee9eb734819dd267b731f8272
 using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

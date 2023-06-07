@@ -72,5 +72,12 @@ namespace BackendServer.Controllers
 
             return Ok(contract);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var contracts = await _context.AnnexContracts.ToListAsync();
+            return Ok(contracts);
+        }
     }
 }

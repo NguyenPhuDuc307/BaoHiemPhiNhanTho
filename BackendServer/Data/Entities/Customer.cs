@@ -11,7 +11,7 @@ public class Customer
     public CustomerType CustomerType { get; set; }
     public string? Gender { get; set; }
     public string? CCCD { get; set; }
-    public ICollection<InsuranceContract>? InsuranceContracts { set; get; }
+    public List<InsuranceContract>? InsuranceContracts { set; get; }
 }
 
 public class CustomerConfiguration : IEntityTypeConfiguration<Customer>

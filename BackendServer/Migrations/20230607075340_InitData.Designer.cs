@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendServer.Migrations
 {
     [DbContext(typeof(BHPNTDbContext))]
-    [Migration("20230606082345_initData")]
-    partial class initData
+    [Migration("20230607075340_InitData")]
+    partial class InitData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -178,17 +178,23 @@ namespace BackendServer.Migrations
                     b.Property<string>("InfoCBNVTVTTCode")
                         .HasColumnType("text");
 
+                    b.Property<string>("InsuranceBeneficiary")
+                        .HasColumnType("text");
+
                     b.Property<decimal?>("InsuranceFee")
                         .HasColumnType("numeric");
 
                     b.Property<string>("InsuranceType")
                         .HasColumnType("text");
 
-                    b.Property<string>("NewOrRenewed")
-                        .HasColumnType("text");
+                    b.Property<bool?>("NewOrRenewed")
+                        .HasColumnType("boolean");
 
                     b.Property<int?>("NumberOfPayments")
                         .HasColumnType("integer");
+
+                    b.Property<string>("OtherInsuranceType")
+                        .HasColumnType("text");
 
                     b.Property<string>("PartnerCode")
                         .HasColumnType("text");

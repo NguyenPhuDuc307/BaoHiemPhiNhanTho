@@ -1,4 +1,5 @@
 ﻿using BackendServer.Data.EF;
+using BackendServer.Models.HopDongPhuLucVM;
 using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ namespace BackendServer.Controllers
         }
 
         [HttpGet("GetList")]
-        public async Task<ApiResult<PagedList<InsuranceContract>>> Index(int page = 1, int pageSize = 10)
+        public async Task<ApiResult<PagedList<InsuranceContractRequest>>> Index(int page = 1, int pageSize = 10)
         {
             var totalCount = await _context.InsuranceContracts.CountAsync();
             var pagedData = await _context.InsuranceContracts
@@ -29,21 +30,62 @@ namespace BackendServer.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
-            var pagedList = new PagedList<InsuranceContract>(pagedData, totalCount, page, pageSize);
-            return new ApiSuccessResult<PagedList<InsuranceContract>>(pagedList);
+            var pagedDataRequest = pagedData.Select(ic => new InsuranceContractRequest
+            {
+                HDBH = ic.HDBH,
+                NewOrRenewed = ic.NewOrRenewed,
+                STBH = ic.STBH,
+                InsuranceFee = ic.InsuranceFee,
+                NumberOfPayments = ic.NumberOfPayments,
+                FromDate = ic.FromDate,
+                ToDate = ic.ToDate,
+                Exception = ic.Exception,
+                Beneficiaries = ic.Beneficiaries,
+                InsuranceType = ic.InsuranceType,
+                OtherInsuranceType = ic.OtherInsuranceType,
+                InsuranceBeneficiary = ic.InsuranceBeneficiary,
+                Cif = ic.Cif,
+                TVTTCode = ic.TVTTCode,
+                PartnerCode = ic.PartnerCode,
+                CollateralRef = ic.CollateralRef,
+            }).ToList();
+
+            var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest, totalCount, page, pageSize);
+            return new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedList);
         }
 
-        [HttpPost("/api/InsuranceContracts/Create")]
-        public IActionResult CreateInsurance(InsuranceContract insuranceContract)
+        [HttpPost]
+        public async Task<IActionResult> CreateInsurance(InsuranceContractRequest request)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Set<InsuranceContract>().Add(insuranceContract);
-                _context.SaveChanges();
-                return Ok();
+                return BadRequest(ModelState);
             }
 
-            return BadRequest(ModelState);
+            var insurance = new InsuranceContract()
+            {
+                HDBH = request.HDBH,
+                NewOrRenewed = request.NewOrRenewed,
+                STBH = request.STBH,
+                InsuranceFee = request.InsuranceFee,
+                NumberOfPayments = request.NumberOfPayments,
+                FromDate = request.FromDate,
+                ToDate = request.ToDate,
+                Exception = request.Exception,
+                Beneficiaries = request.Beneficiaries,
+                InsuranceType = request.InsuranceType,
+                OtherInsuranceType = request.OtherInsuranceType,
+                InsuranceBeneficiary = request.InsuranceBeneficiary,
+                Cif = request.Cif,
+                TVTTCode = request.TVTTCode,
+                PartnerCode = request.PartnerCode,
+                CollateralRef = request.CollateralRef,
+            };
+
+            _context.InsuranceContracts.Add(insurance);
+            await _context.SaveChangesAsync();
+
+            return Ok(insurance);
         }
     }
 

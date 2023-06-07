@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BackendServer.Migrations
 {
-    public partial class initData : Migration
+    public partial class InitData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -89,7 +89,7 @@ namespace BackendServer.Migrations
                 columns: table => new
                 {
                     HDBH = table.Column<string>(type: "text", nullable: false),
-                    NewOrRenewed = table.Column<string>(type: "text", nullable: true),
+                    NewOrRenewed = table.Column<bool>(type: "boolean", nullable: true),
                     STBH = table.Column<decimal>(type: "numeric", nullable: true),
                     InsuranceFee = table.Column<decimal>(type: "numeric", nullable: true),
                     NumberOfPayments = table.Column<int>(type: "integer", nullable: true),
@@ -98,6 +98,8 @@ namespace BackendServer.Migrations
                     Exception = table.Column<string>(type: "text", nullable: true),
                     Beneficiaries = table.Column<string>(type: "text", nullable: true),
                     InsuranceType = table.Column<string>(type: "text", nullable: true),
+                    OtherInsuranceType = table.Column<string>(type: "text", nullable: true),
+                    InsuranceBeneficiary = table.Column<string>(type: "text", nullable: true),
                     Cif = table.Column<string>(type: "text", nullable: true),
                     CustomerCif = table.Column<string>(type: "text", nullable: true),
                     TVTTCode = table.Column<string>(type: "text", nullable: true),

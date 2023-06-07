@@ -6,7 +6,7 @@ namespace BaoHiemPhiNhanTho.BackendServer.Models;
 public class InsuranceContract
 {
     public string? HDBH { get; set; }
-    public string? NewOrRenewed { get; set; }
+    public bool? NewOrRenewed { get; set; }
     public decimal? STBH { get; set; }
     public decimal? InsuranceFee { get; set; }
     public int? NumberOfPayments { get; set; }

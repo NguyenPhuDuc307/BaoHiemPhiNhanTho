@@ -18,11 +18,6 @@ namespace BackendServer.Controllers
             _context = context;
         }
 
-        //public IActionResult Index()
-        //{
-        //    return Ok();
-        //}
-
         [HttpPost]
         public async Task<IActionResult> SaveContract([FromBody] AnnexContractRequest request)
         {
@@ -74,9 +69,9 @@ namespace BackendServer.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int productPage = 1, int pageSize = 10)
         {
-            var contracts = await _context.AnnexContracts.ToListAsync();
+            var contracts = await _context.AnnexContracts.Skip((productPage - 1) * pageSize).Take(pageSize).ToListAsync();
             return Ok(contracts);
         }
     }

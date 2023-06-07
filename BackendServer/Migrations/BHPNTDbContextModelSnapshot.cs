@@ -176,25 +176,23 @@ namespace BackendServer.Migrations
                     b.Property<string>("InfoCBNVTVTTCode")
                         .HasColumnType("text");
 
+                    b.Property<string>("InsuranceBeneficiary")
+                        .HasColumnType("text");
+
                     b.Property<decimal?>("InsuranceFee")
                         .HasColumnType("numeric");
 
                     b.Property<string>("InsuranceType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("NewOrRenewed")
                         .HasColumnType("text");
 
+                    b.Property<bool?>("NewOrRenewed")
+                        .HasColumnType("boolean");
 
                     b.Property<int?>("NumberOfPayments")
                         .HasColumnType("integer");
 
                     b.Property<string>("OtherInsuranceType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PartnerCode")
                         .HasColumnType("text");

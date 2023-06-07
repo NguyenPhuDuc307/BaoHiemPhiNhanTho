@@ -9,11 +9,11 @@ namespace BackendServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class HopDongPhuLucController : ControllerBase
+    public class AnnexContractController : ControllerBase
     {
         private readonly BHPNTDbContext _context;
 
-        public HopDongPhuLucController(BHPNTDbContext context)
+        public AnnexContractController(BHPNTDbContext context)
         {
             _context = context;
         }

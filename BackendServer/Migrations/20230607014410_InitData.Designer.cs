@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BackendServer.Data.Migrations
+namespace BackendServer.Migrations
 {
     [DbContext(typeof(BHPNTDbContext))]
-    [Migration("20230606065353_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230607014410_InitData")]
+    partial class InitData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -205,20 +205,32 @@ namespace BackendServer.Data.Migrations
                         .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("InsuranceBeneficiary")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<float?>("InsuranceFee")
                         .IsRequired()
                         .HasColumnType("real");
 
                     b.Property<string>("InsuranceType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NewOrRenewed")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool?>("NewOrRenewed")
+                        .IsRequired()
+                        .HasColumnType("boolean");
 
                     b.Property<int?>("NumberOfPayments")
                         .IsRequired()
                         .HasColumnType("integer");
+
+                    b.Property<string>("OtherInsuranceType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("PartnerCode")
                         .IsRequired()

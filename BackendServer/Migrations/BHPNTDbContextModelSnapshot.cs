@@ -203,20 +203,32 @@ namespace BackendServer.Migrations
                         .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("InsuranceBeneficiary")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<float?>("InsuranceFee")
                         .IsRequired()
                         .HasColumnType("real");
 
                     b.Property<string>("InsuranceType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NewOrRenewed")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool?>("NewOrRenewed")
+                        .IsRequired()
+                        .HasColumnType("boolean");
 
                     b.Property<int?>("NumberOfPayments")
                         .IsRequired()
                         .HasColumnType("integer");
+
+                    b.Property<string>("OtherInsuranceType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("PartnerCode")
                         .IsRequired()

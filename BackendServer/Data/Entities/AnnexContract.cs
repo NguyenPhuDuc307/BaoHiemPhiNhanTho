@@ -13,13 +13,11 @@ public class AnnexContract
     public DateTime? FromDate { get; set; }
     public DateTime? ToDate { get; set; }
     public string? Exception { get; set; }
-
     public string? HDBH { get; set; }
     public InsuranceContract? InsuranceContract { set; get; }
-
     public string? TVTTCode { get; set; }
     public InfoCBNV? InfoCBNV { set; get; }
-
+    public string? Status { get; set; }
 }
 
 public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract>
@@ -52,6 +50,9 @@ public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract
         builder.Property(x => x.Exception)
                .IsRequired()
                .HasMaxLength(255);
+
+        builder.Property(x => x.Status)
+               .IsRequired();
 
         builder.HasOne(x => x.InsuranceContract)
                    .WithMany(x => x.AnnexContracts)

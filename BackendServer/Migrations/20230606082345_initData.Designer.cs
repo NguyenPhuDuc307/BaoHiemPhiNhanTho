@@ -3,6 +3,7 @@ using System;
 using BackendServer.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendServer.Migrations
 {
     [DbContext(typeof(BHPNTDbContext))]
-    partial class BHPNTDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230606082345_initData")]
+    partial class initData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,21 +182,13 @@ namespace BackendServer.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<string>("InsuranceType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<string>("NewOrRenewed")
                         .HasColumnType("text");
 
-
                     b.Property<int?>("NumberOfPayments")
                         .HasColumnType("integer");
-
-                    b.Property<string>("OtherInsuranceType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("PartnerCode")
                         .HasColumnType("text");

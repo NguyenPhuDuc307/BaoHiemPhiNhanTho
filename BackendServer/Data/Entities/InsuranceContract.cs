@@ -15,6 +15,8 @@ public class InsuranceContract
     public string? Exception { get; set; }
     public string? Beneficiaries { get; set; }
     public string? InsuranceType { get; set; }
+    public string? OtherInsuranceType { get; set; }
+    public string? InsuranceBeneficiary { get; set; }
     public string? Cif { get; set; }
     public Customer? Customer { set; get; }
     public string? TVTTCode { get; set; }
@@ -73,6 +75,18 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
                .HasMaxLength(255);
 
         builder.Property(x => x.Beneficiaries)
+               .IsRequired()
+               .HasMaxLength(50);
+
+        builder.Property(x => x.InsuranceType)
+               .IsRequired()
+               .HasMaxLength(50);
+
+        builder.Property(x => x.OtherInsuranceType)
+              .IsRequired()
+              .HasMaxLength(50);
+
+        builder.Property(x => x.InsuranceBeneficiary)
                .IsRequired()
                .HasMaxLength(50);
 

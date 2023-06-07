@@ -3,6 +3,7 @@ using System;
 using BackendServer.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendServer.Migrations
 {
     [DbContext(typeof(BHPNTDbContext))]
-    partial class BHPNTDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230607014410_InitData")]
+    partial class InitData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,170 +27,204 @@ namespace BackendServer.Migrations
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.AnnexContract", b =>
                 {
                     b.Property<string>("HDPL")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Exception")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime?>("FromDate")
+                        .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("HDBH")
-                        .HasColumnType("text");
-
-                    b.Property<string>("InsuranceContractHDBH")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<decimal?>("InsuranceFee")
-                        .HasColumnType("numeric");
+                        .IsRequired()
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<bool?>("NewOrRenewed")
+                        .IsRequired()
                         .HasColumnType("boolean");
 
                     b.Property<int?>("NumberOfPayments")
                         .HasColumnType("integer");
 
                     b.Property<decimal?>("STBH")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<string>("TVTTCode")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("ToDate")
+                        .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("HDPL");
 
-                    b.HasIndex("InsuranceContractHDBH");
+                    b.HasIndex("HDBH");
 
                     b.HasIndex("TVTTCode");
 
-                    b.ToTable("AnnexContracts");
+                    b.ToTable("AnnexContracts", (string)null);
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Branch", b =>
                 {
                     b.Property<string>("BranchCode")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("BranchName")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.HasKey("BranchCode");
 
-                    b.ToTable("Branches");
+                    b.ToTable("Branchs", (string)null);
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Collateral", b =>
                 {
                     b.Property<string>("Ref")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("AddressCollateral")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("PropertyType")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Relationship")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("StatusCollateral")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<decimal?>("ValueCollateral")
-                        .HasColumnType("numeric");
+                        .IsRequired()
+                        .HasColumnType("numeric(18,2)");
 
                     b.HasKey("Ref");
 
-                    b.ToTable("Collaterals");
+                    b.ToTable("Collaterals", (string)null);
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Customer", b =>
                 {
                     b.Property<string>("Cif")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("CCCD")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("CustomerType")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("CustomerType");
 
                     b.Property<string>("Gender")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.HasKey("Cif");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", b =>
                 {
                     b.Property<string>("TVTTCode")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("BranchCode")
-                        .HasColumnType("text");
-
-                    b.Property<string>("BranchCode1")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("NameTVTT")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.HasKey("TVTTCode");
 
-                    b.HasIndex("BranchCode1");
+                    b.HasIndex("BranchCode");
 
-                    b.ToTable("InfoCBNVs");
+                    b.ToTable("InfoCBNVs", (string)null);
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", b =>
                 {
                     b.Property<string>("HDBH")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Beneficiaries")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Cif")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("CollateralRef")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CustomerCif")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Exception")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime?>("FromDate")
+                        .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("InfoCBNVTVTTCode")
-                        .HasColumnType("text");
+                    b.Property<string>("InsuranceBeneficiary")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.Property<decimal?>("InsuranceFee")
-                        .HasColumnType("numeric");
+                    b.Property<float?>("InsuranceFee")
+                        .IsRequired()
+                        .HasColumnType("real");
 
                     b.Property<string>("InsuranceType")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("NewOrRenewed")
-                        .HasColumnType("text");
-
+                    b.Property<bool?>("NewOrRenewed")
+                        .IsRequired()
+                        .HasColumnType("boolean");
 
                     b.Property<int?>("NumberOfPayments")
+                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<string>("OtherInsuranceType")
@@ -197,84 +233,87 @@ namespace BackendServer.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("PartnerCode")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.Property<string>("PartnerCode1")
-                        .HasColumnType("text");
-
-                    b.Property<decimal?>("STBH")
-                        .HasColumnType("numeric");
+                    b.Property<float?>("STBH")
+                        .IsRequired()
+                        .HasColumnType("real");
 
                     b.Property<string>("TVTTCode")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("ToDate")
+                        .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("HDBH");
 
+                    b.HasIndex("Cif");
+
                     b.HasIndex("CollateralRef");
 
-                    b.HasIndex("CustomerCif");
+                    b.HasIndex("PartnerCode");
 
-                    b.HasIndex("InfoCBNVTVTTCode");
+                    b.HasIndex("TVTTCode");
 
-                    b.HasIndex("PartnerCode1");
-
-                    b.ToTable("InsuranceContracts");
+                    b.ToTable("InsuranceContracts", (string)null);
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Partner", b =>
                 {
                     b.Property<string>("PartnerCode")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.HasKey("PartnerCode");
 
-                    b.ToTable("Partners");
+                    b.ToTable("Partners", (string)null);
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.PaymentPeriod", b =>
                 {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("FeePaymentDate")
+                        .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("HDBH")
-                        .HasColumnType("text");
-
-                    b.Property<string>("InsuranceContractHDBH")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<decimal?>("Money")
-                        .HasColumnType("numeric");
+                        .IsRequired()
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<string>("Period")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("TotalAmount")
-                        .HasColumnType("integer");
+                    b.Property<string>("TotalAmount")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InsuranceContractHDBH");
+                    b.HasIndex("HDBH");
 
-                    b.ToTable("PaymentPeriods");
+                    b.ToTable("PaymentPeriods", (string)null);
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.AnnexContract", b =>
                 {
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", "InsuranceContract")
                         .WithMany("AnnexContracts")
-                        .HasForeignKey("InsuranceContractHDBH");
+                        .HasForeignKey("HDBH");
 
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
                         .WithMany("AnnexContracts")
@@ -289,28 +328,34 @@ namespace BackendServer.Migrations
                 {
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Branch", "Branch")
                         .WithMany("InfoCBNVs")
-                        .HasForeignKey("BranchCode1");
+                        .HasForeignKey("BranchCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", b =>
                 {
-                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Collateral", "Collateral")
-                        .WithMany("InsuranceContracts")
-                        .HasForeignKey("CollateralRef");
-
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Customer", "Customer")
                         .WithMany("InsuranceContracts")
-                        .HasForeignKey("CustomerCif");
+                        .HasForeignKey("Cif");
 
-                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Collateral", "Collateral")
                         .WithMany("InsuranceContracts")
-                        .HasForeignKey("InfoCBNVTVTTCode");
+                        .HasForeignKey("CollateralRef")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Partner", "Partner")
                         .WithMany("InsuranceContracts")
-                        .HasForeignKey("PartnerCode1");
+                        .HasForeignKey("PartnerCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
+                        .WithMany("InsuranceContracts")
+                        .HasForeignKey("TVTTCode");
 
                     b.Navigation("Collateral");
 
@@ -325,7 +370,7 @@ namespace BackendServer.Migrations
                 {
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", "InsuranceContract")
                         .WithMany("PaymentPeriods")
-                        .HasForeignKey("InsuranceContractHDBH");
+                        .HasForeignKey("HDBH");
 
                     b.Navigation("InsuranceContract");
                 });

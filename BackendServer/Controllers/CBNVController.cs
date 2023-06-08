@@ -1,6 +1,7 @@
 using BackendServer.Data.EF;
 using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace BackendServer.Models
@@ -30,6 +31,32 @@ namespace BackendServer.Models
             }
 
             return BadRequest("infoCBNV not found");
+        }
+
+        [HttpPost("post/CBNV")]
+        public async Task<IActionResult> CreateCBNV(InfoCBNV InfoCBNV)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var Branch = await _context.Branches.FirstOrDefaultAsync(b => b.BranchCode == InfoCBNV.BranchCode);
+            if (Branch == null)
+            {
+                return NotFound();
+            }
+            var CBNV = new InfoCBNV()
+            {
+                TVTTCode = InfoCBNV.TVTTCode,
+                NameTVTT = InfoCBNV.NameTVTT,
+                BranchCode = InfoCBNV.NameTVTT,
+                Branch = Branch
+            };
+            _context.InfoCBNVs.Add(CBNV);
+            await _context.SaveChangesAsync();
+
+            return Ok(InfoCBNV);
         }
     }
 }

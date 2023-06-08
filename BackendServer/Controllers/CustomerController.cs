@@ -1,6 +1,7 @@
 using BackendServer.Data.EF;
 using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace BackendServer.Controllers
@@ -34,7 +35,9 @@ namespace BackendServer.Controllers
         [HttpGet("get/Customer")]
         public async Task<IActionResult> GetOneCustomer(string cif)
         {
-            var customer = await _context.Customers.FindAsync(cif);
+            var customer = await _context.Customers
+                .Include(c => c.InsuranceContracts)
+                .FirstOrDefaultAsync(c => c.Cif == cif);
 
             if (customer != null)
             {

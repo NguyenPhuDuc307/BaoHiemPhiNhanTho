@@ -18,7 +18,6 @@ public class InsuranceContract
     public string? OtherInsuranceType { get; set; }
     public string? InsuranceBeneficiary { get; set; }
     public string? Cif { get; set; }
-    public string? Name { get; set; }
     public Customer? Customer { set; get; }
     public string? TVTTCode { get; set; }
     public InfoCBNV? InfoCBNV { set; get; }
@@ -49,10 +48,6 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
               .IsRequired()
               .HasMaxLength(50);
 
-        builder.Property(x => x.PartnerCode)
-              .IsRequired()
-              .HasMaxLength(50);
-
         builder.Property(x => x.NewOrRenewed)
                .IsRequired();
 
@@ -69,8 +64,6 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
                .IsRequired();
 
         builder.Property(x => x.ToDate)
-               .IsRequired();
-        builder.Property(x => x.Name)
                .IsRequired();
 
         builder.Property(x => x.Exception)
@@ -95,7 +88,7 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
 
         builder.HasOne(x => x.Customer)
               .WithMany(x => x.InsuranceContracts)
-              .HasForeignKey(x => x.Cif);
+              .HasForeignKey(x => x.Cif).OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.InfoCBNV)
               .WithMany(x => x.InsuranceContracts)

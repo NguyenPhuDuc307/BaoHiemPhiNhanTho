@@ -36,6 +36,9 @@ namespace BackendServer.Migrations
                     b.Property<string>("HDBH")
                         .HasColumnType("text");
 
+                    b.Property<string>("InfoCBNVTVTTCode")
+                        .HasColumnType("text");
+
                     b.Property<string>("InsuranceContractHDBH")
                         .HasColumnType("text");
 
@@ -62,9 +65,9 @@ namespace BackendServer.Migrations
 
                     b.HasKey("HDPL");
 
-                    b.HasIndex("InsuranceContractHDBH");
+                    b.HasIndex("InfoCBNVTVTTCode");
 
-                    b.HasIndex("TVTTCode");
+                    b.HasIndex("InsuranceContractHDBH");
 
                     b.ToTable("AnnexContracts");
                 });
@@ -273,13 +276,13 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.AnnexContract", b =>
                 {
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
+                        .WithMany("AnnexContracts")
+                        .HasForeignKey("InfoCBNVTVTTCode");
+
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", "InsuranceContract")
                         .WithMany("AnnexContracts")
                         .HasForeignKey("InsuranceContractHDBH");
-
-                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
-                        .WithMany("AnnexContracts")
-                        .HasForeignKey("TVTTCode");
 
                     b.Navigation("InfoCBNV");
 

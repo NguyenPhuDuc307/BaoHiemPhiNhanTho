@@ -25,7 +25,7 @@ namespace BackendServer.Controllers
         public async Task<ApiResult<PagedList<InsuranceContractRequest>>> Index(int page = 1, int pageSize = 10)
         {
             var totalCount = await _context.InsuranceContracts.CountAsync();
-            var pagedData = await _context.InsuranceContracts
+            var pagedData = await _context.InsuranceContracts.Include(c => c.Customer)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -48,9 +48,10 @@ namespace BackendServer.Controllers
                 TVTTCode = ic.TVTTCode,
                 PartnerCode = ic.PartnerCode,
                 CollateralRef = ic.CollateralRef,
-            }).ToList();
+                CustomerName = ic.Customer.Name,
+            });
 
-            var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest, totalCount, page, pageSize);
+            var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
             return new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedList);
         }
 
@@ -62,7 +63,9 @@ namespace BackendServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var customerName = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
+            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
+
+            var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
 
             var insurance = new InsuranceContract()
             {
@@ -82,7 +85,8 @@ namespace BackendServer.Controllers
                 TVTTCode = request.TVTTCode,
                 PartnerCode = request.PartnerCode,
                 CollateralRef = request.CollateralRef,
-                Name = customerName.Name,
+                Customer = customer,
+                InfoCBNV = CBNV
             };
 
             _context.InsuranceContracts.Add(insurance);

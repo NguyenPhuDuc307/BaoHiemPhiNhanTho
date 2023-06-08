@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendServer.Migrations
 {
     [DbContext(typeof(BHPNTDbContext))]
-    [Migration("20230607090117_newMig")]
-    partial class newMig
+    [Migration("20230608021928_InitData")]
+    partial class InitData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,6 +36,9 @@ namespace BackendServer.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("HDBH")
+                        .HasColumnType("text");
+
+                    b.Property<string>("InfoCBNVTVTTCode")
                         .HasColumnType("text");
 
                     b.Property<string>("InsuranceContractHDBH")
@@ -64,9 +67,9 @@ namespace BackendServer.Migrations
 
                     b.HasKey("HDPL");
 
-                    b.HasIndex("InsuranceContractHDBH");
+                    b.HasIndex("InfoCBNVTVTTCode");
 
-                    b.HasIndex("TVTTCode");
+                    b.HasIndex("InsuranceContractHDBH");
 
                     b.ToTable("AnnexContracts");
                 });
@@ -275,13 +278,13 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.AnnexContract", b =>
                 {
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
+                        .WithMany("AnnexContracts")
+                        .HasForeignKey("InfoCBNVTVTTCode");
+
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", "InsuranceContract")
                         .WithMany("AnnexContracts")
                         .HasForeignKey("InsuranceContractHDBH");
-
-                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
-                        .WithMany("AnnexContracts")
-                        .HasForeignKey("TVTTCode");
 
                     b.Navigation("InfoCBNV");
 

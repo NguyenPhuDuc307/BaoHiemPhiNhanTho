@@ -30,8 +30,8 @@ public class InfoCBNVConfiguration : IEntityTypeConfiguration<InfoCBNV>
                .HasMaxLength(255);
 
         builder.Property(x => x.BranchCode)
-              .IsRequired()
-              .HasMaxLength(50);
+               .IsRequired()
+               .HasMaxLength(50);
 
         builder.HasOne(x => x.Branch)
               .WithMany(x => x.InfoCBNVs)

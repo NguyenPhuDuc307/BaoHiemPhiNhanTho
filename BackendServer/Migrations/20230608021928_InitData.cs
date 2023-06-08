@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BackendServer.Migrations
 {
-    public partial class updb : Migration
+    public partial class InitData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -101,6 +101,7 @@ namespace BackendServer.Migrations
                     OtherInsuranceType = table.Column<string>(type: "text", nullable: true),
                     InsuranceBeneficiary = table.Column<string>(type: "text", nullable: true),
                     Cif = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     CustomerCif = table.Column<string>(type: "text", nullable: true),
                     TVTTCode = table.Column<string>(type: "text", nullable: true),
                     InfoCBNVTVTTCode = table.Column<string>(type: "text", nullable: true),
@@ -148,14 +149,15 @@ namespace BackendServer.Migrations
                     HDBH = table.Column<string>(type: "text", nullable: true),
                     InsuranceContractHDBH = table.Column<string>(type: "text", nullable: true),
                     TVTTCode = table.Column<string>(type: "text", nullable: true),
+                    InfoCBNVTVTTCode = table.Column<string>(type: "text", nullable: true),
                     Status = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AnnexContracts", x => x.HDPL);
                     table.ForeignKey(
-                        name: "FK_AnnexContracts_InfoCBNVs_TVTTCode",
-                        column: x => x.TVTTCode,
+                        name: "FK_AnnexContracts_InfoCBNVs_InfoCBNVTVTTCode",
+                        column: x => x.InfoCBNVTVTTCode,
                         principalTable: "InfoCBNVs",
                         principalColumn: "TVTTCode");
                     table.ForeignKey(
@@ -189,14 +191,14 @@ namespace BackendServer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AnnexContracts_InfoCBNVTVTTCode",
+                table: "AnnexContracts",
+                column: "InfoCBNVTVTTCode");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AnnexContracts_InsuranceContractHDBH",
                 table: "AnnexContracts",
                 column: "InsuranceContractHDBH");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AnnexContracts_TVTTCode",
-                table: "AnnexContracts",
-                column: "TVTTCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InfoCBNVs_BranchCode1",

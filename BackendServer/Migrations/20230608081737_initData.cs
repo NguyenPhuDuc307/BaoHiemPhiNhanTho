@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BackendServer.Migrations
 {
-    public partial class updb : Migration
+    public partial class initData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -101,6 +101,7 @@ namespace BackendServer.Migrations
                     OtherInsuranceType = table.Column<string>(type: "text", nullable: true),
                     InsuranceBeneficiary = table.Column<string>(type: "text", nullable: true),
                     Cif = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     CustomerCif = table.Column<string>(type: "text", nullable: true),
                     TVTTCode = table.Column<string>(type: "text", nullable: true),
                     InfoCBNVTVTTCode = table.Column<string>(type: "text", nullable: true),

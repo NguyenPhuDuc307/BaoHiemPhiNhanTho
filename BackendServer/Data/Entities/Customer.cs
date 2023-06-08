@@ -44,6 +44,5 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .HasColumnType("integer")
             .HasConversion<int>()
             .UsePropertyAccessMode(PropertyAccessMode.Property);
-
     }
 }

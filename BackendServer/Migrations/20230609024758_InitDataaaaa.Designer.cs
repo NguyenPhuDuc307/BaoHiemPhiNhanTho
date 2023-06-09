@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendServer.Migrations
 {
     [DbContext(typeof(BHPNTDbContext))]
-    [Migration("20230608081737_initData")]
-    partial class initData
+    [Migration("20230609024758_InitDataaaaa")]
+    partial class InitDataaaaa
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,6 +29,12 @@ namespace BackendServer.Migrations
                     b.Property<string>("HDPL")
                         .HasColumnType("text");
 
+                    b.Property<string>("Cif")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustomerCif")
+                        .HasColumnType("text");
+
                     b.Property<string>("Exception")
                         .HasColumnType("text");
 
@@ -36,6 +42,9 @@ namespace BackendServer.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("HDBH")
+                        .HasColumnType("text");
+
+                    b.Property<string>("InfoCBNVTVTTCode")
                         .HasColumnType("text");
 
                     b.Property<string>("InsuranceContractHDBH")
@@ -64,9 +73,11 @@ namespace BackendServer.Migrations
 
                     b.HasKey("HDPL");
 
-                    b.HasIndex("InsuranceContractHDBH");
+                    b.HasIndex("CustomerCif");
 
-                    b.HasIndex("TVTTCode");
+                    b.HasIndex("InfoCBNVTVTTCode");
+
+                    b.HasIndex("InsuranceContractHDBH");
 
                     b.ToTable("AnnexContracts");
                 });
@@ -187,9 +198,6 @@ namespace BackendServer.Migrations
                     b.Property<string>("InsuranceType")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
                     b.Property<bool?>("NewOrRenewed")
                         .HasColumnType("boolean");
 
@@ -275,13 +283,19 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.AnnexContract", b =>
                 {
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Customer", "Customer")
+                        .WithMany("AnnexContracts")
+                        .HasForeignKey("CustomerCif");
+
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
+                        .WithMany("AnnexContracts")
+                        .HasForeignKey("InfoCBNVTVTTCode");
+
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", "InsuranceContract")
                         .WithMany("AnnexContracts")
                         .HasForeignKey("InsuranceContractHDBH");
 
-                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
-                        .WithMany("AnnexContracts")
-                        .HasForeignKey("TVTTCode");
+                    b.Navigation("Customer");
 
                     b.Navigation("InfoCBNV");
 
@@ -345,6 +359,8 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Customer", b =>
                 {
+                    b.Navigation("AnnexContracts");
+
                     b.Navigation("InsuranceContracts");
                 });
 

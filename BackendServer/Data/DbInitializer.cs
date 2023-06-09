@@ -43,13 +43,15 @@ public class DbInitializer
         {
             _context.InfoCBNVs.AddRange(new List<InfoCBNV>()
             {
-                new InfoCBNV(){TVTTCode = "001", NameTVTT = "Nguyễn Văn Huy", BranchCode="001"},
-                new InfoCBNV(){TVTTCode = "002", NameTVTT = "Nguyễn Phú Đức", BranchCode="001"},
-                new InfoCBNV(){TVTTCode = "003", NameTVTT = "Đỗ Phát Đạt", BranchCode="002"},
-                new InfoCBNV(){TVTTCode = "004", NameTVTT = "Ngô Trí Trường", BranchCode="002"},
-                new InfoCBNV(){TVTTCode = "005", NameTVTT = "Hoàng Bảo Phúc", BranchCode="003"}
+                new InfoCBNV(){TVTTCode = "001", NameTVTT = "Nguyễn Văn Huy", BranchCode="001", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
+                new InfoCBNV(){TVTTCode = "002", NameTVTT = "Nguyễn Phú Đức", BranchCode="001", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
+                new InfoCBNV(){TVTTCode = "003", NameTVTT = "Đỗ Phát Đạt", BranchCode="002", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
+                new InfoCBNV(){TVTTCode = "004", NameTVTT = "Ngô Trí Trường", BranchCode="002", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
+                new InfoCBNV(){TVTTCode = "005", NameTVTT = "Hoàng Bảo Phúc", BranchCode="003", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")}
             });
         }
+
+        var customer1 = new Customer() { Cif = "987654321", Name = "Customer1", CustomerType = CustomerType.KHDN, Gender = "Nam", CCCD = "125087654321" };
 
         if (!_context.Customers.Any())
         {
@@ -93,7 +95,12 @@ public class DbInitializer
                 Cif = "987654321",
                 TVTTCode = "001",
                 PartnerCode="001",
-                CollateralRef = "987654321"},
+                CollateralRef = "987654321",
+                Customer = _context.Customers.FirstOrDefault(b => b.Cif == "987654321"),
+                InfoCBNV = _context.InfoCBNVs.FirstOrDefault(b => b.TVTTCode == "001"),
+                Partner = _context.Partners.FirstOrDefault(b => b.PartnerCode == "001"),
+                Collateral = _context.Collaterals.FirstOrDefault(b => b.Ref == "987654321"),
+                },
 
                 new InsuranceContract(){HDBH = "987654322",
                 NewOrRenewed = true,
@@ -110,7 +117,12 @@ public class DbInitializer
                 Cif = "987654321",
                 TVTTCode = "001",
                 PartnerCode="001",
-                CollateralRef = "987654321"},
+                CollateralRef = "987654321",
+                Customer = _context.Customers.FirstOrDefault(b => b.Cif == "987654321"),
+                InfoCBNV = _context.InfoCBNVs.FirstOrDefault(b => b.TVTTCode == "001"),
+                Partner = _context.Partners.FirstOrDefault(b => b.PartnerCode == "001"),
+                Collateral = _context.Collaterals.FirstOrDefault(b => b.Ref == "987654321"),
+                },
 
                 new InsuranceContract(){HDBH = "987654323",
                 NewOrRenewed = false,
@@ -127,7 +139,12 @@ public class DbInitializer
                 Cif = "987654321",
                 TVTTCode = "001",
                 PartnerCode="001",
-                CollateralRef = "987654321"},
+                CollateralRef = "987654321",
+                Customer = _context.Customers.FirstOrDefault(b => b.Cif == "987654321"),
+                InfoCBNV = _context.InfoCBNVs.FirstOrDefault(b => b.TVTTCode == "001"),
+                Partner = _context.Partners.FirstOrDefault(b => b.PartnerCode == "001"),
+                Collateral = _context.Collaterals.FirstOrDefault(b => b.Ref == "987654321"),
+                },
             });
         }
 
@@ -142,9 +159,14 @@ public class DbInitializer
                 FromDate=DateTime.UtcNow.AddDays(-100),
                 ToDate=DateTime.UtcNow.AddDays(-10),
                 Exception = "",
+                Cif = "987654321",
                 HDBH = "987654321",
                 TVTTCode = "001",
-                Status = "chưa chuyển duyệt"},
+                Status = "chưa chuyển duyệt",
+                InsuranceContract = _context.InsuranceContracts.FirstOrDefault(b => b.HDBH == "987654321"),
+                InfoCBNV = _context.InfoCBNVs.FirstOrDefault(b => b.TVTTCode == "001"),
+                Customer = _context.Customers.FirstOrDefault(b => b.Cif == "987654321"),
+                },
 
                 new AnnexContract(){HDPL = "987654322",
                 NewOrRenewed = true, STBH=100000000,
@@ -153,9 +175,14 @@ public class DbInitializer
                 FromDate=DateTime.UtcNow.AddDays(-100),
                 ToDate=DateTime.UtcNow.AddDays(-10),
                 Exception = "",
+                Cif = "987654321",
                 HDBH = "987654321",
                 TVTTCode = "001",
-                Status = "chưa chuyển duyệt"},
+                Status = "chưa chuyển duyệt",
+                InsuranceContract = _context.InsuranceContracts.FirstOrDefault(b => b.HDBH == "987654321"),
+                InfoCBNV = _context.InfoCBNVs.FirstOrDefault(b => b.TVTTCode == "001"),
+                Customer = _context.Customers.FirstOrDefault(b => b.Cif == "987654321"),
+                },
 
                 new AnnexContract(){HDPL = "987654323",
                 NewOrRenewed = true,
@@ -165,9 +192,14 @@ public class DbInitializer
                 FromDate=DateTime.UtcNow.AddDays(-100),
                 ToDate=DateTime.UtcNow.AddDays(-10),
                 Exception = "",
+                Cif = "987654321",
                 HDBH = "987654321",
                 TVTTCode = "001",
-                Status = "chưa chuyển duyệt"}
+                Status = "chưa chuyển duyệt",
+                InsuranceContract = _context.InsuranceContracts.FirstOrDefault(b => b.HDBH == "987654321"),
+                InfoCBNV = _context.InfoCBNVs.FirstOrDefault(b => b.TVTTCode == "001"),
+                Customer = _context.Customers.FirstOrDefault(b => b.Cif == "987654321"),
+                }
             });
         }
 

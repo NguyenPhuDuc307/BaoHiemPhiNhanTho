@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BackendServer.Migrations
 {
-    public partial class InitData : Migration
+    public partial class InitDataaaaa : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -71,15 +71,14 @@ namespace BackendServer.Migrations
                 {
                     TVTTCode = table.Column<string>(type: "text", nullable: false),
                     NameTVTT = table.Column<string>(type: "text", nullable: true),
-                    BranchCode = table.Column<string>(type: "text", nullable: true),
-                    BranchCode1 = table.Column<string>(type: "text", nullable: true)
+                    BranchCode = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InfoCBNVs", x => x.TVTTCode);
                     table.ForeignKey(
-                        name: "FK_InfoCBNVs_Branches_BranchCode1",
-                        column: x => x.BranchCode1,
+                        name: "FK_InfoCBNVs_Branches_BranchCode",
+                        column: x => x.BranchCode,
                         principalTable: "Branches",
                         principalColumn: "BranchCode");
                 });
@@ -101,12 +100,10 @@ namespace BackendServer.Migrations
                     OtherInsuranceType = table.Column<string>(type: "text", nullable: true),
                     InsuranceBeneficiary = table.Column<string>(type: "text", nullable: true),
                     Cif = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "text", nullable: true),
                     CustomerCif = table.Column<string>(type: "text", nullable: true),
                     TVTTCode = table.Column<string>(type: "text", nullable: true),
                     InfoCBNVTVTTCode = table.Column<string>(type: "text", nullable: true),
                     PartnerCode = table.Column<string>(type: "text", nullable: true),
-                    PartnerCode1 = table.Column<string>(type: "text", nullable: true),
                     CollateralRef = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -128,8 +125,8 @@ namespace BackendServer.Migrations
                         principalTable: "InfoCBNVs",
                         principalColumn: "TVTTCode");
                     table.ForeignKey(
-                        name: "FK_InsuranceContracts_Partners_PartnerCode1",
-                        column: x => x.PartnerCode1,
+                        name: "FK_InsuranceContracts_Partners_PartnerCode",
+                        column: x => x.PartnerCode,
                         principalTable: "Partners",
                         principalColumn: "PartnerCode");
                 });
@@ -150,11 +147,18 @@ namespace BackendServer.Migrations
                     InsuranceContractHDBH = table.Column<string>(type: "text", nullable: true),
                     TVTTCode = table.Column<string>(type: "text", nullable: true),
                     InfoCBNVTVTTCode = table.Column<string>(type: "text", nullable: true),
-                    Status = table.Column<string>(type: "text", nullable: true)
+                    Status = table.Column<string>(type: "text", nullable: true),
+                    Cif = table.Column<string>(type: "text", nullable: true),
+                    CustomerCif = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AnnexContracts", x => x.HDPL);
+                    table.ForeignKey(
+                        name: "FK_AnnexContracts_Customers_CustomerCif",
+                        column: x => x.CustomerCif,
+                        principalTable: "Customers",
+                        principalColumn: "Cif");
                     table.ForeignKey(
                         name: "FK_AnnexContracts_InfoCBNVs_InfoCBNVTVTTCode",
                         column: x => x.InfoCBNVTVTTCode,
@@ -191,6 +195,11 @@ namespace BackendServer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AnnexContracts_CustomerCif",
+                table: "AnnexContracts",
+                column: "CustomerCif");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AnnexContracts_InfoCBNVTVTTCode",
                 table: "AnnexContracts",
                 column: "InfoCBNVTVTTCode");
@@ -201,9 +210,9 @@ namespace BackendServer.Migrations
                 column: "InsuranceContractHDBH");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InfoCBNVs_BranchCode1",
+                name: "IX_InfoCBNVs_BranchCode",
                 table: "InfoCBNVs",
-                column: "BranchCode1");
+                column: "BranchCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InsuranceContracts_CollateralRef",
@@ -221,9 +230,9 @@ namespace BackendServer.Migrations
                 column: "InfoCBNVTVTTCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InsuranceContracts_PartnerCode1",
+                name: "IX_InsuranceContracts_PartnerCode",
                 table: "InsuranceContracts",
-                column: "PartnerCode1");
+                column: "PartnerCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentPeriods_InsuranceContractHDBH",

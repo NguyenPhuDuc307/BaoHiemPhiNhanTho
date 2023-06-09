@@ -66,6 +66,10 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
         builder.Property(x => x.ToDate)
                .IsRequired();
 
+        builder.Property(x => x.PartnerCode)
+                       .IsRequired()
+                       .HasMaxLength(50);
+
         builder.Property(x => x.Exception)
                .IsRequired()
                .HasMaxLength(255);
@@ -88,7 +92,7 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
 
         builder.HasOne(x => x.Customer)
               .WithMany(x => x.InsuranceContracts)
-              .HasForeignKey(x => x.Cif).OnDelete(DeleteBehavior.Cascade);
+              .HasForeignKey(x => x.Cif);
 
         builder.HasOne(x => x.InfoCBNV)
               .WithMany(x => x.InsuranceContracts)

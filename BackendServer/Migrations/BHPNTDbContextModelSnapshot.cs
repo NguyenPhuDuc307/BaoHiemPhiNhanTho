@@ -27,6 +27,12 @@ namespace BackendServer.Migrations
                     b.Property<string>("HDPL")
                         .HasColumnType("text");
 
+                    b.Property<string>("Cif")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustomerCif")
+                        .HasColumnType("text");
+
                     b.Property<string>("Exception")
                         .HasColumnType("text");
 
@@ -64,6 +70,8 @@ namespace BackendServer.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("HDPL");
+
+                    b.HasIndex("CustomerCif");
 
                     b.HasIndex("InfoCBNVTVTTCode");
 
@@ -188,9 +196,6 @@ namespace BackendServer.Migrations
                     b.Property<string>("InsuranceType")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
                     b.Property<bool?>("NewOrRenewed")
                         .HasColumnType("boolean");
 
@@ -276,6 +281,10 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.AnnexContract", b =>
                 {
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Customer", "Customer")
+                        .WithMany("AnnexContracts")
+                        .HasForeignKey("CustomerCif");
+
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
                         .WithMany("AnnexContracts")
                         .HasForeignKey("InfoCBNVTVTTCode");
@@ -283,6 +292,8 @@ namespace BackendServer.Migrations
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", "InsuranceContract")
                         .WithMany("AnnexContracts")
                         .HasForeignKey("InsuranceContractHDBH");
+
+                    b.Navigation("Customer");
 
                     b.Navigation("InfoCBNV");
 
@@ -346,6 +357,8 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Customer", b =>
                 {
+                    b.Navigation("AnnexContracts");
+
                     b.Navigation("InsuranceContracts");
                 });
 

@@ -73,6 +73,7 @@ namespace BackendServer.Controllers
         public async Task<ApiResult<PagedList<AnnexContractRequest>>> Index(int page = 1, int pageSize = 10)
         {
             var totalCount = await _context.AnnexContracts.CountAsync();
+
             var pagedData = await _context.AnnexContracts.Include(c => c.Customer)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)

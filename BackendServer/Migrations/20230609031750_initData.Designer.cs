@@ -3,6 +3,7 @@ using System;
 using BackendServer.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendServer.Migrations
 {
     [DbContext(typeof(BHPNTDbContext))]
-    partial class BHPNTDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230609031750_initData")]
+    partial class initData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,9 +30,6 @@ namespace BackendServer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Cif")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CustomerCif")
                         .HasColumnType("text");
 
                     b.Property<string>("Exception")
@@ -73,8 +72,6 @@ namespace BackendServer.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("HDPL");
-
-                    b.HasIndex("CustomerCif");
 
                     b.HasIndex("InfoCBNVTVTTCode");
 
@@ -153,7 +150,7 @@ namespace BackendServer.Migrations
                     b.Property<string>("BranchCode")
                         .HasColumnType("text");
 
-                    b.Property<string>("InfoCBNVBranchCode")
+                    b.Property<string>("BranchCode1")
                         .HasColumnType("text");
 
                     b.Property<string>("NameTVTT")
@@ -161,7 +158,7 @@ namespace BackendServer.Migrations
 
                     b.HasKey("TVTTCode");
 
-                    b.HasIndex("BranchCode");
+                    b.HasIndex("BranchCode1");
 
                     b.ToTable("InfoCBNVs");
                 });
@@ -198,9 +195,6 @@ namespace BackendServer.Migrations
                     b.Property<decimal?>("InsuranceFee")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("InsurancePartnerCode")
-                        .HasColumnType("text");
-
                     b.Property<string>("InsuranceType")
                         .HasColumnType("text");
 
@@ -214,6 +208,9 @@ namespace BackendServer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PartnerCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PartnerCode1")
                         .HasColumnType("text");
 
                     b.Property<decimal?>("STBH")
@@ -233,7 +230,7 @@ namespace BackendServer.Migrations
 
                     b.HasIndex("InfoCBNVTVTTCode");
 
-                    b.HasIndex("PartnerCode");
+                    b.HasIndex("PartnerCode1");
 
                     b.ToTable("InsuranceContracts");
                 });
@@ -286,10 +283,6 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.AnnexContract", b =>
                 {
-                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Customer", "Customer")
-                        .WithMany("AnnexContracts")
-                        .HasForeignKey("CustomerCif");
-
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
                         .WithMany("AnnexContracts")
                         .HasForeignKey("InfoCBNVTVTTCode");
@@ -301,7 +294,6 @@ namespace BackendServer.Migrations
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Customer", "customer")
                         .WithMany("AnnexContract")
                         .HasForeignKey("customerCif");
-                    b.Navigation("Customer");
 
                     b.Navigation("InfoCBNV");
 
@@ -314,7 +306,7 @@ namespace BackendServer.Migrations
                 {
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Branch", "Branch")
                         .WithMany("InfoCBNVs")
-                        .HasForeignKey("BranchCode");
+                        .HasForeignKey("BranchCode1");
 
                     b.Navigation("Branch");
                 });
@@ -335,7 +327,7 @@ namespace BackendServer.Migrations
 
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Partner", "Partner")
                         .WithMany("InsuranceContracts")
-                        .HasForeignKey("PartnerCode");
+                        .HasForeignKey("PartnerCode1");
 
                     b.Navigation("Collateral");
 
@@ -367,9 +359,8 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Customer", b =>
                 {
+                    b.Navigation("AnnexContract");
 
-                    b.Navigation("AnnexContracts");
-                    
                     b.Navigation("InsuranceContracts");
                 });
 

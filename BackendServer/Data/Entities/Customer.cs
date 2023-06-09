@@ -12,6 +12,7 @@ public class Customer
     public string? Gender { get; set; }
     public string? CCCD { get; set; }
     public ICollection<InsuranceContract>? InsuranceContracts { set; get; }
+    public ICollection<AnnexContract>? AnnexContract { get; set; }
 
     public Customer()
     {

@@ -27,6 +27,9 @@ namespace BackendServer.Migrations
                     b.Property<string>("HDPL")
                         .HasColumnType("text");
 
+                    b.Property<string>("Cif")
+                        .HasColumnType("text");
+
                     b.Property<string>("Exception")
                         .HasColumnType("text");
 
@@ -63,11 +66,16 @@ namespace BackendServer.Migrations
                     b.Property<DateTime?>("ToDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("customerCif")
+                        .HasColumnType("text");
+
                     b.HasKey("HDPL");
 
                     b.HasIndex("InfoCBNVTVTTCode");
 
                     b.HasIndex("InsuranceContractHDBH");
+
+                    b.HasIndex("customerCif");
 
                     b.ToTable("AnnexContracts");
                 });
@@ -188,9 +196,6 @@ namespace BackendServer.Migrations
                     b.Property<string>("InsuranceType")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
                     b.Property<bool?>("NewOrRenewed")
                         .HasColumnType("boolean");
 
@@ -284,9 +289,15 @@ namespace BackendServer.Migrations
                         .WithMany("AnnexContracts")
                         .HasForeignKey("InsuranceContractHDBH");
 
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Customer", "customer")
+                        .WithMany("AnnexContract")
+                        .HasForeignKey("customerCif");
+
                     b.Navigation("InfoCBNV");
 
                     b.Navigation("InsuranceContract");
+
+                    b.Navigation("customer");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", b =>
@@ -346,6 +357,8 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Customer", b =>
                 {
+                    b.Navigation("AnnexContract");
+
                     b.Navigation("InsuranceContracts");
                 });
 

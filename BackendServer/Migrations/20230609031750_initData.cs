@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BackendServer.Migrations
 {
-    public partial class InitData : Migration
+    public partial class initData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -101,7 +101,6 @@ namespace BackendServer.Migrations
                     OtherInsuranceType = table.Column<string>(type: "text", nullable: true),
                     InsuranceBeneficiary = table.Column<string>(type: "text", nullable: true),
                     Cif = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "text", nullable: true),
                     CustomerCif = table.Column<string>(type: "text", nullable: true),
                     TVTTCode = table.Column<string>(type: "text", nullable: true),
                     InfoCBNVTVTTCode = table.Column<string>(type: "text", nullable: true),
@@ -150,11 +149,18 @@ namespace BackendServer.Migrations
                     InsuranceContractHDBH = table.Column<string>(type: "text", nullable: true),
                     TVTTCode = table.Column<string>(type: "text", nullable: true),
                     InfoCBNVTVTTCode = table.Column<string>(type: "text", nullable: true),
-                    Status = table.Column<string>(type: "text", nullable: true)
+                    Status = table.Column<string>(type: "text", nullable: true),
+                    Cif = table.Column<string>(type: "text", nullable: true),
+                    customerCif = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AnnexContracts", x => x.HDPL);
+                    table.ForeignKey(
+                        name: "FK_AnnexContracts_Customers_customerCif",
+                        column: x => x.customerCif,
+                        principalTable: "Customers",
+                        principalColumn: "Cif");
                     table.ForeignKey(
                         name: "FK_AnnexContracts_InfoCBNVs_InfoCBNVTVTTCode",
                         column: x => x.InfoCBNVTVTTCode,
@@ -189,6 +195,11 @@ namespace BackendServer.Migrations
                         principalTable: "InsuranceContracts",
                         principalColumn: "HDBH");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AnnexContracts_customerCif",
+                table: "AnnexContracts",
+                column: "customerCif");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AnnexContracts_InfoCBNVTVTTCode",

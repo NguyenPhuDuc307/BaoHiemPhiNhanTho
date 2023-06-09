@@ -93,7 +93,8 @@ public class DbInitializer
                 Cif = "987654321",
                 TVTTCode = "001",
                 PartnerCode="001",
-                CollateralRef = "987654321"},
+                CollateralRef = "987654321"
+                },
 
                 new InsuranceContract(){HDBH = "987654322",
                 NewOrRenewed = true,

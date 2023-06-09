@@ -3,6 +3,7 @@ using BackendServer.Models.HopDongPhuLucVM;
 using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using System.Diagnostics.Contracts;
 
 namespace BackendServer.Controllers
@@ -68,11 +69,32 @@ namespace BackendServer.Controllers
             return Ok(contract);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll(int productPage = 1, int pageSize = 10)
+        [HttpGet("GetList")]
+        public async Task<ApiResult<PagedList<AnnexContractRequest>>> Index(int page = 1, int pageSize = 10)
         {
-            var contracts = await _context.AnnexContracts.Skip((productPage - 1) * pageSize).Take(pageSize).ToListAsync();
-            return Ok(contracts);
+            var totalCount = await _context.AnnexContracts.CountAsync();
+            var pagedData = await _context.AnnexContracts.Include(c => c.Customer)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var pagedDataRequest = pagedData.Select(ic => new AnnexContractRequest
+            {
+                HDPL = ic.HDPL,
+                NewOrRenewed = ic.NewOrRenewed,
+                STBH = ic.STBH,
+                InsuranceFee = ic.InsuranceFee,
+                NumberOfPayments = ic.NumberOfPayments,
+                FromDate = ic.FromDate,
+                ToDate = ic.ToDate,
+                Exception = ic.Exception,
+                Cif = ic.Cif,
+                TVTTCode = ic.TVTTCode,
+                CustomerName = ic.Customer.Name,
+            });
+
+            var pagedList = new PagedList<AnnexContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
+            return new ApiSuccessResult<PagedList<AnnexContractRequest>>(pagedList);
         }
     }
 }

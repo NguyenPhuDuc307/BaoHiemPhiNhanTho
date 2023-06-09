@@ -14,6 +14,8 @@ namespace BackendServer.Models.HopDongPhuLucVM
         public string? Exception { get; set; }
         public string? HDBH { get; set; }
         public string? TVTTCode { get; set; }
+        public string? Cif { get; set; }
         public string? Status { get; set; }
+        public string? CustomerName { get; set; }
     }
 }

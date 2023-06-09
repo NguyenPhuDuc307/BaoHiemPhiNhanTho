@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BackendServer.Migrations
 {
-    public partial class InitDataaaaa : Migration
+    public partial class Initdata : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -71,6 +71,7 @@ namespace BackendServer.Migrations
                 {
                     TVTTCode = table.Column<string>(type: "text", nullable: false),
                     NameTVTT = table.Column<string>(type: "text", nullable: true),
+                    InfoCBNVBranchCode = table.Column<string>(type: "text", nullable: true),
                     BranchCode = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -103,6 +104,7 @@ namespace BackendServer.Migrations
                     CustomerCif = table.Column<string>(type: "text", nullable: true),
                     TVTTCode = table.Column<string>(type: "text", nullable: true),
                     InfoCBNVTVTTCode = table.Column<string>(type: "text", nullable: true),
+                    InsurancePartnerCode = table.Column<string>(type: "text", nullable: true),
                     PartnerCode = table.Column<string>(type: "text", nullable: true),
                     CollateralRef = table.Column<string>(type: "text", nullable: true)
                 },

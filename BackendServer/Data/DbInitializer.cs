@@ -25,6 +25,7 @@ public class DbInitializer
                 new Partner(){PartnerCode = "004", Name = "MNO"},
                 new Partner(){PartnerCode = "005", Name = "QPR"}
             });
+            await _context.SaveChangesAsync();
         }
 
         if (!_context.Branches.Any())
@@ -37,18 +38,20 @@ public class DbInitializer
                 new Branch(){BranchCode = "004", BranchName = "CN Quận 1"},
                 new Branch(){BranchCode = "005", BranchName = "CN Quận 2"}
             });
+            await _context.SaveChangesAsync();
         }
 
         if (!_context.InfoCBNVs.Any())
         {
             _context.InfoCBNVs.AddRange(new List<InfoCBNV>()
             {
-                new InfoCBNV(){TVTTCode = "001", NameTVTT = "Nguyễn Văn Huy", BranchCode="001", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
-                new InfoCBNV(){TVTTCode = "002", NameTVTT = "Nguyễn Phú Đức", BranchCode="001", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
-                new InfoCBNV(){TVTTCode = "003", NameTVTT = "Đỗ Phát Đạt", BranchCode="002", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
-                new InfoCBNV(){TVTTCode = "004", NameTVTT = "Ngô Trí Trường", BranchCode="002", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
-                new InfoCBNV(){TVTTCode = "005", NameTVTT = "Hoàng Bảo Phúc", BranchCode="003", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")}
+                new InfoCBNV(){TVTTCode = "001", NameTVTT = "Nguyễn Văn Huy", InfoCBNVBranchCode="001", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
+                new InfoCBNV(){TVTTCode = "002", NameTVTT = "Nguyễn Phú Đức", InfoCBNVBranchCode="001", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
+                new InfoCBNV(){TVTTCode = "003", NameTVTT = "Đỗ Phát Đạt", InfoCBNVBranchCode="002", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
+                new InfoCBNV(){TVTTCode = "004", NameTVTT = "Ngô Trí Trường", InfoCBNVBranchCode="002", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")},
+                new InfoCBNV(){TVTTCode = "005", NameTVTT = "Hoàng Bảo Phúc", InfoCBNVBranchCode="003", Branch = _context.Branches.FirstOrDefault(b => b.BranchCode == "001")}
             });
+            await _context.SaveChangesAsync();
         }
 
         var customer1 = new Customer() { Cif = "987654321", Name = "Customer1", CustomerType = CustomerType.KHDN, Gender = "Nam", CCCD = "125087654321" };
@@ -62,6 +65,7 @@ public class DbInitializer
                 new Customer(){Cif = "987654323", Name = "Customer3", CustomerType=CustomerType.KHCN, Gender = "Nam", CCCD="125087654323"},
                 new Customer(){Cif = "987654324", Name = "Customer4", CustomerType=CustomerType.KHCN, Gender = "Nam", CCCD="125087654324"},
             });
+            await _context.SaveChangesAsync();
         }
 
         if (!_context.Collaterals.Any())
@@ -74,6 +78,7 @@ public class DbInitializer
                 new Collateral(){Ref = "987654324", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF3", Relationship=Relationship.Relationship2, PropertyType="Xe"},
                 new Collateral(){Ref = "987654325", StatusCollateral = "Blank", ValueCollateral=100000000, AddressCollateral = "ABC2", Relationship=Relationship.Relationship2, PropertyType="Nhà phố"},
             });
+            await _context.SaveChangesAsync();
         }
 
         if (!_context.InsuranceContracts.Any())
@@ -94,7 +99,7 @@ public class DbInitializer
                 InsuranceBeneficiary= InsuranceBeneficiary.InsuranceType1,
                 Cif = "987654321",
                 TVTTCode = "001",
-                PartnerCode="001",
+                InsurancePartnerCode="001",
                 CollateralRef = "987654321",
                 Customer = _context.Customers.FirstOrDefault(b => b.Cif == "987654321"),
                 InfoCBNV = _context.InfoCBNVs.FirstOrDefault(b => b.TVTTCode == "001"),
@@ -116,7 +121,7 @@ public class DbInitializer
                 InsuranceBeneficiary= InsuranceBeneficiary.InsuranceType1,
                 Cif = "987654321",
                 TVTTCode = "001",
-                PartnerCode="001",
+                InsurancePartnerCode="001",
                 CollateralRef = "987654321",
                 Customer = _context.Customers.FirstOrDefault(b => b.Cif == "987654321"),
                 InfoCBNV = _context.InfoCBNVs.FirstOrDefault(b => b.TVTTCode == "001"),
@@ -138,7 +143,7 @@ public class DbInitializer
                 InsuranceBeneficiary= InsuranceBeneficiary.InsuranceType1,
                 Cif = "987654321",
                 TVTTCode = "001",
-                PartnerCode="001",
+                InsurancePartnerCode="001",
                 CollateralRef = "987654321",
                 Customer = _context.Customers.FirstOrDefault(b => b.Cif == "987654321"),
                 InfoCBNV = _context.InfoCBNVs.FirstOrDefault(b => b.TVTTCode == "001"),
@@ -146,6 +151,7 @@ public class DbInitializer
                 Collateral = _context.Collaterals.FirstOrDefault(b => b.Ref == "987654321"),
                 },
             });
+            await _context.SaveChangesAsync();
         }
 
         if (!_context.AnnexContracts.Any())
@@ -201,6 +207,7 @@ public class DbInitializer
                 Customer = _context.Customers.FirstOrDefault(b => b.Cif == "987654321"),
                 }
             });
+            await _context.SaveChangesAsync();
         }
 
         await _context.SaveChangesAsync();

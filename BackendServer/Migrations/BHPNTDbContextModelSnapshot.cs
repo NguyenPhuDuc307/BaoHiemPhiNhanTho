@@ -148,7 +148,7 @@ namespace BackendServer.Migrations
                     b.Property<string>("BranchCode")
                         .HasColumnType("text");
 
-                    b.Property<string>("BranchCode1")
+                    b.Property<string>("InfoCBNVBranchCode")
                         .HasColumnType("text");
 
                     b.Property<string>("NameTVTT")
@@ -156,7 +156,7 @@ namespace BackendServer.Migrations
 
                     b.HasKey("TVTTCode");
 
-                    b.HasIndex("BranchCode1");
+                    b.HasIndex("BranchCode");
 
                     b.ToTable("InfoCBNVs");
                 });
@@ -193,6 +193,9 @@ namespace BackendServer.Migrations
                     b.Property<decimal?>("InsuranceFee")
                         .HasColumnType("numeric");
 
+                    b.Property<string>("InsurancePartnerCode")
+                        .HasColumnType("text");
+
                     b.Property<string>("InsuranceType")
                         .HasColumnType("text");
 
@@ -206,9 +209,6 @@ namespace BackendServer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PartnerCode")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PartnerCode1")
                         .HasColumnType("text");
 
                     b.Property<decimal?>("STBH")
@@ -228,7 +228,7 @@ namespace BackendServer.Migrations
 
                     b.HasIndex("InfoCBNVTVTTCode");
 
-                    b.HasIndex("PartnerCode1");
+                    b.HasIndex("PartnerCode");
 
                     b.ToTable("InsuranceContracts");
                 });
@@ -304,7 +304,7 @@ namespace BackendServer.Migrations
                 {
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Branch", "Branch")
                         .WithMany("InfoCBNVs")
-                        .HasForeignKey("BranchCode1");
+                        .HasForeignKey("BranchCode");
 
                     b.Navigation("Branch");
                 });
@@ -325,7 +325,7 @@ namespace BackendServer.Migrations
 
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Partner", "Partner")
                         .WithMany("InsuranceContracts")
-                        .HasForeignKey("PartnerCode1");
+                        .HasForeignKey("PartnerCode");
 
                     b.Navigation("Collateral");
 

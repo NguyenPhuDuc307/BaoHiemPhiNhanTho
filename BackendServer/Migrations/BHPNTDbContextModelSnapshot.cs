@@ -27,6 +27,12 @@ namespace BackendServer.Migrations
                     b.Property<string>("HDPL")
                         .HasColumnType("text");
 
+                    b.Property<string>("Cif")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustomerCif")
+                        .HasColumnType("text");
+
                     b.Property<string>("Exception")
                         .HasColumnType("text");
 
@@ -64,6 +70,8 @@ namespace BackendServer.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("HDPL");
+
+                    b.HasIndex("CustomerCif");
 
                     b.HasIndex("InfoCBNVTVTTCode");
 
@@ -140,7 +148,7 @@ namespace BackendServer.Migrations
                     b.Property<string>("BranchCode")
                         .HasColumnType("text");
 
-                    b.Property<string>("BranchCode1")
+                    b.Property<string>("InfoCBNVBranchCode")
                         .HasColumnType("text");
 
                     b.Property<string>("NameTVTT")
@@ -148,7 +156,7 @@ namespace BackendServer.Migrations
 
                     b.HasKey("TVTTCode");
 
-                    b.HasIndex("BranchCode1");
+                    b.HasIndex("BranchCode");
 
                     b.ToTable("InfoCBNVs");
                 });
@@ -185,10 +193,10 @@ namespace BackendServer.Migrations
                     b.Property<decimal?>("InsuranceFee")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("InsuranceType")
+                    b.Property<string>("InsurancePartnerCode")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("InsuranceType")
                         .HasColumnType("text");
 
                     b.Property<bool?>("NewOrRenewed")
@@ -201,9 +209,6 @@ namespace BackendServer.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PartnerCode")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PartnerCode1")
                         .HasColumnType("text");
 
                     b.Property<decimal?>("STBH")
@@ -223,7 +228,7 @@ namespace BackendServer.Migrations
 
                     b.HasIndex("InfoCBNVTVTTCode");
 
-                    b.HasIndex("PartnerCode1");
+                    b.HasIndex("PartnerCode");
 
                     b.ToTable("InsuranceContracts");
                 });
@@ -276,6 +281,10 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.AnnexContract", b =>
                 {
+                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Customer", "Customer")
+                        .WithMany("AnnexContracts")
+                        .HasForeignKey("CustomerCif");
+
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", "InfoCBNV")
                         .WithMany("AnnexContracts")
                         .HasForeignKey("InfoCBNVTVTTCode");
@@ -283,6 +292,8 @@ namespace BackendServer.Migrations
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", "InsuranceContract")
                         .WithMany("AnnexContracts")
                         .HasForeignKey("InsuranceContractHDBH");
+
+                    b.Navigation("Customer");
 
                     b.Navigation("InfoCBNV");
 
@@ -293,7 +304,7 @@ namespace BackendServer.Migrations
                 {
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Branch", "Branch")
                         .WithMany("InfoCBNVs")
-                        .HasForeignKey("BranchCode1");
+                        .HasForeignKey("BranchCode");
 
                     b.Navigation("Branch");
                 });
@@ -314,7 +325,7 @@ namespace BackendServer.Migrations
 
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Partner", "Partner")
                         .WithMany("InsuranceContracts")
-                        .HasForeignKey("PartnerCode1");
+                        .HasForeignKey("PartnerCode");
 
                     b.Navigation("Collateral");
 
@@ -346,6 +357,8 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Customer", b =>
                 {
+                    b.Navigation("AnnexContracts");
+
                     b.Navigation("InsuranceContracts");
                 });
 

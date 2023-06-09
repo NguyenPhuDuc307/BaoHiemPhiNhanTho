@@ -41,7 +41,7 @@ namespace BackendServer.Models
                 return BadRequest(ModelState);
             }
 
-            var Branch = await _context.Branches.FirstOrDefaultAsync(b => b.BranchCode == InfoCBNV.BranchCode);
+            var Branch = await _context.Branches.FirstOrDefaultAsync(b => b.BranchCode == InfoCBNV.InfoCBNVBranchCode);
             if (Branch == null)
             {
                 return NotFound();
@@ -50,7 +50,7 @@ namespace BackendServer.Models
             {
                 TVTTCode = InfoCBNV.TVTTCode,
                 NameTVTT = InfoCBNV.NameTVTT,
-                BranchCode = InfoCBNV.NameTVTT,
+                InfoCBNVBranchCode = InfoCBNV.InfoCBNVBranchCode,
                 Branch = Branch
             };
             _context.InfoCBNVs.Add(CBNV);

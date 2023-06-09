@@ -12,11 +12,8 @@ public class Customer
     public string? Gender { get; set; }
     public string? CCCD { get; set; }
     public ICollection<InsuranceContract>? InsuranceContracts { set; get; }
+    public ICollection<AnnexContract>? AnnexContracts { set; get; }
 
-    public Customer()
-    {
-        InsuranceContracts = new List<InsuranceContract>(); // Initialize the collection in the constructor
-    }
 }
 
 public class CustomerConfiguration : IEntityTypeConfiguration<Customer>

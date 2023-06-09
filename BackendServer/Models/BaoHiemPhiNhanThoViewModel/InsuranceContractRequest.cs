@@ -18,7 +18,7 @@ namespace BackendServer.Models.HopDongPhuLucVM
         public string? InsuranceBeneficiary { get; set; }
         public string? Cif { get; set; }
         public string? TVTTCode { get; set; }
-        public string? PartnerCode { get; set; }
+        public string? InsurancePartnerCode { get; set; }
         public string? CollateralRef { get; set; }
         public string? CustomerName { get; set; }
 

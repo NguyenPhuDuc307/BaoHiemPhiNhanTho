@@ -46,7 +46,7 @@ namespace BackendServer.Controllers
                 InsuranceBeneficiary = ic.InsuranceBeneficiary,
                 Cif = ic.Cif,
                 TVTTCode = ic.TVTTCode,
-                PartnerCode = ic.PartnerCode,
+                InsurancePartnerCode = ic.InsurancePartnerCode,
                 CollateralRef = ic.CollateralRef,
                 CustomerName = ic.Customer.Name,
             });
@@ -83,7 +83,7 @@ namespace BackendServer.Controllers
                 InsuranceBeneficiary = request.InsuranceBeneficiary,
                 Cif = request.Cif,
                 TVTTCode = request.TVTTCode,
-                PartnerCode = request.PartnerCode,
+                InsurancePartnerCode = request.InsurancePartnerCode,
                 CollateralRef = request.CollateralRef,
                 Customer = customer,
                 InfoCBNV = CBNV

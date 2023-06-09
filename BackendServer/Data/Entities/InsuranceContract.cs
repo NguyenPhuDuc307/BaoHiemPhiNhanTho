@@ -22,7 +22,7 @@ public class InsuranceContract
     public string? TVTTCode { get; set; }
     public InfoCBNV? InfoCBNV { set; get; }
 
-    public string? PartnerCode { get; set; }
+    public string? InsurancePartnerCode { get; set; }
     public Partner? Partner { set; get; }
 
     public string? CollateralRef { get; set; }
@@ -66,6 +66,10 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
         builder.Property(x => x.ToDate)
                .IsRequired();
 
+        builder.Property(x => x.InsurancePartnerCode)
+                       .IsRequired()
+                       .HasMaxLength(50);
+
         builder.Property(x => x.Exception)
                .IsRequired()
                .HasMaxLength(255);
@@ -88,7 +92,7 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
 
         builder.HasOne(x => x.Customer)
               .WithMany(x => x.InsuranceContracts)
-              .HasForeignKey(x => x.Cif).OnDelete(DeleteBehavior.Cascade);
+              .HasForeignKey(x => x.Cif);
 
         builder.HasOne(x => x.InfoCBNV)
               .WithMany(x => x.InsuranceContracts)
@@ -96,7 +100,7 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
 
         builder.HasOne(x => x.Partner)
               .WithMany(x => x.InsuranceContracts)
-              .HasForeignKey(x => x.PartnerCode);
+              .HasForeignKey(x => x.InsurancePartnerCode);
 
         builder.HasOne(x => x.Collateral)
               .WithMany(x => x.InsuranceContracts)

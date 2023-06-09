@@ -19,7 +19,7 @@ public class AnnexContract
     public InfoCBNV? InfoCBNV { set; get; }
     public string? Status { get; set; }
     public string? Cif { get; set; }
-    public Customer? customer { get; set; }
+    public Customer? Customer { set; get; }
 }
 
 public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract>
@@ -61,6 +61,10 @@ public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract
                    .HasForeignKey(x => x.HDBH);
         builder.HasOne(x => x.customer)
               .WithMany(x => x.AnnexContract)
+              .HasForeignKey(x => x.Cif);
+
+        builder.HasOne(x => x.Customer)
+              .WithMany(x => x.AnnexContracts)
               .HasForeignKey(x => x.Cif);
 
         builder.HasOne(x => x.InfoCBNV)

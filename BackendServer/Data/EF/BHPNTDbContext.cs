@@ -11,13 +11,13 @@ public class BHPNTDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AnnexContract>().HasKey(ac => ac.HDPL);
         modelBuilder.Entity<Branch>().HasKey(ac => ac.BranchCode);
-        modelBuilder.Entity<Collateral>().HasKey(ac => ac.Ref);
         modelBuilder.Entity<Customer>().HasKey(ac => ac.Cif);
+        modelBuilder.Entity<Partner>().HasKey(ac => ac.PartnerCode);
+        modelBuilder.Entity<Collateral>().HasKey(ac => ac.Ref);
         modelBuilder.Entity<InfoCBNV>().HasKey(ac => ac.TVTTCode);
         modelBuilder.Entity<InsuranceContract>().HasKey(ac => ac.HDBH);
-        modelBuilder.Entity<Partner>().HasKey(ac => ac.PartnerCode);
+        modelBuilder.Entity<AnnexContract>().HasKey(ac => ac.HDPL);
         modelBuilder.Entity<PaymentPeriod>().HasKey(ac => ac.Id);
     }
 

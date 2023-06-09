@@ -3,6 +3,7 @@ using System;
 using BackendServer.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendServer.Migrations
 {
     [DbContext(typeof(BHPNTDbContext))]
-    partial class BHPNTDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230609034036_Initdata")]
+    partial class Initdata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,9 +71,6 @@ namespace BackendServer.Migrations
                     b.Property<DateTime?>("ToDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("customerCif")
-                        .HasColumnType("text");
-
                     b.HasKey("HDPL");
 
                     b.HasIndex("CustomerCif");
@@ -79,8 +78,6 @@ namespace BackendServer.Migrations
                     b.HasIndex("InfoCBNVTVTTCode");
 
                     b.HasIndex("InsuranceContractHDBH");
-
-                    b.HasIndex("customerCif");
 
                     b.ToTable("AnnexContracts");
                 });
@@ -298,16 +295,11 @@ namespace BackendServer.Migrations
                         .WithMany("AnnexContracts")
                         .HasForeignKey("InsuranceContractHDBH");
 
-                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.Customer", "customer")
-                        .WithMany("AnnexContract")
-                        .HasForeignKey("customerCif");
                     b.Navigation("Customer");
 
                     b.Navigation("InfoCBNV");
 
                     b.Navigation("InsuranceContract");
-
-                    b.Navigation("customer");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.InfoCBNV", b =>
@@ -367,9 +359,8 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Customer", b =>
                 {
-
                     b.Navigation("AnnexContracts");
-                    
+
                     b.Navigation("InsuranceContracts");
                 });
 

@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using BackendServer.Data.EF;
 using BackendServer.Data;
 using System.Text.Json.Serialization;
+using FluentValidation;
+using BackendServer.Models.HopDongPhuLucVM;
+using BackendServer.Validator.InsuranceContract;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -53,6 +57,11 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddTransient<DbInitializer>();
+
+// Fluent Validation
+builder.Services.AddMvc();
+// add fluent validation
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<InsuranceContractRequestValidator>());
 
 builder.Services.AddCors(options =>
 {

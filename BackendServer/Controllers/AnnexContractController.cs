@@ -112,7 +112,7 @@ namespace BackendServer.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPost("CreateAnnexContract")]
         public async Task<IActionResult> CreateInsurance([FromBody] AnnexContractNewRequest request)
         {
             try
@@ -171,7 +171,7 @@ namespace BackendServer.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("EditAnnexContract")]
         public async Task<IActionResult> EditInsurance(string HDPL, [FromBody] AnnexContractNewRequest request)
         {
             try

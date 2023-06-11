@@ -150,7 +150,7 @@ namespace BackendServer.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPost("CreateInsuranceContrac")]
         public async Task<IActionResult> CreateInsurance([FromBody] InsuranceContractNewRequest request)
         {
             try
@@ -231,7 +231,7 @@ namespace BackendServer.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("EditInsuranceContrac")]
         public async Task<IActionResult> EditInsurance(string HDBH, [FromBody] InsuranceContractNewRequest request)
         {
             try

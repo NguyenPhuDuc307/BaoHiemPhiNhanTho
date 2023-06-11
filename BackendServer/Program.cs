@@ -1,13 +1,10 @@
 ﻿using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
 using Microsoft.EntityFrameworkCore;
 using BackendServer.Data.EF;
 using BackendServer.Data;
 using System.Text.Json.Serialization;
-using FluentValidation;
-using BackendServer.Models.HopDongPhuLucVM;
 using BackendServer.Validator.InsuranceContract;
 using FluentValidation.AspNetCore;
 
@@ -61,7 +58,7 @@ builder.Services.AddTransient<DbInitializer>();
 // Fluent Validation
 builder.Services.AddMvc();
 // add fluent validation
-builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<InsuranceContractRequestValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<InsuranceContractValidator>());
 
 builder.Services.AddCors(options =>
 {
@@ -99,6 +96,8 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddScoped<AuthorizeCustomFilter>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -118,6 +117,7 @@ app.UseAuthentication();
 app.UseRouting();
 
 app.UseAuthorization();
+
 
 app.UseSwagger();
 

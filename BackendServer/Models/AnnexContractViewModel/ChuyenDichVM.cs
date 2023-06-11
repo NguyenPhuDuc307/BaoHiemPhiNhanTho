@@ -1,4 +1,4 @@
-﻿namespace BackendServer.Models.HopDongPhuLucVM
+﻿namespace BackendServer.Models.AnnexContractViewModel
 {
     public class ChuyenDichVM
     {

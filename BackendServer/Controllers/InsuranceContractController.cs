@@ -1,7 +1,8 @@
 ﻿using BackendServer.Data.EF;
-using BackendServer.Models.HopDongPhuLucVM;
+using BackendServer.Models.InsuranceContractViewModel;
+using BackendServer.Validator.InsuranceContract;
 using BaoHiemPhiNhanTho.BackendServer.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -10,6 +11,7 @@ namespace BackendServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class InsuranceContractController : ControllerBase
     {
         private readonly ILogger<InsuranceContractController> _logger;
@@ -24,82 +26,290 @@ namespace BackendServer.Controllers
         [HttpGet("GetList")]
         public async Task<ApiResult<PagedList<InsuranceContractRequest>>> Index(int page = 1, int pageSize = 10)
         {
-            var totalCount = await _context.InsuranceContracts.CountAsync();
-            var pagedData = await _context.InsuranceContracts.Include(c => c.Customer)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var pagedDataRequest = pagedData.Select(ic => new InsuranceContractRequest
+            try
             {
-                HDBH = ic.HDBH,
-                NewOrRenewed = ic.NewOrRenewed,
-                STBH = ic.STBH,
-                InsuranceFee = ic.InsuranceFee,
-                NumberOfPayments = ic.NumberOfPayments,
-                FromDate = ic.FromDate,
-                ToDate = ic.ToDate,
-                Exception = ic.Exception,
-                Beneficiaries = ic.Beneficiaries,
-                InsuranceType = ic.InsuranceType,
-                OtherInsuranceType = ic.OtherInsuranceType,
-                InsuranceBeneficiary = ic.InsuranceBeneficiary,
-                Cif = ic.Cif,
-                TVTTCode = ic.TVTTCode,
-                InsurancePartnerCode = ic.InsurancePartnerCode,
-                CollateralRef = ic.CollateralRef,
-                CustomerName = ic.Customer.Name,
-            });
+                var totalCount = await _context.InsuranceContracts.CountAsync();
+                var pagedData = await _context.InsuranceContracts
+                    .Include(c => c.Customer)
+                    .Include(c => c.Collateral)
+                    .Include(c => c.InfoCBNV)
+                        .ThenInclude(c => c.Branch)
+                    .Include(c => c.AnnexContract)
+                    .Include(c => c.Partner)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
 
-            var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
-            return new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedList);
+                var pagedDataRequest = pagedData.Select(ic => new InsuranceContractRequest
+                {
+                    HDBH = ic.HDBH,
+                    NewOrRenewed = ic.NewOrRenewed,
+                    STBH = ic.STBH,
+                    InsuranceFee = ic.InsuranceFee,
+                    NumberOfPayments = ic.NumberOfPayments,
+                    FromDate = ic.FromDate,
+                    ToDate = ic.ToDate,
+                    Exception = ic.Exception,
+                    Beneficiaries = ic.Beneficiaries,
+                    InsuranceType = ic.InsuranceType,
+                    OtherInsuranceType = ic.OtherInsuranceType,
+                    InsuranceBeneficiary = ic.InsuranceBeneficiary,
+                    Cif = ic.Cif,
+                    TVTTCode = ic.TVTTCode,
+                    InsurancePartnerCode = ic.InsurancePartnerCode,
+                    CustomerName = ic.Customer.Name,
+                    CustomerType = ic.Customer.CustomerType,
+                    CCCD = ic.Customer.CCCD,
+                    Status = ic.Status,
+                    PartnerName = ic.Partner.Name,
+                    StatusCollateral = ic.Collateral.StatusCollateral,
+                    CollateralRef = ic.Collateral.Ref,
+                    CollateralType = ic.Collateral.PropertyType,
+                    ValueCollateral = ic.Collateral.ValueCollateral,
+                    AddressCollateral = ic.Collateral.AddressCollateral,
+                    Relationship = ic.Collateral.Relationship,
+                    NameTVTT = ic.InfoCBNV.NameTVTT,
+                    BranchName = ic.InfoCBNV.Branch.BranchName
+                });
+
+                var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
+                return new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedList);
+
+            }
+            catch (Exception ex)
+            {
+                return new ApiErrorResult<PagedList<InsuranceContractRequest>>();
+            }
+
+        }
+
+
+
+        [HttpGet("GetSingleInsurance")]
+        public async Task<IActionResult> GetOneInsurance(string HDBH)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var InsuranceContract = await _context.InsuranceContracts
+                .Include(c => c.Customer)
+                .Include(c => c.Collateral)
+                .Include(c => c.InfoCBNV)
+                    .ThenInclude(c => c.Branch)
+                .Include(c => c.AnnexContract)
+                .Include(c => c.Partner)
+                .FirstOrDefaultAsync(x => x.HDBH == HDBH);
+
+                if (InsuranceContract != null)
+                {
+                    var InsuranceRequset = new InsuranceContractRequest
+                    {
+                        HDBH = InsuranceContract.HDBH,
+                        NewOrRenewed = InsuranceContract.NewOrRenewed,
+                        STBH = InsuranceContract.STBH,
+                        InsuranceFee = InsuranceContract.InsuranceFee,
+                        NumberOfPayments = InsuranceContract.NumberOfPayments,
+                        FromDate = InsuranceContract.FromDate,
+                        ToDate = InsuranceContract.ToDate,
+                        Exception = InsuranceContract.Exception,
+                        Beneficiaries = InsuranceContract.Beneficiaries,
+                        InsuranceType = InsuranceContract.InsuranceType,
+                        OtherInsuranceType = InsuranceContract.OtherInsuranceType,
+                        InsuranceBeneficiary = InsuranceContract.InsuranceBeneficiary,
+                        Cif = InsuranceContract.Cif,
+                        TVTTCode = InsuranceContract.TVTTCode,
+                        InsurancePartnerCode = InsuranceContract.InsurancePartnerCode,
+                        CustomerName = InsuranceContract.Customer.Name,
+                        CustomerType = InsuranceContract.Customer.CustomerType,
+                        CCCD = InsuranceContract.Customer.CCCD,
+                        Status = InsuranceContract.Status,
+                        PartnerName = InsuranceContract.Partner.Name,
+                        StatusCollateral = InsuranceContract.Collateral.StatusCollateral,
+                        CollateralRef = InsuranceContract.Collateral.Ref,
+                        CollateralType = InsuranceContract.Collateral.PropertyType,
+                        ValueCollateral = InsuranceContract.Collateral.ValueCollateral,
+                        AddressCollateral = InsuranceContract.Collateral.AddressCollateral,
+                        Relationship = InsuranceContract.Collateral.Relationship,
+                        NameTVTT = InsuranceContract.InfoCBNV.NameTVTT,
+                        BranchName = InsuranceContract.InfoCBNV.Branch.BranchName
+                    };
+                    return Ok(InsuranceRequset);
+                }
+
+                return BadRequest("InsuranceContract Not Found");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateInsurance(InsuranceContractRequest request)
+        public async Task<IActionResult> CreateInsurance([FromBody] InsuranceContractNewRequest request)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var validator = new InsuranceContractValidator();
+                var validationResult = validator.Validate(request);
+                if (!validationResult.IsValid)
+                {
+                    return BadRequest(validationResult.Errors);
+                }
+
+                var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
+                if (customer == null)
+                {
+                    return BadRequest("Customer not found");
+                }
+
+                var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
+                if (CBNV == null)
+                {
+                    return BadRequest("CBNV not found");
+                }
+
+                var partner = await _context.Partners.FirstOrDefaultAsync(x => x.PartnerCode == request.InsurancePartnerCode);
+                if (partner == null)
+                {
+                    return BadRequest("Partner not found");
+                }
+
+                var collateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.CollateralRef);
+                if (collateral == null)
+                {
+                    return BadRequest("Collateral not found");
+                }
+
+                var insurance = new InsuranceContract()
+                {
+                    HDBH = request.HDBH,
+                    NewOrRenewed = request.NewOrRenewed,
+                    STBH = request.STBH,
+                    InsuranceFee = request.InsuranceFee,
+                    NumberOfPayments = request.NumberOfPayments,
+                    FromDate = request.FromDate,
+                    ToDate = request.ToDate,
+                    Exception = request.Exception,
+                    Beneficiaries = request.Beneficiaries,
+                    InsuranceType = request.InsuranceType,
+                    OtherInsuranceType = request.OtherInsuranceType,
+                    InsuranceBeneficiary = request.InsuranceBeneficiary,
+                    Status = request.Status,
+                    Cif = request.Cif,
+                    TVTTCode = request.TVTTCode,
+                    InsurancePartnerCode = request.InsurancePartnerCode,
+                    Ref = request.CollateralRef,
+                    Customer = customer,
+                    InfoCBNV = CBNV,
+                    Partner = partner,
+                    Collateral = collateral
+                };
+
+                _context.InsuranceContracts.Add(insurance);
+                int result = await _context.SaveChangesAsync();
+                if (result <= 0)
+                {
+                    return BadRequest("Something went wrong, can't add it");
+                }
+
+                return Ok(insurance);
             }
-
-            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
-
-            var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
-
-            var insurance = new InsuranceContract()
+            catch (Exception ex)
             {
-                HDBH = request.HDBH,
-                NewOrRenewed = request.NewOrRenewed,
-                STBH = request.STBH,
-                InsuranceFee = request.InsuranceFee,
-                NumberOfPayments = request.NumberOfPayments,
-                FromDate = request.FromDate,
-                ToDate = request.ToDate,
-                Exception = request.Exception,
-                Beneficiaries = request.Beneficiaries,
-                InsuranceType = request.InsuranceType,
-                OtherInsuranceType = request.OtherInsuranceType,
-                InsuranceBeneficiary = request.InsuranceBeneficiary,
-                Cif = request.Cif,
-                TVTTCode = request.TVTTCode,
-                InsurancePartnerCode = request.InsurancePartnerCode,
-                CollateralRef = request.CollateralRef,
-                Customer = customer,
-                InfoCBNV = CBNV
-            };
-
-            _context.InsuranceContracts.Add(insurance);
-            await _context.SaveChangesAsync();
-
-            return Ok(insurance);
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpGet("GetListPartner")]
-        public async Task<IActionResult> GetListPartner(int productPage = 1, int pageSize = 10)
+        [HttpPut]
+        public async Task<IActionResult> EditInsurance(string HDBH, [FromBody] InsuranceContractNewRequest request)
         {
-            var partner = await _context.Partners.Skip((productPage - 1) * pageSize).Take(pageSize).ToListAsync();
-            return Ok(partner);
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var insurance = await _context.InsuranceContracts.Include(c => c.Customer)
+                    .Include(c => c.Collateral)
+                    .Include(c => c.InfoCBNV)
+                        .ThenInclude(c => c.Branch)
+                    .Include(c => c.AnnexContract)
+                    .Include(c => c.Partner)
+                    .FirstOrDefaultAsync(x => x.HDBH == HDBH);
+                if (insurance == null)
+                {
+                    return BadRequest("insurance not found");
+                }
+                var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
+                if (customer == null)
+                {
+                    return BadRequest("Customer not found");
+                }
+
+                var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
+                if (CBNV == null)
+                {
+                    return BadRequest("CBNV not found");
+                }
+
+                var partner = await _context.Partners.FirstOrDefaultAsync(x => x.PartnerCode == request.InsurancePartnerCode);
+                if (partner == null)
+                {
+                    return BadRequest("Partner not found");
+                }
+
+                var collateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.CollateralRef);
+                if (collateral == null)
+                {
+                    return BadRequest("Collateral not found");
+                }
+
+                insurance.HDBH = request.HDBH;
+                insurance.NewOrRenewed = request.NewOrRenewed;
+                insurance.STBH = request.STBH;
+                insurance.InsuranceFee = request.InsuranceFee;
+                insurance.NumberOfPayments = request.NumberOfPayments;
+                insurance.FromDate = request.FromDate;
+                insurance.ToDate = request.ToDate;
+                insurance.Exception = request.Exception;
+                insurance.Beneficiaries = request.Beneficiaries;
+                insurance.InsuranceType = request.InsuranceType;
+                insurance.OtherInsuranceType = request.OtherInsuranceType;
+                insurance.InsuranceBeneficiary = request.InsuranceBeneficiary;
+                insurance.Status = request.Status;
+                insurance.Cif = request.Cif;
+                insurance.TVTTCode = request.TVTTCode;
+                insurance.InsurancePartnerCode = request.InsurancePartnerCode;
+                insurance.Ref = request.CollateralRef;
+                insurance.Customer = customer;
+                insurance.InfoCBNV = CBNV;
+                insurance.Partner = partner;
+                insurance.Collateral = collateral;
+
+                _context.InsuranceContracts.Update(insurance);
+                int result = await _context.SaveChangesAsync();
+                if (result <= 0)
+                {
+                    return BadRequest("Something went wrongHDBH, can't add it");
+                }
+
+                return Ok(insurance);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

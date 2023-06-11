@@ -19,6 +19,17 @@ public class BHPNTDbContext : DbContext
         modelBuilder.Entity<InsuranceContract>().HasKey(ac => ac.HDBH);
         modelBuilder.Entity<AnnexContract>().HasKey(ac => ac.HDPL);
         modelBuilder.Entity<PaymentPeriod>().HasKey(ac => ac.Id);
+
+        //Cấu hình 1:1
+        modelBuilder.Entity<InsuranceContract>()
+            .HasOne<Collateral>(s => s.Collateral)
+            .WithOne(ad => ad.InsuranceContract)
+            .HasForeignKey<Collateral>(ad => ad.HDBH);
+
+        modelBuilder.Entity<InsuranceContract>()
+            .HasOne<AnnexContract>(s => s.AnnexContract)
+            .WithOne(ad => ad.InsuranceContract)
+            .HasForeignKey<AnnexContract>(ad => ad.HDBH);
     }
 
     public DbSet<AnnexContract> AnnexContracts { get; set; }

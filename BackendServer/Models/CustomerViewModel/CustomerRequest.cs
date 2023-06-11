@@ -1,6 +1,6 @@
 using BackendServer.Data.Enums;
 
-namespace BackendServer.Models.HopDongPhuLucVM
+namespace BackendServer.Models.CustomerViewModel
 {
     public class CustomerRequest
     {

@@ -19,5 +19,4 @@ namespace Models
             PageSize = pageSize;
         }
     }
-
 }

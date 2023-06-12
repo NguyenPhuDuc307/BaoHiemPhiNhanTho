@@ -11,7 +11,7 @@ namespace BackendServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class AnnexContractController : ControllerBase
     {
         private readonly ILogger<AnnexContractController> _logger;

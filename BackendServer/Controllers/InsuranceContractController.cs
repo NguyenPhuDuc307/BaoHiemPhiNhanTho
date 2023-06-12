@@ -11,7 +11,7 @@ namespace BackendServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class InsuranceContractController : ControllerBase
     {
         private readonly ILogger<InsuranceContractController> _logger;

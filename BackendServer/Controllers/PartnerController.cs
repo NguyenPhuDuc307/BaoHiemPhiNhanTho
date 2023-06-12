@@ -8,7 +8,7 @@ namespace BackendServer.Models
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
 
     public class PartnerController : ControllerBase
     {

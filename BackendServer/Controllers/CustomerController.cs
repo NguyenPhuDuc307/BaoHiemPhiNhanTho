@@ -9,7 +9,7 @@ namespace BackendServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly ILogger<CustomerController> _logger;

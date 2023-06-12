@@ -27,9 +27,7 @@ namespace BackendServer.Controllers
         {
             try
             {
-                var customer = await _context.Customers
-                .Include(c => c.InsuranceContracts)
-                .FirstOrDefaultAsync(c => c.Cif == cif);
+                var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Cif == cif);
 
                 if (customer != null)
                 {

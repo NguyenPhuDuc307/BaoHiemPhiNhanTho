@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace BackendServer.validator.Customer
 {
-    public class CustomerValidator : AbstractValidator<CustomerRequest>
+    public class CustomerValidator : AbstractValidator<Customer>
     {
         public CustomerValidator()
         {

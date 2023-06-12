@@ -24,9 +24,7 @@ namespace BackendServer.Controllers
         [HttpGet("get/Customer")]
         public async Task<IActionResult> GetOneCustomer(string cif)
         {
-            try
-            {
-                var customer = await _context.Customers
+            var customer = await _context.Customers
                 .Include(c => c.InsuranceContracts)
                 .FirstOrDefaultAsync(c => c.Cif == cif);
 
@@ -36,7 +34,6 @@ namespace BackendServer.Controllers
                 }
 
                 return BadRequest("Customer not found");
-
             }
             catch (Exception ex)
             {

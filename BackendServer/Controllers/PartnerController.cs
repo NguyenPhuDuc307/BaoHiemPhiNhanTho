@@ -21,6 +21,7 @@ namespace BackendServer.Models
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet("get/Partners")]
         public async Task<IActionResult> GetCBNV()
         {
@@ -44,6 +45,7 @@ namespace BackendServer.Models
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("get/SinglePartners")]
         public async Task<IActionResult> GetOneCBNV(string PartnerCode)
         {

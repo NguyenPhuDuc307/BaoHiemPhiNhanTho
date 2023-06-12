@@ -27,7 +27,7 @@ public class PaymentPeriodConfiguration : IEntityTypeConfiguration<PaymentPeriod
                .IsRequired();
 
         builder.Property(x => x.Money)
-               .IsRequired().HasColumnType("decimal(18,2)");
+               .IsRequired();
 
         builder.Property(x => x.HDBH)
        .IsRequired()

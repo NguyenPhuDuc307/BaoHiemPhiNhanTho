@@ -32,7 +32,7 @@ public class CollateralConfiguration : IEntityTypeConfiguration<Collateral>
               .HasMaxLength(50);
 
         builder.Property(x => x.ValueCollateral)
-              .IsRequired().HasColumnType("decimal(18,2)");
+              .IsRequired();
 
         builder.Property(x => x.AddressCollateral)
               .IsRequired()

@@ -32,10 +32,10 @@ public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract
                .HasMaxLength(50);
 
         builder.Property(x => x.AdditionalAnnexFee)
-               .IsRequired().HasColumnType("decimal(18,2)");
+               .IsRequired();
 
         builder.Property(x => x.AnnexFeeVAT)
-               .IsRequired().HasColumnType("decimal(18,2)");
+               .IsRequired();
 
         builder.Property(x => x.FromDate)
                .IsRequired();

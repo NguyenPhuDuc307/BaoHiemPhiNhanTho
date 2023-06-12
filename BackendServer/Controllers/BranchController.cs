@@ -46,6 +46,7 @@ namespace BackendServer.Models
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("get/SingleBranch")]
         public async Task<IActionResult> GetOneCBNV(string BranchCode)
         {

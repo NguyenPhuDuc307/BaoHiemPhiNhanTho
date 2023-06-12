@@ -10,7 +10,7 @@ namespace BackendServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class PaymentPeriodController : ControllerBase
     {
         private readonly ILogger<PaymentPeriodController> _logger;

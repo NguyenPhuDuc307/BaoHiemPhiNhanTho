@@ -1,4 +1,5 @@
 using BackendServer.Data.EF;
+using BackendServer.Models.CBNVViewModel;
 using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace BackendServer.Models
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
 
     public class CBNVController : ControllerBase
     {
@@ -28,11 +29,21 @@ namespace BackendServer.Models
         {
             try
             {
-                var infoCBNV = await _context.InfoCBNVs.FindAsync(TVTT);
+                var infoCBNV = await _context.InfoCBNVs
+                    .Include(c => c.Branch)
+                    .FirstOrDefaultAsync(c => c.InfoCBNVBranchCode == c.Branch.BranchCode);
+
 
                 if (infoCBNV != null)
                 {
-                    return Ok(infoCBNV);
+                    var result = new CBNVRequest
+                    {
+                        TVTTCode = infoCBNV.TVTTCode,
+                        NameTVTT = infoCBNV.NameTVTT,
+                        BranchCode = infoCBNV.InfoCBNVBranchCode,
+                        BranchName = infoCBNV.Branch.BranchName,
+                    };
+                    return Ok(result);
                 }
 
                 return BadRequest("infoCBNV not found");

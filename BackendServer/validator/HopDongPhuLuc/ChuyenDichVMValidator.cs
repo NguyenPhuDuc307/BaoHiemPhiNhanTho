@@ -1,4 +1,4 @@
-﻿using BackendServer.Models.HopDongPhuLucVM;
+﻿using BackendServer.Models.AnnexContractViewModel;
 using FluentValidation;
 
 namespace BackendServer.validator.HopDongPhuLuc

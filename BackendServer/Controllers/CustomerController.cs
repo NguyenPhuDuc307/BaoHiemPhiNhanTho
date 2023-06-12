@@ -24,7 +24,9 @@ namespace BackendServer.Controllers
         [HttpGet("get/Customer")]
         public async Task<IActionResult> GetOneCustomer(string cif)
         {
-            var customer = await _context.Customers
+            try
+            {
+                var customer = await _context.Customers
                 .Include(c => c.InsuranceContracts)
                 .FirstOrDefaultAsync(c => c.Cif == cif);
 

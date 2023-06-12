@@ -40,8 +40,7 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
         builder.HasKey(x => x.HDBH);
 
         builder.Property(x => x.HDBH)
-               .IsRequired()
-               .HasMaxLength(50);
+               .IsRequired();
 
         builder.Property(x => x.NewOrRenewed)
                .IsRequired();
@@ -62,48 +61,37 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
                .IsRequired();
 
         builder.Property(x => x.InsurancePartnerCode)
-              .IsRequired()
-              .HasMaxLength(50);
+              .IsRequired();
 
         builder.Property(x => x.Exception)
-               .IsRequired()
-               .HasMaxLength(255);
+               .IsRequired();
 
         builder.Property(x => x.Beneficiaries)
-               .IsRequired()
-               .HasMaxLength(50);
+               .IsRequired();
 
         builder.Property(x => x.InsuranceType)
-               .IsRequired()
-               .HasMaxLength(50);
+               .IsRequired();
 
         builder.Property(x => x.OtherInsuranceType)
-              .IsRequired()
-              .HasMaxLength(50);
+              .IsRequired();
 
         builder.Property(x => x.Status)
-              .IsRequired()
-              .HasMaxLength(50);
+              .IsRequired();
 
         builder.Property(x => x.InsuranceBeneficiary)
-               .IsRequired()
-               .HasMaxLength(50);
+               .IsRequired();
 
         builder.Property(x => x.Cif)
-        .IsRequired()
-        .HasMaxLength(50);
+        .IsRequired();
 
         builder.Property(x => x.TVTTCode)
-       .IsRequired()
-       .HasMaxLength(50);
+       .IsRequired();
 
         builder.Property(x => x.Ref)
-        .IsRequired()
-        .HasMaxLength(50);
+        .IsRequired();
 
         builder.Property(x => x.HDPL)
-        .IsRequired()
-        .HasMaxLength(50);
+        .IsRequired();
 
         builder.HasOne(x => x.Customer)
               .WithMany(x => x.InsuranceContracts)

@@ -23,6 +23,7 @@ namespace BackendServer.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet("GetList")]
         public async Task<ApiResult<PagedList<InsuranceContractRequest>>> Index(int page = 1, int pageSize = 10)
         {
@@ -84,7 +85,7 @@ namespace BackendServer.Controllers
         }
 
 
-
+        [AllowAnonymous]
         [HttpGet("GetSingleInsurance")]
         public async Task<IActionResult> GetOneInsurance(string HDBH)
         {
@@ -149,7 +150,7 @@ namespace BackendServer.Controllers
             }
 
         }
-
+        [AllowAnonymous]
         [HttpPost("CreateInsuranceContrac")]
         public async Task<IActionResult> CreateInsurance([FromBody] InsuranceContractNewRequest request)
         {
@@ -231,6 +232,7 @@ namespace BackendServer.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPut("EditInsuranceContrac")]
         public async Task<IActionResult> EditInsurance(string HDBH, [FromBody] InsuranceContractNewRequest request)
         {

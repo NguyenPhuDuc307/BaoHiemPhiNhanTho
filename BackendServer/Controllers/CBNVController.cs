@@ -22,6 +22,7 @@ namespace BackendServer.Models
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet("get/CBNV")]
         public async Task<IActionResult> GetOneCBNV(string TVTT)
         {

@@ -21,6 +21,7 @@ namespace BackendServer.Models
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet("get/Collaterals")]
         public async Task<IActionResult> GetCollateral()
         {
@@ -49,6 +50,7 @@ namespace BackendServer.Models
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("get/SingleCollateral")]
         public async Task<IActionResult> GetOneCollateral(string Ref)
         {

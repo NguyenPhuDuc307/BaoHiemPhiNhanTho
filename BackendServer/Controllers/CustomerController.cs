@@ -21,6 +21,7 @@ namespace BackendServer.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet("get/Customer")]
         public async Task<IActionResult> GetOneCustomer(string cif)
         {

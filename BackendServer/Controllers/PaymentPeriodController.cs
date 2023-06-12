@@ -22,6 +22,7 @@ namespace BackendServer.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpPost("CreateSinglePaymentPeriod")]
         [ServiceFilter(typeof(AuthorizeCustomFilter))]
         public async Task<IActionResult> CreatePaymentPeriod([FromBody] PaymentPeriodRequest request)
@@ -57,6 +58,7 @@ namespace BackendServer.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("CreateMultiPaymentPeriod")]
         public async Task<IActionResult> CreateMultiPaymentPeriods([FromBody] List<PaymentPeriodRequest> requests)
         {
@@ -113,6 +115,7 @@ namespace BackendServer.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("get/PaymentPeriod")]
         public async Task<IActionResult> GetPaymentPeriods(string HDBH)
         {

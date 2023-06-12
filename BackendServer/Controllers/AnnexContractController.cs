@@ -23,6 +23,7 @@ namespace BackendServer.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet("GetList")]
         public async Task<ApiResult<PagedList<AnnexContractRequest>>> Index(int page = 1, int pageSize = 10)
         {
@@ -65,7 +66,7 @@ namespace BackendServer.Controllers
         }
 
 
-
+        [AllowAnonymous]
         [HttpGet("GetSingleAnnex")]
         public async Task<IActionResult> GetOneInsurance(string HDPL)
         {
@@ -111,7 +112,7 @@ namespace BackendServer.Controllers
             }
 
         }
-
+        [AllowAnonymous]
         [HttpPost("CreateAnnexContract")]
         public async Task<IActionResult> CreateInsurance([FromBody] AnnexContractNewRequest request)
         {
@@ -170,7 +171,7 @@ namespace BackendServer.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [AllowAnonymous]
         [HttpPut("EditAnnexContract")]
         public async Task<IActionResult> EditInsurance(string HDPL, [FromBody] AnnexContractNewRequest request)
         {

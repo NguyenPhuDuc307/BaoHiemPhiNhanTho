@@ -10,6 +10,9 @@ using FluentValidation;
 using BackendServer.Models.HopDongPhuLucVM;
 using BackendServer.Validator.InsuranceContract;
 using FluentValidation.AspNetCore;
+using BackendServer.validator.CanBoNhanVien;
+using BackendServer.validator.HopDongPhuLuc;
+using BackendServer.validator.KhachHang;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -62,6 +65,11 @@ builder.Services.AddTransient<DbInitializer>();
 builder.Services.AddMvc();
 // add fluent validation
 builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<InsuranceContractRequestValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CBNVValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AnnexContractValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ChuyenDichVMValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<InsuranceContractRequestValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CustomerValidator>());
 
 builder.Services.AddCors(options =>
 {

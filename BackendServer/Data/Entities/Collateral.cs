@@ -11,7 +11,8 @@ public class Collateral
     public string? AddressCollateral { get; set; }
     public string? Relationship { get; set; }
     public string? PropertyType { get; set; }
-    public ICollection<InsuranceContract>? InsuranceContracts { set; get; }
+    public string? HDBH { get; set; }
+    public InsuranceContract? InsuranceContract { set; get; }
 }
 
 public class CollateralConfiguration : IEntityTypeConfiguration<Collateral>
@@ -44,5 +45,9 @@ public class CollateralConfiguration : IEntityTypeConfiguration<Collateral>
         builder.Property(x => x.PropertyType)
               .IsRequired()
               .HasMaxLength(50);
+
+        builder.Property(x => x.HDBH)
+        .IsRequired()
+        .HasMaxLength(50);
     }
 }

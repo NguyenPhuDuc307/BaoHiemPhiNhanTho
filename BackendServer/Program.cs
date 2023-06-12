@@ -1,13 +1,10 @@
 ﻿using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
 using Microsoft.EntityFrameworkCore;
 using BackendServer.Data.EF;
 using BackendServer.Data;
 using System.Text.Json.Serialization;
-using FluentValidation;
-using BackendServer.Models.HopDongPhuLucVM;
 using BackendServer.Validator.InsuranceContract;
 using FluentValidation.AspNetCore;
 using BackendServer.validator.CanBoNhanVien;
@@ -70,6 +67,7 @@ builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidator
 builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ChuyenDichVMValidator>());
 builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<InsuranceContractRequestValidator>());
 builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CustomerValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<InsuranceContractValidator>());
 
 builder.Services.AddCors(options =>
 {
@@ -106,6 +104,8 @@ builder.Services.AddAuthentication(opt =>
         IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes)
     };
 });
+
+builder.Services.AddScoped<AuthorizeCustomFilter>();
 
 var app = builder.Build();
 

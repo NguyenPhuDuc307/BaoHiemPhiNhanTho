@@ -1,5 +1,4 @@
-﻿using BackendServer.Models.HopDongPhuLucVM;
-using BaoHiemPhiNhanTho.BackendServer.Models;
+﻿using BaoHiemPhiNhanTho.BackendServer.Models;
 using FluentValidation;
 
 namespace BackendServer.validator.CanBoNhanVien

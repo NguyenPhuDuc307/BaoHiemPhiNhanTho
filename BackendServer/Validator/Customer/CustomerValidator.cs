@@ -1,7 +1,7 @@
-﻿using BaoHiemPhiNhanTho.BackendServer.Models;
+﻿using BackendServer.Models.CustomerViewModel;
 using FluentValidation;
 
-namespace BackendServer.validator.KhachHang
+namespace BackendServer.validator.Customer
 {
     public class CustomerValidator : AbstractValidator<Customer>
     {

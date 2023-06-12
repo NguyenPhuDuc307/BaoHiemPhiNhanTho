@@ -1,11 +1,11 @@
-﻿using BackendServer.Models.HopDongPhuLucVM;
+﻿using BackendServer.Models.InsuranceContractViewModel;
 using FluentValidation;
 
 namespace BackendServer.Validator.InsuranceContract
 {
-    public class InsuranceContractRequestValidator : AbstractValidator<InsuranceContractRequest>
+    public class InsuranceContractValidator : AbstractValidator<InsuranceContractNewRequest>
     {
-        public InsuranceContractRequestValidator()
+        public InsuranceContractValidator()
         {
             RuleFor(x => x.HDBH).NotEmpty().WithMessage("Hợp đồng bảo hiểm không được để trống");
             RuleFor(x => x.NewOrRenewed).NotEmpty().WithMessage("Hợp đồng mới hay gia hạn không được để trống");
@@ -23,7 +23,6 @@ namespace BackendServer.Validator.InsuranceContract
             RuleFor(x => x.TVTTCode).NotEmpty().WithMessage("Trường mã TVTT không được để trống");
             RuleFor(x => x.InsurancePartnerCode).NotEmpty().WithMessage("Trường mã đối tác bảo hiểm không được để trống");
             RuleFor(x => x.CollateralRef).NotEmpty().WithMessage("Trường tham chiếu tài sản không được để trống");
-            RuleFor(x => x.CustomerName).NotEmpty().WithMessage("Trường tên khách hàng không được để trống");
         }
     }
 }

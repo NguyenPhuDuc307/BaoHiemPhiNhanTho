@@ -17,18 +17,17 @@ public class InsuranceContract
     public string? InsuranceType { get; set; }
     public string? OtherInsuranceType { get; set; }
     public string? InsuranceBeneficiary { get; set; }
+    public string? Status { get; set; }
     public string? Cif { get; set; }
     public Customer? Customer { set; get; }
     public string? TVTTCode { get; set; }
     public InfoCBNV? InfoCBNV { set; get; }
-
     public string? InsurancePartnerCode { get; set; }
     public Partner? Partner { set; get; }
-
-    public string? CollateralRef { get; set; }
+    public string? Ref { get; set; }
     public Collateral? Collateral { set; get; }
-
-    public ICollection<AnnexContract>? AnnexContracts { set; get; }
+    public string? HDPL { set; get; }
+    public AnnexContract? AnnexContract { set; get; }
     public ICollection<PaymentPeriod>? PaymentPeriods { set; get; }
 }
 
@@ -43,10 +42,6 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
         builder.Property(x => x.HDBH)
                .IsRequired()
                .HasMaxLength(50);
-
-        builder.Property(x => x.CollateralRef)
-              .IsRequired()
-              .HasMaxLength(50);
 
         builder.Property(x => x.NewOrRenewed)
                .IsRequired();
@@ -67,8 +62,8 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
                .IsRequired();
 
         builder.Property(x => x.InsurancePartnerCode)
-                       .IsRequired()
-                       .HasMaxLength(50);
+              .IsRequired()
+              .HasMaxLength(50);
 
         builder.Property(x => x.Exception)
                .IsRequired()
@@ -86,9 +81,29 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
               .IsRequired()
               .HasMaxLength(50);
 
+        builder.Property(x => x.Status)
+              .IsRequired()
+              .HasMaxLength(50);
+
         builder.Property(x => x.InsuranceBeneficiary)
                .IsRequired()
                .HasMaxLength(50);
+
+        builder.Property(x => x.Cif)
+        .IsRequired()
+        .HasMaxLength(50);
+
+        builder.Property(x => x.TVTTCode)
+       .IsRequired()
+       .HasMaxLength(50);
+
+        builder.Property(x => x.Ref)
+        .IsRequired()
+        .HasMaxLength(50);
+
+        builder.Property(x => x.HDPL)
+        .IsRequired()
+        .HasMaxLength(50);
 
         builder.HasOne(x => x.Customer)
               .WithMany(x => x.InsuranceContracts)
@@ -101,9 +116,5 @@ public class InsuranceContractConfiguration : IEntityTypeConfiguration<Insurance
         builder.HasOne(x => x.Partner)
               .WithMany(x => x.InsuranceContracts)
               .HasForeignKey(x => x.InsurancePartnerCode);
-
-        builder.HasOne(x => x.Collateral)
-              .WithMany(x => x.InsuranceContracts)
-              .HasForeignKey(x => x.CollateralRef);
     }
 }

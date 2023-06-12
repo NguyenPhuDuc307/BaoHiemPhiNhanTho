@@ -1,7 +1,7 @@
 namespace BackendServer.Data.Enums;
 
-public enum CustomerType
+public class CustomerType
 {
-    KHDN = 0,
-    KHCN = 1,
+    public static string CustomerType1 = "KHDN";
+    public static string CustomerType2 = "KHCN";
 }

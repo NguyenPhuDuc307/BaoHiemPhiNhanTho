@@ -7,11 +7,10 @@ public class InfoCBNV
 {
     public string? TVTTCode { get; set; }
     public string? NameTVTT { get; set; }
+    public string? InfoCBNVBranchCode { get; set; }
+    public Branch? Branch { set; get; }
     public ICollection<InsuranceContract>? InsuranceContracts { set; get; }
     public ICollection<AnnexContract>? AnnexContracts { set; get; }
-    public string? InfoCBNVBranchCode { get; set; }
-
-    public Branch? Branch { set; get; }
 }
 
 public class InfoCBNVConfiguration : IEntityTypeConfiguration<InfoCBNV>

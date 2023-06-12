@@ -8,11 +8,10 @@ public class Customer
 {
     public string? Cif { get; set; }
     public string? Name { get; set; }
-    public CustomerType CustomerType { get; set; }
+    public string? CustomerType { get; set; }
     public string? Gender { get; set; }
     public string? CCCD { get; set; }
     public ICollection<InsuranceContract>? InsuranceContracts { set; get; }
-    public ICollection<AnnexContract>? AnnexContracts { set; get; }
 
 }
 
@@ -41,10 +40,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
               .HasMaxLength(50);
 
         builder.Property(x => x.CustomerType)
-            .IsRequired()
-            .HasColumnName("CustomerType")
-            .HasColumnType("integer")
-            .HasConversion<int>()
-            .UsePropertyAccessMode(PropertyAccessMode.Property);
+              .IsRequired()
+              .HasMaxLength(50);
     }
 }

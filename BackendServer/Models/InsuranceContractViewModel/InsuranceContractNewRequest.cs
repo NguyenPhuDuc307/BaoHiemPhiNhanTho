@@ -1,8 +1,11 @@
-using BaoHiemPhiNhanTho.BackendServer.Models;
 
-namespace BackendServer.Models.HopDongPhuLucVM
+
+using BaoHiemPhiNhanTho.BackendServer.Models;
+using BackendServer.Data.Enums;
+
+namespace BackendServer.Models.InsuranceContractViewModel
 {
-    public class InsuranceContractRequest
+    public class InsuranceContractNewRequest
     {
         public string? HDBH { get; set; }
         public bool? NewOrRenewed { get; set; }
@@ -16,11 +19,10 @@ namespace BackendServer.Models.HopDongPhuLucVM
         public string? InsuranceType { get; set; }
         public string? OtherInsuranceType { get; set; }
         public string? InsuranceBeneficiary { get; set; }
+        public string? Status { get; set; }
         public string? Cif { get; set; }
         public string? TVTTCode { get; set; }
         public string? InsurancePartnerCode { get; set; }
         public string? CollateralRef { get; set; }
-        public string? CustomerName { get; set; }
-
     }
 }

@@ -16,5 +16,6 @@ namespace BackendServer.Models.AnnexContractViewModel
         public string? NameTVTT { get; set; }
         public string? BranchName { get; set; }
         public string? HDBH { get; set; }
+        public string? InsuranceType { get; set; }
     }
 }

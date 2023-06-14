@@ -1,4 +1,5 @@
 ﻿using BackendServer.Data.EF;
+using BackendServer.Data.Enums;
 using BackendServer.Models.InsuranceContractViewModel;
 using BackendServer.Validator.InsuranceContract;
 using BaoHiemPhiNhanTho.BackendServer.Models;
@@ -6,12 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using System;
+using Exception = System.Exception;
 
 namespace BackendServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize]
     public class InsuranceContractController : ControllerBase
     {
         private readonly ILogger<InsuranceContractController> _logger;
@@ -75,15 +77,12 @@ namespace BackendServer.Controllers
 
                 var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
                 return new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedList);
-
             }
             catch (Exception ex)
             {
                 return new ApiErrorResult<PagedList<InsuranceContractRequest>>();
             }
-
         }
-
 
         [AllowAnonymous]
         [HttpGet("GetSingleInsurance")]
@@ -142,14 +141,13 @@ namespace BackendServer.Controllers
                 }
 
                 return BadRequest("InsuranceContract Not Found");
-
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
+
         [AllowAnonymous]
         [HttpPost("CreateInsuranceContrac")]
         public async Task<IActionResult> CreateInsurance([FromBody] InsuranceContractNewRequest request)
@@ -206,7 +204,7 @@ namespace BackendServer.Controllers
                     InsuranceType = request.InsuranceType,
                     OtherInsuranceType = request.OtherInsuranceType,
                     InsuranceBeneficiary = request.InsuranceBeneficiary,
-                    Status = request.Status,
+                    Status = Insuranceapprove.DontSeedapproval.ToString(),
                     Cif = request.Cif,
                     TVTTCode = request.TVTTCode,
                     InsurancePartnerCode = request.InsurancePartnerCode,
@@ -289,7 +287,7 @@ namespace BackendServer.Controllers
                 insurance.InsuranceType = request.InsuranceType;
                 insurance.OtherInsuranceType = request.OtherInsuranceType;
                 insurance.InsuranceBeneficiary = request.InsuranceBeneficiary;
-                insurance.Status = request.Status;
+                insurance.Status = Insuranceapprove.DontSeedapproval.ToString();
                 insurance.Cif = request.Cif;
                 insurance.TVTTCode = request.TVTTCode;
                 insurance.InsurancePartnerCode = request.InsurancePartnerCode;
@@ -312,6 +310,53 @@ namespace BackendServer.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [AllowAnonymous]
+        [HttpPut("EditStatus")]
+        public async Task<IActionResult> Approve(string HDBH)
+        {
+            var insuranceId = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == HDBH);
+            if (insuranceId == null)
+                return BadRequest();
+
+            if (insuranceId.Status == Insuranceapprove.DontSeedapproval.ToString() || insuranceId.Status == Insuranceapprove.Pending.ToString())
+            {
+                insuranceId.Status = Insuranceapprove.Pending.ToString();
+                _context.InsuranceContracts.Update(insuranceId);
+                await _context.SaveChangesAsync();
+                return Ok("Chuyển duyệt thành công, đợi cấp quản lý duyệt");
+            }
+            if (insuranceId.Status == Insuranceapprove.Rejected.ToString())
+            {
+                return BadRequest("Hồ sơ có trạng thái là từ chối, không thể duyệt");
+            }
+
+            if (insuranceId.Status == Insuranceapprove.approved.ToString())
+            {
+                return BadRequest("Hồ sơ đã được duyệt, không thể duyệt lại");
+            }
+
+            return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpPut("ApprovedByManagement")]
+        public async Task<IActionResult> ApprovedByManagement(string HDBH, Insuranceapprove Insuranceapprove)
+        {
+            var insuranceId = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == HDBH);
+            if (insuranceId == null)
+                return BadRequest();
+
+            if (insuranceId.Status == Insuranceapprove.Pending.ToString())
+            {
+                insuranceId.Status = Insuranceapprove.ToString();
+                _context.InsuranceContracts.Update(insuranceId);
+                await _context.SaveChangesAsync();
+                return Ok(insuranceId.Status);
+            }
+
+            return BadRequest();
         }
     }
 }

@@ -11,6 +11,5 @@ namespace BackendServer.Models.AnnexContractViewModel
         public string? Beneficiaries { get; set; }
         public string? Status { get; set; }
         public string? TVTTCode { get; set; }
-        public string? HDBH { get; set; }
-    }
+        public string? HDBH { get; set; }    }
 }

@@ -25,6 +25,5 @@ public class PartnerConfiguration : IEntityTypeConfiguration<Partner>
         builder.Property(x => x.Name)
                .IsRequired()
                .HasMaxLength(255);
-
     }
 }

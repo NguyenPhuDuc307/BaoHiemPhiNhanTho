@@ -1,4 +1,5 @@
 ﻿using BackendServer.Data.EF;
+using BackendServer.Data.Enums;
 using BackendServer.Models.AnnexContractViewModel;
 using BackendServer.validator.AnnexContract;
 using BaoHiemPhiNhanTho.BackendServer.Models;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Exception = System.Exception;
 
 namespace BackendServer.Controllers
 {
@@ -52,6 +54,7 @@ namespace BackendServer.Controllers
                     NameTVTT = ic.InfoCBNV.NameTVTT,
                     BranchName = ic.InfoCBNV.Branch.BranchName,
                     HDBH = ic.HDBH,
+                    InsuranceType = ic.InsuranceContract.InsuranceType
                 });
 
                 var pagedList = new PagedList<AnnexContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
@@ -99,6 +102,7 @@ namespace BackendServer.Controllers
                         NameTVTT = AnnexContract.InfoCBNV.NameTVTT,
                         BranchName = AnnexContract.InfoCBNV.Branch.BranchName,
                         HDBH = AnnexContract.HDBH,
+                        InsuranceType = AnnexContract.InsuranceContract.InsuranceType
                     };
                     return Ok(AnnexRequset);
                 }

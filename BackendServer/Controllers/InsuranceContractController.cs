@@ -40,12 +40,16 @@ namespace BackendServer.Controllers
                     .Include(c => c.Customer)
                     .Include(c => c.Collateral)
                     .Include(c => c.InfoCBNV)
-                        .ThenInclude(c => c.Branch)
+                    .ThenInclude(c => c.Branch)
                     .Include(c => c.AnnexContract)
                     .Include(c => c.Partner)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
+                if (pagedData == null)
+                {
+                    return new ApiErrorResult<PagedList<InsuranceContractRequest>>("khong tim thay");
+                }
 
                 var pagedDataRequest = pagedData.Select(ic => new InsuranceContractRequest
                 {
@@ -61,13 +65,13 @@ namespace BackendServer.Controllers
                     InsuranceType = ic.InsuranceType,
                     OtherInsuranceType = ic.OtherInsuranceType,
                     InsuranceBeneficiary = ic.InsuranceBeneficiary,
+                    Status = ic.Status,
                     Cif = ic.Cif,
                     TVTTCode = ic.TVTTCode,
                     InsurancePartnerCode = ic.InsurancePartnerCode,
                     CustomerName = ic.Customer.Name,
                     CustomerType = ic.Customer.CustomerType,
                     CCCD = ic.Customer.CCCD,
-                    Status = ic.Status,
                     PartnerName = ic.Partner.Name,
                     StatusCollateral = ic.Collateral.StatusCollateral,
                     CollateralRef = ic.Collateral.Ref,
@@ -80,6 +84,10 @@ namespace BackendServer.Controllers
                 });
 
                 var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
+                if (pagedList == null)
+                {
+                    return new ApiErrorResult<PagedList<InsuranceContractRequest>>("Gan sai");
+                }
                 return new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedList);
             }
             catch (Exception ex)
@@ -106,6 +114,7 @@ namespace BackendServer.Controllers
                     .ThenInclude(c => c.Branch)
                 .Include(c => c.AnnexContract)
                 .Include(c => c.Partner)
+                .Include(c => c.PaymentPeriods)
                 .FirstOrDefaultAsync(x => x.HDBH == HDBH);
 
                 if (InsuranceContract != null)
@@ -328,7 +337,6 @@ namespace BackendServer.Controllers
             {
                 return Ok(new { Message = "Hồ sơ đã gửi phê duyệt, không gửi nhiều lần", MessageStatus = "alreadyApproveProcess", Contract = insuranceId });
             }
-
 
             if (insuranceId.Status == Insuranceapprove.Rejected.ToString())
             {

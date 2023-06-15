@@ -79,7 +79,7 @@ namespace BackendServer.Controllers
                 }
 
                 var paymentPeriods = await _context.PaymentPeriods.FirstOrDefaultAsync(x => x.HDBH == requests[0].HDBH);
-                if (paymentPeriods == null)
+                if (paymentPeriods != null)
                 {
                     return BadRequest("Đã có kỳ đóng phí, không thể thêm mới");
                 }

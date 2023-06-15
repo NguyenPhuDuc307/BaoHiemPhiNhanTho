@@ -1,10 +1,10 @@
 ﻿namespace BackendServer.Data.Enums
 {
-    public enum Insuranceapprove
+    public class Insuranceapprove
     {
-        DontSeedapproval,
-        Pending,
-        Rejected,
-        approved
+        public static string DontSeedapproval = "Chưa phê duyệt";
+        public static string Pending = "Chờ phê duyệt";
+        public static string Rejected = "Từ chối";
+        public static string Approved = "Đã được duyệt";
     }
 }

@@ -1,13 +1,17 @@
 ﻿using BackendServer.Data.EF;
 using BackendServer.Data.Enums;
+using BackendServer.DTO;
 using BackendServer.Models.InsuranceContractViewModel;
 using BackendServer.Validator.InsuranceContract;
 using BaoHiemPhiNhanTho.BackendServer.Models;
+using FluentValidation.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
+using System.Collections.Generic;
 using Exception = System.Exception;
 
 namespace BackendServer.Controllers
@@ -314,27 +318,34 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpPut("EditStatus")]
-        public async Task<IActionResult> Approve(string HDBH)
+        public async Task<IActionResult> Approve([FromBody] InsuranceIdDto insuranceDto)
         {
-            var insuranceId = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == HDBH);
+            var insuranceId = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == insuranceDto.HDBH);
             if (insuranceId == null)
                 return BadRequest();
 
-            if (insuranceId.Status == Insuranceapprove.DontSeedapproval.ToString() || insuranceId.Status == Insuranceapprove.Pending.ToString())
+            if (insuranceId.Status == Insuranceapprove.Pending.ToString())
+            {
+                return Ok(new { Message = "Hồ sơ đã gửi phê duyệt, không gửi nhiều lần", MessageStatus = "alreadyApproveProcess", Contract = insuranceId });
+            }
+
+
+            if (insuranceId.Status == Insuranceapprove.Rejected.ToString())
+            {
+                return BadRequest(new { Message = "Hồ sơ có trạng thái là từ chối, không thể duyệt" });
+            }
+
+            if (insuranceId.Status == Insuranceapprove.Approved.ToString())
+            {
+                return Ok(new { Message = "Hồ sơ đã được duyệt, không thể duyệt lại", MessageStatus = "alreadyApproved", Contract = insuranceId });
+            }
+
+            if (insuranceId.Status == Insuranceapprove.DontSeedapproval.ToString())
             {
                 insuranceId.Status = Insuranceapprove.Pending.ToString();
                 _context.InsuranceContracts.Update(insuranceId);
                 await _context.SaveChangesAsync();
-                return Ok("Chuyển duyệt thành công, đợi cấp quản lý duyệt");
-            }
-            if (insuranceId.Status == Insuranceapprove.Rejected.ToString())
-            {
-                return BadRequest("Hồ sơ có trạng thái là từ chối, không thể duyệt");
-            }
-
-            if (insuranceId.Status == Insuranceapprove.approved.ToString())
-            {
-                return BadRequest("Hồ sơ đã được duyệt, không thể duyệt lại");
+                return Ok(new { Message = "Chuyển duyệt thành công, đợi cấp quản lý duyệt", MessageStatus = "approveProcess", Contract = insuranceId });
             }
 
             return BadRequest();
@@ -342,21 +353,52 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpPut("ApprovedByManagement")]
-        public async Task<IActionResult> ApprovedByManagement(string HDBH, Insuranceapprove Insuranceapprove)
+        public async Task<IActionResult> ApprovedByManagement([FromBody] InsuranceDto InsuranceDto)
         {
-            var insuranceId = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == HDBH);
+            var insuranceId = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == InsuranceDto.HDBH);
             if (insuranceId == null)
                 return BadRequest();
 
+            if (insuranceId.Status == Insuranceapprove.Rejected.ToString())
+            {
+                return BadRequest(new { Message = "Hồ sơ đã bị từ chối, không thể phê duyệt lại", MessageStatus = "alreadyRejected", Contract = insuranceId });
+            }
+
+            if (insuranceId.Status == Insuranceapprove.Approved.ToString())
+            {
+                return BadRequest(new { Message = "Hợp đồng đã được xử lý, không xử lý lại" });
+            }
+
+            if (insuranceId.Status == Insuranceapprove.DontSeedapproval.ToString())
+            {
+                return BadRequest(new { Message = "Chưa được duyệt hợp đồng này, vui lòng liên hệ TVTT để biết thêm chi tiết" });
+            }
+
             if (insuranceId.Status == Insuranceapprove.Pending.ToString())
             {
-                insuranceId.Status = Insuranceapprove.ToString();
+                insuranceId.Status = InsuranceDto.status;
                 _context.InsuranceContracts.Update(insuranceId);
                 await _context.SaveChangesAsync();
-                return Ok(insuranceId.Status);
+                return Ok(new { Message = "Đã duyệt hợp đồng thành công", MessageStatus = "approveSuccess", Contract = insuranceId });
             }
 
             return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpPut("resetStatus")]
+        public IActionResult resetStatus()
+        {
+            var entities = _context.InsuranceContracts.ToList();
+
+            foreach (var entity in entities)
+            {
+                entity.Status = Insuranceapprove.DontSeedapproval.ToString();
+            }
+
+            _context.SaveChanges();
+
+            return Ok("đã reset tất cả các hợp đồng về trạng thái chưa gửi chuyển duyệt");
         }
     }
 }

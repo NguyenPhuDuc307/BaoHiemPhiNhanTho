@@ -29,6 +29,11 @@ public class InsuranceContract
     public string? HDPL { set; get; }
     public AnnexContract? AnnexContract { set; get; }
     public ICollection<PaymentPeriod>? PaymentPeriods { set; get; }
+
+    public static explicit operator string(InsuranceContract v)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class InsuranceContractConfiguration : IEntityTypeConfiguration<InsuranceContract>

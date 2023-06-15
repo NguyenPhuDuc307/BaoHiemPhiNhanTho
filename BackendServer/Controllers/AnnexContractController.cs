@@ -1,5 +1,6 @@
 ﻿using BackendServer.Data.EF;
 using BackendServer.Data.Enums;
+using BackendServer.DTO;
 using BackendServer.Models.AnnexContractViewModel;
 using BackendServer.validator.AnnexContract;
 using BaoHiemPhiNhanTho.BackendServer.Models;
@@ -13,7 +14,6 @@ namespace BackendServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize]
     public class AnnexContractController : ControllerBase
     {
         private readonly ILogger<AnnexContractController> _logger;
@@ -59,15 +59,12 @@ namespace BackendServer.Controllers
 
                 var pagedList = new PagedList<AnnexContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
                 return new ApiSuccessResult<PagedList<AnnexContractRequest>>(pagedList);
-
             }
             catch (Exception ex)
             {
                 return new ApiErrorResult<PagedList<AnnexContractRequest>>();
             }
-
         }
-
 
         [AllowAnonymous]
         [HttpGet("GetSingleAnnex")]
@@ -108,14 +105,13 @@ namespace BackendServer.Controllers
                 }
 
                 return BadRequest("AnnexContract Not Found");
-
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
+
         [AllowAnonymous]
         [HttpPost("CreateAnnexContract")]
         public async Task<IActionResult> CreateInsurance([FromBody] AnnexContractNewRequest request)
@@ -175,6 +171,7 @@ namespace BackendServer.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [AllowAnonymous]
         [HttpPut("EditAnnexContract")]
         public async Task<IActionResult> EditInsurance(string HDPL, [FromBody] AnnexContractNewRequest request)
@@ -227,6 +224,91 @@ namespace BackendServer.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [AllowAnonymous]
+        [HttpPut("EditStatus")]
+        public async Task<IActionResult> Approve([FromBody] AnnexContractsIdDto annexContractsDto)
+        {
+            var innexContractsId = await _context.AnnexContracts.FirstOrDefaultAsync(x => x.HDPL == annexContractsDto.HDPL);
+            if (innexContractsId == null)
+                return BadRequest();
+
+            if (innexContractsId.Status == Insuranceapprove.Pending.ToString())
+            {
+                return Ok(new { Message = "Hồ sơ đã gửi phê duyệt, không gửi nhiều lần", MessageStatus = "alreadyApproveProcess", Contract = innexContractsId });
+            }
+
+            
+            if (innexContractsId.Status == Insuranceapprove.Rejected.ToString())
+            {
+                return BadRequest(new { Message = "Hồ sơ có trạng thái là từ chối, không thể duyệt" });
+            }
+
+            if (innexContractsId.Status == Insuranceapprove.Approved.ToString())
+            {
+                return Ok(new { Message = "Hồ sơ đã được duyệt, không thể duyệt lại", MessageStatus = "alreadyApproved", Contract = innexContractsId });
+            }
+
+            if (innexContractsId.Status == Insuranceapprove.DontSeedapproval.ToString())
+            {
+                innexContractsId.Status = Insuranceapprove.Pending.ToString();
+                _context.AnnexContracts.Update(innexContractsId);
+                await _context.SaveChangesAsync();
+                return Ok(new { Message = "Chuyển duyệt thành công, đợi cấp quản lý duyệt", MessageStatus = "approveProcess", Contract = innexContractsId });
+            }
+
+            return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpPut("ApprovedByManagement")]
+        public async Task<IActionResult> ApprovedByManagement([FromBody] AnnexContractsDto annexContractsDto)
+        {
+            var innexContractsId = await _context.AnnexContracts.FirstOrDefaultAsync(x => x.HDPL == annexContractsDto.HDPL);
+            if (innexContractsId == null)
+                return BadRequest();
+
+            if (innexContractsId.Status == Insuranceapprove.Rejected.ToString())
+            {
+                return BadRequest(new { Message = "Hồ sơ đã bị từ chối, không thể phê duyệt lại", MessageStatus = "alreadyRejected", Contract = innexContractsId });
+            }
+
+            if (innexContractsId.Status == Insuranceapprove.Approved.ToString())
+            {
+                return BadRequest(new { Message = "Hợp đồng đã được xử lý, không xử lý lại" });
+            }
+
+            if (innexContractsId.Status == Insuranceapprove.DontSeedapproval.ToString())
+            {
+                return BadRequest(new { Message = "Chưa được duyệt hợp đồng này, vui lòng liên hệ TVTT để biết thêm chi tiết" });
+            }
+
+            if (innexContractsId.Status == Insuranceapprove.Pending.ToString())
+            {
+                innexContractsId.Status = annexContractsDto.status;
+                _context.AnnexContracts.Update(innexContractsId);
+                await _context.SaveChangesAsync();
+                return Ok(new { Message = "Đã duyệt hợp đồng thành công", MessageStatus = "approveSuccess", Contract = innexContractsId });
+            }
+
+            return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpPut("resetStatus")]
+        public IActionResult resetStatus()
+        {
+            var entities = _context.AnnexContracts.ToList();
+
+            foreach (var entity in entities)
+            {
+                entity.Status = Insuranceapprove.DontSeedapproval.ToString();
+            }
+
+            _context.SaveChanges();
+
+            return Ok("đã reset tất cả các hợp đồng về trạng thái chưa gửi chuyển duyệt");
         }
     }
 }

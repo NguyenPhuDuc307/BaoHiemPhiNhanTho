@@ -36,6 +36,7 @@ namespace BackendServer.Controllers
 
                 var insurance = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == request.HDBH);
 
+
                 var payment = new PaymentPeriod()
                 {
                     FeePaymentDate = request.FeePaymentDate,
@@ -77,6 +78,12 @@ namespace BackendServer.Controllers
                     return BadRequest(validationResult.Errors);
                 }
 
+                var paymentPeriods = await _context.PaymentPeriods.FirstOrDefaultAsync(x => x.HDBH == requests[0].HDBH);
+                if (paymentPeriods == null)
+                {
+                    return BadRequest("Đã có kỳ đóng phí, không thể thêm mới");
+                }
+
                 // tìm hợp đồng thêm kỳ đóng
                 decimal? sum = 0;
                 var insurance = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == requests[0].HDBH);
@@ -84,7 +91,6 @@ namespace BackendServer.Controllers
                 {
                     return BadRequest("Không tìm thấy hợp đồng");
                 }
-
                 foreach (var request in requests)
                 {
                     var payment = new PaymentPeriod()
@@ -94,12 +100,14 @@ namespace BackendServer.Controllers
                         HDBH = request.HDBH,
                         InsuranceContract = insurance
                     };
-
                     _context.PaymentPeriods.Add(payment);
                     sum += request.Money;
                 }
                 if (sum == insurance.InsuranceFee)
                 {
+
+                    insurance.NumberOfPayments = requests.Count;
+                    _context.InsuranceContracts.Update(insurance);
                     int result = await _context.SaveChangesAsync();
                     if (result <= 0)
                     {
@@ -136,6 +144,67 @@ namespace BackendServer.Controllers
                     return Ok(result);
                 }
                 return BadRequest("infoCBNV not found");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPut("EditpaymentPeriods")]
+        public async Task<IActionResult> EditInsurance(string HDBH, [FromBody] List<PaymentPeriodRequest> requests)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                // tìm hợp đồng
+                var insurance = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == requests[0].HDBH);
+                if (insurance == null)
+                {
+                    return BadRequest("Không tìm thấy hợp đồng");
+                }
+
+                // tìm kỳ đóng phí
+                var paymentperiods = await _context.PaymentPeriods
+                    .Include(c => c.InsuranceContract)
+                    .Where(c => c.HDBH == HDBH)
+                    .ToListAsync();
+                if (paymentperiods == null)
+                {
+                    return BadRequest("paymentperiods not found");
+                }
+
+                decimal? sum = 0;
+
+                foreach (var item in requests)
+                {
+                    var payment = new PaymentPeriod()
+                    {
+                        FeePaymentDate = item.FeePaymentDate,
+                        Money = item.Money,
+                        HDBH = item.HDBH,
+                        InsuranceContract = insurance
+                    };
+                    _context.PaymentPeriods.Add(payment);
+                    sum += item.Money;
+                }
+                if (sum == insurance.InsuranceFee)
+                {
+                    _context.PaymentPeriods.RemoveRange(paymentperiods);
+                    insurance.NumberOfPayments = requests.Count;
+                    _context.InsuranceContracts.Update(insurance);
+                    int result = await _context.SaveChangesAsync();
+                    if (result <= 0)
+                    {
+                        return BadRequest("Something went wrong, can't add them");
+                    }
+                    return Ok(requests);
+                }
+                return BadRequest("Tổng số tiền các kỳ đóng bé hơn phí bảo hiểm");
             }
             catch (Exception ex)
             {

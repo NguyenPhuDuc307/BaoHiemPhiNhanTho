@@ -48,7 +48,7 @@ namespace BackendServer.Controllers
                     .ToListAsync();
                 if (pagedData == null)
                 {
-                    return new ApiErrorResult<PagedList<InsuranceContractRequest>>("khong tim thay");
+                    return new ApiErrorResult<PagedList<InsuranceContractRequest>>("Không tìm thấy");
                 }
 
                 var pagedDataRequest = pagedData.Select(ic => new InsuranceContractRequest
@@ -86,7 +86,7 @@ namespace BackendServer.Controllers
                 var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
                 if (pagedList == null)
                 {
-                    return new ApiErrorResult<PagedList<InsuranceContractRequest>>("Gan sai");
+                    return new ApiErrorResult<PagedList<InsuranceContractRequest>>("Gán vào list bị sai");
                 }
                 return new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedList);
             }
@@ -209,13 +209,13 @@ namespace BackendServer.Controllers
                     NewOrRenewed = request.NewOrRenewed,
                     STBH = request.STBH,
                     InsuranceFee = request.InsuranceFee,
-                    NumberOfPayments = request.NumberOfPayments,
+                    NumberOfPayments = request.NumberOfPayments ?? null,
                     FromDate = request.FromDate,
                     ToDate = request.ToDate,
-                    Exception = request.Exception,
+                    Exception = request.Exception ?? "",
                     Beneficiaries = request.Beneficiaries,
                     InsuranceType = request.InsuranceType,
-                    OtherInsuranceType = request.OtherInsuranceType,
+                    OtherInsuranceType = request.OtherInsuranceType ?? "",
                     InsuranceBeneficiary = request.InsuranceBeneficiary,
                     Status = Insuranceapprove.DontSeedapproval.ToString(),
                     Cif = request.Cif,

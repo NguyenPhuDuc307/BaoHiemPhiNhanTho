@@ -36,6 +36,7 @@ namespace BackendServer.Controllers
                     .Include(c => c.InfoCBNV)
                         .ThenInclude(c => c.Branch)
                     .Include(c => c.InsuranceContract)
+                    .OrderBy(ic => ic.HDPL)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -135,10 +136,16 @@ namespace BackendServer.Controllers
                 {
                     return BadRequest("CBNV not found");
                 }
-                var insurance = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDPL == request.HDPL);
-                if (insurance == null)
+                var insurance = await _context.InsuranceContracts
+                    .Include(c => c.AnnexContract)
+                    .FirstOrDefaultAsync(x => x.HDBH == request.HDBH);
+                if (insurance == null )
                 {
                     return BadRequest("InsuranceContracts not found");
+                }
+                if (insurance.HDPL != null)
+                {
+                    return BadRequest("InsuranceContracts Already");
                 }
 
                 var annexContract = new AnnexContract()

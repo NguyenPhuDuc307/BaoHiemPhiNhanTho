@@ -437,7 +437,7 @@ public class DbInitializer
                     HDBH = "987654323",
                     InsuranceContract = _context.InsuranceContracts.FirstOrDefault(b => b.HDBH == "987654329"),
                 }
-            }) ;
+            });
             await _context.SaveChangesAsync();
         }
 

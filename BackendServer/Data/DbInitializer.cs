@@ -79,6 +79,16 @@ public class DbInitializer
                 new Collateral(){Ref = "987654327", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF", Relationship=Relationship.Relationship2, PropertyType="Xe"},
                 new Collateral(){Ref = "987654328", StatusCollateral = "Blank", ValueCollateral=100000000, AddressCollateral = "DEF2", Relationship=Relationship.Relationship2, PropertyType="Xe"},
                 new Collateral(){Ref = "987654329", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF3", Relationship=Relationship.Relationship2, PropertyType="Xe"},
+                new Collateral(){Ref = "987654330", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF3", Relationship=Relationship.Relationship2, PropertyType="Xe"},
+                new Collateral(){Ref = "987654331", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "ABC", Relationship=Relationship.Relationship1, PropertyType="Nhà phố"},
+                new Collateral(){Ref = "987654332", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF", Relationship=Relationship.Relationship2, PropertyType="Xe"},
+                new Collateral(){Ref = "987654333", StatusCollateral = "Blank", ValueCollateral=100000000, AddressCollateral = "DEF2", Relationship=Relationship.Relationship2, PropertyType="Xe"},
+                new Collateral(){Ref = "987654334", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF3", Relationship=Relationship.Relationship2, PropertyType="Xe"},
+                new Collateral(){Ref = "987654335", StatusCollateral = "Blank", ValueCollateral=100000000, AddressCollateral = "ABC2", Relationship=Relationship.Relationship2, PropertyType="Nhà phố"},
+                new Collateral(){Ref = "987654336", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "ABC", Relationship=Relationship.Relationship1, PropertyType="Nhà phố"},
+                new Collateral(){Ref = "987654337", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF", Relationship=Relationship.Relationship2, PropertyType="Xe"},
+                new Collateral(){Ref = "987654338", StatusCollateral = "Blank", ValueCollateral=100000000, AddressCollateral = "DEF2", Relationship=Relationship.Relationship2, PropertyType="Xe"},
+                new Collateral(){Ref = "987654339", StatusCollateral = "Active", ValueCollateral=100000000, AddressCollateral = "DEF3", Relationship=Relationship.Relationship2, PropertyType="Xe"},
             });
             await _context.SaveChangesAsync();
         }
@@ -437,7 +447,7 @@ public class DbInitializer
                     HDBH = "987654323",
                     InsuranceContract = _context.InsuranceContracts.FirstOrDefault(b => b.HDBH == "987654329"),
                 }
-            }) ;
+            });
             await _context.SaveChangesAsync();
         }
 

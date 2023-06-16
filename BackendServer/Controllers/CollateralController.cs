@@ -1,5 +1,6 @@
-using BackendServer.Data.EF;
+﻿using BackendServer.Data.EF;
 using BackendServer.Models.CollateralViewModel;
+using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -77,6 +78,39 @@ namespace BackendServer.Models
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Collateral")]
+        public async Task<IActionResult> CreateNewCollateral([FromBody] CollateralRequest request)
+        {
+            try {
+                var checkCollateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.Ref);
+
+                if (checkCollateral != null)
+                {
+                    return BadRequest("đã tồn tại");
+                }
+
+                var collaterals = new Collateral()
+                {
+                    Ref = request.Ref,
+                    StatusCollateral = request.StatusCollateral,
+                    ValueCollateral = request.ValueCollateral,
+                    AddressCollateral = request.AddressCollateral,
+                    Relationship = request.Relationship,
+                    PropertyType = request.PropertyType,
+                    HDBH = request.HDBH
+                };
+
+                _context.Collaterals.Add(collaterals);
+                await _context.SaveChangesAsync();
+                return Ok(collaterals);
+            }
+            catch(Exception ex) {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }

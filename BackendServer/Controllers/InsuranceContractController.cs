@@ -4,14 +4,10 @@ using BackendServer.DTO;
 using BackendServer.Models.InsuranceContractViewModel;
 using BackendServer.Validator.InsuranceContract;
 using BaoHiemPhiNhanTho.BackendServer.Models;
-using FluentValidation.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using System;
-using System.Collections.Generic;
 using Exception = System.Exception;
 
 namespace BackendServer.Controllers
@@ -162,7 +158,7 @@ namespace BackendServer.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("CreateInsuranceContrac")]
+        [HttpPost("CreateInsuranceContract")]
         public async Task<IActionResult> CreateInsurance([FromBody] InsuranceContractNewRequest request)
         {
             try
@@ -242,6 +238,112 @@ namespace BackendServer.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [AllowAnonymous]
+        [HttpPost("CreateInsuranceContracWithPeriod")]
+        public async Task<IActionResult> CreateInsurancePeriod([FromBody] InsuranceNewWithPeriodsNewRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
+                if (customer == null)
+                {
+                    return BadRequest("Customer not found");
+                }
+
+                var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
+                if (CBNV == null)
+                {
+                    return BadRequest("CBNV not found");
+                }
+
+                var partner = await _context.Partners.FirstOrDefaultAsync(x => x.PartnerCode == request.InsurancePartnerCode);
+                if (partner == null)
+                {
+                    return BadRequest("Partner not found");
+                }
+
+                var collateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.CollateralRef);
+                if (collateral == null)
+                {
+                    return BadRequest("Collateral not found");
+                }
+
+                var checkCollateral = await _context.InsuranceContracts.FirstOrDefaultAsync(c => c.Ref == request.CollateralRef);
+                if (checkCollateral != null)
+                {
+                    return BadRequest("This collateral is already in another contract");
+                }
+
+                decimal? sum = 0;
+                foreach (var item in request.lstPaymentPeriod)
+                {
+                    sum += item.Money;
+                }
+
+                // Nếu số tiền đóng phí bằng với phí bảo hiểm thì lưu
+                if (sum == request.InsuranceFee)
+                {
+                    var insurance = new InsuranceContract()
+                    {
+                        HDBH = request.HDBH,
+                        NewOrRenewed = request.NewOrRenewed,
+                        STBH = request.STBH,
+                        InsuranceFee = request.InsuranceFee,
+                        NumberOfPayments = request.lstPaymentPeriod.Count,
+                        FromDate = request.FromDate,
+                        ToDate = request.ToDate,
+                        Exception = request.Exception ?? "",
+                        Beneficiaries = request.Beneficiaries,
+                        InsuranceType = request.InsuranceType,
+                        OtherInsuranceType = request.OtherInsuranceType ?? "",
+                        InsuranceBeneficiary = request.InsuranceBeneficiary,
+                        Status = Insuranceapprove.DontSeedapproval.ToString(),
+                        Cif = request.Cif,
+                        TVTTCode = request.TVTTCode,
+                        InsurancePartnerCode = request.InsurancePartnerCode,
+                        Ref = request.CollateralRef,
+                        Customer = customer,
+                        InfoCBNV = CBNV,
+                        Partner = partner,
+                        Collateral = collateral
+
+                    };
+
+                    foreach (var item in request.lstPaymentPeriod)
+                    {
+                        var payment = new PaymentPeriod()
+                        {
+                            FeePaymentDate = item.FeePaymentDate,
+                            Money = item.Money,
+                            HDBH = item.HDBH,
+                            InsuranceContract = insurance
+                        };
+                        _context.PaymentPeriods.Add(payment);
+                        sum += item.Money;
+                    }
+                    _context.InsuranceContracts.Add(insurance);
+                    int result = await _context.SaveChangesAsync();
+                    if (result <= 0)
+                    {
+                        return BadRequest("Something went wrong, can't add it");
+                    }
+                    return Ok("Oke rồi đó nhóc con");
+                }
+                return Ok("The amount of the premium is not equal to the premium");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [AllowAnonymous]
         [HttpPut("EditInsuranceContrac")]

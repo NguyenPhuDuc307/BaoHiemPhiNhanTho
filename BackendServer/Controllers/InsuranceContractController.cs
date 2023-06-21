@@ -275,10 +275,10 @@ namespace BackendServer.Controllers
                     return BadRequest("Collateral not found");
                 }
 
-                var checkCollateral = await _context.InsuranceContracts.FirstOrDefaultAsync(c => c.Ref == request.CollateralRef);
+                var checkCollateral = await _context.Collaterals.FirstOrDefaultAsync(c => c.HDBH == request.HDBH);
                 if (checkCollateral != null)
                 {
-                    return BadRequest("This collateral is already in another contract");
+                    return BadRequest("Tài sản đảm bảo này đã thuộc hợp đồng khác");
                 }
 
                 decimal? sum = 0;

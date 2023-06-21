@@ -78,12 +78,6 @@ namespace BackendServer.Controllers
                     return BadRequest(validationResult.Errors);
                 }
 
-                var paymentPeriods = await _context.PaymentPeriods.FirstOrDefaultAsync(x => x.HDBH == requests[0].HDBH);
-                if (paymentPeriods != null)
-                {
-                    return BadRequest("Đã có kỳ đóng phí, không thể thêm mới");
-                }
-
                 // tìm hợp đồng thêm kỳ đóng
                 decimal? sum = 0;
                 var insurance = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == requests[0].HDBH);

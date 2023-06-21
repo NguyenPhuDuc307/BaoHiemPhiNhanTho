@@ -250,6 +250,12 @@ namespace BackendServer.Controllers
                     return BadRequest(ModelState);
                 }
 
+                var checkInsurance = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == request.HDBH);
+                if (checkInsurance != null)
+                {
+                    return BadRequest("Mã bảo hiểm đã tồn tại");
+                }
+
                 var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
                 if (customer == null)
                 {
@@ -274,7 +280,7 @@ namespace BackendServer.Controllers
                     return BadRequest("Collateral not found");
                 }
 
-                var checkCollateral = await _context.Collaterals.FirstOrDefaultAsync(c => c.HDBH == request.HDBH);
+                var checkCollateral = await _context.InsuranceContracts.FirstOrDefaultAsync(c => c.Ref == request.CollateralRef);
                 if (checkCollateral != null)
                 {
                     return BadRequest("Tài sản đảm bảo này đã thuộc hợp đồng khác");
@@ -332,7 +338,7 @@ namespace BackendServer.Controllers
                     {
                         return BadRequest("Something went wrong, can't add it");
                     }
-                    return Ok("Oke rồi đó nhóc con");
+                    return Ok(insurance);
                 }
                 return Ok("The amount of the premium is not equal to the premium");
             }

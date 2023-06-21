@@ -99,6 +99,8 @@ public class DbInitializer
             {
                 new InsuranceContract(){
                     HDBH = "987654321",
+                    Ref = "987654321",
+                    HDPL = "987654321",
                     NewOrRenewed = true,
                     STBH=100000000,
                     InsuranceFee = 1000000000,
@@ -122,6 +124,8 @@ public class DbInitializer
 
                 new InsuranceContract(){
                     HDBH = "987654322",
+                    Ref = "987654322",
+                    HDPL = "987654322",
                     NewOrRenewed = true,
                     STBH=100000000,
                     InsuranceFee = 1000000000,
@@ -146,6 +150,8 @@ public class DbInitializer
                 new InsuranceContract()
                 {
                     HDBH = "987654323",
+                    Ref = "987654323",
+                    HDPL = "987654323",
                     NewOrRenewed = true,
                     STBH=100000000,
                     InsuranceFee = 1000000000,
@@ -168,6 +174,8 @@ public class DbInitializer
                 },
                 new InsuranceContract(){
                     HDBH = "987654324",
+                    Ref = "987654324",
+                    HDPL = "987654324",
                     NewOrRenewed = true,
                     STBH=100000000,
                     InsuranceFee = 1000000000,
@@ -191,6 +199,8 @@ public class DbInitializer
 
                 new InsuranceContract(){
                     HDBH = "987654325",
+                    Ref = "987654325",
+                    HDPL = "987654325",
                     NewOrRenewed = true,
                     STBH=100000000,
                     InsuranceFee = 1000000000,
@@ -215,6 +225,8 @@ public class DbInitializer
                 new InsuranceContract()
                 {
                     HDBH = "987654326",
+                    Ref = "987654326",
+                    HDPL = "987654326",
                     NewOrRenewed = true,
                     STBH=100000000,
                     InsuranceFee = 1000000000,
@@ -237,6 +249,8 @@ public class DbInitializer
                 },
                 new InsuranceContract(){
                     HDBH = "987654327",
+                    Ref = "987654327",
+                    HDPL = "987654327",
                     NewOrRenewed = true,
                     STBH=100000000,
                     InsuranceFee = 1000000000,
@@ -260,6 +274,8 @@ public class DbInitializer
 
                 new InsuranceContract(){
                     HDBH = "987654328",
+                    Ref = "987654328",
+                    HDPL = "987654328",
                     NewOrRenewed = true,
                     STBH=100000000,
                     InsuranceFee = 1000000000,
@@ -284,6 +300,8 @@ public class DbInitializer
                 new InsuranceContract()
                 {
                     HDBH = "987654329",
+                    Ref = "987654329",
+                    HDPL = "987654329",
                     NewOrRenewed = true,
                     STBH=100000000,
                     InsuranceFee = 1000000000,

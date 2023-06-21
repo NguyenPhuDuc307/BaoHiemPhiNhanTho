@@ -9,8 +9,6 @@ namespace BackendServer.Models
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize]
-
     public class CollateralController : ControllerBase
     {
         private readonly ILogger<CollateralController> _logger;
@@ -84,12 +82,18 @@ namespace BackendServer.Models
         [HttpPost("Collateral")]
         public async Task<IActionResult> CreateNewCollateral([FromBody] CollateralRequest request)
         {
-            try {
+            try
+            {
                 var checkCollateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.Ref);
-
                 if (checkCollateral != null)
                 {
-                    return BadRequest("đã tồn tại");
+                    return BadRequest("đã tồn tại tài sản đảm bảo này rồi");
+                }
+
+                var checkCollateral1 = await _context.Collaterals.FindAsync(request.HDBH);
+                if (checkCollateral1 != null)
+                {
+                    return BadRequest("đã tồn tại tài sản đảm bảo cho hợp đồng này rồi");
                 }
 
                 var collaterals = new Collateral()
@@ -107,10 +111,10 @@ namespace BackendServer.Models
                 await _context.SaveChangesAsync();
                 return Ok(collaterals);
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
-
         }
     }
 }

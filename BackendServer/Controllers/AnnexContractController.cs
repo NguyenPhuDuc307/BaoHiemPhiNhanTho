@@ -254,7 +254,6 @@ namespace BackendServer.Controllers
                 return Ok(new { Message = "Hồ sơ đã gửi phê duyệt, không gửi nhiều lần", MessageStatus = "alreadyApproveProcess", Contract = innexContractsId });
             }
 
-
             if (innexContractsId.Status == Insuranceapprove.Rejected.ToString())
             {
                 return BadRequest(new { Message = "Hồ sơ có trạng thái là từ chối, không thể duyệt" });

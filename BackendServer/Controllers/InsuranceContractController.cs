@@ -71,12 +71,12 @@ namespace BackendServer.Controllers
                     PartnerName = ic.Partner.Name,
                     StatusCollateral = ic.Collateral.StatusCollateral,
                     CollateralRef = ic.Collateral.Ref,
-                    //CollateralType = ic.Collateral.PropertyType,
-                    //ValueCollateral = ic.Collateral.ValueCollateral,
-                    //AddressCollateral = ic.Collateral.AddressCollateral,
-                    //Relationship = ic.Collateral.Relationship,
-                    //NameTVTT = ic.InfoCBNV.NameTVTT,
-                    //BranchName = ic.InfoCBNV.Branch.BranchName
+                    CollateralType = ic.Collateral.PropertyType,
+                    ValueCollateral = ic.Collateral.ValueCollateral,
+                    AddressCollateral = ic.Collateral.AddressCollateral,
+                    Relationship = ic.Collateral.Relationship,
+                    NameTVTT = ic.InfoCBNV.NameTVTT,
+                    BranchName = ic.InfoCBNV.Branch.BranchName
                 });
 
                 var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);

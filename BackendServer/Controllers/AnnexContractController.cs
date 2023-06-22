@@ -147,7 +147,11 @@ namespace BackendServer.Controllers
                 {
                     return BadRequest("InsuranceContracts Already");
                 }
-
+                var checkAnnex = await _context.AnnexContracts.FirstOrDefaultAsync(x => x.HDPL == request.HDPL);
+                if (checkAnnex != null)
+                {
+                    return BadRequest("AnnexContracts đã tồn tại");
+                }
                 var annexContract = new AnnexContract()
                 {
                     HDPL = request.HDPL,

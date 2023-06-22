@@ -49,21 +49,21 @@ namespace BackendServer.Controllers
 
                 var pagedDataRequest = pagedData.Select(ic => new InsuranceContractRequest
                 {
-                    HDBH = ic.HDBH,
-                    NewOrRenewed = ic.NewOrRenewed,
-                    STBH = ic.STBH,
-                    InsuranceFee = ic.InsuranceFee,
-                    NumberOfPayments = ic.NumberOfPayments,
-                    FromDate = ic.FromDate,
-                    ToDate = ic.ToDate,
-                    Exception = ic.Exception,
-                    Beneficiaries = ic.Beneficiaries,
-                    InsuranceType = ic.InsuranceType,
-                    OtherInsuranceType = ic.OtherInsuranceType,
-                    InsuranceBeneficiary = ic.InsuranceBeneficiary,
-                    Status = ic.Status,
-                    Cif = ic.Cif,
-                    TVTTCode = ic.TVTTCode,
+                    HDBH = ic.HDBH ?? null,
+                    NewOrRenewed = ic.NewOrRenewed ?? null,
+                    STBH = ic.STBH ?? null,
+                    InsuranceFee = ic.InsuranceFee ?? null,
+                    NumberOfPayments = ic.NumberOfPayments ?? null,
+                    FromDate = ic.FromDate ?? null,
+                    ToDate = ic.ToDate ?? null,
+                    Exception = ic.Exception ?? null,
+                    Beneficiaries = ic.Beneficiaries ?? null,
+                    InsuranceType = ic.InsuranceType ?? null,
+                    OtherInsuranceType = ic.OtherInsuranceType ?? null,
+                    InsuranceBeneficiary = ic.InsuranceBeneficiary ?? null,
+                    Status = ic.Status ?? null,
+                    Cif = ic.Cif ?? null,
+                    TVTTCode = ic.TVTTCode ?? null,
                     InsurancePartnerCode = ic.InsurancePartnerCode,
                     CustomerName = ic.Customer.Name,
                     CustomerType = ic.Customer.CustomerType,
@@ -71,12 +71,12 @@ namespace BackendServer.Controllers
                     PartnerName = ic.Partner.Name,
                     StatusCollateral = ic.Collateral.StatusCollateral,
                     CollateralRef = ic.Collateral.Ref,
-                    //CollateralType = ic.Collateral.PropertyType,
-                    //ValueCollateral = ic.Collateral.ValueCollateral,
-                    //AddressCollateral = ic.Collateral.AddressCollateral,
-                    //Relationship = ic.Collateral.Relationship,
-                    //NameTVTT = ic.InfoCBNV.NameTVTT,
-                    //BranchName = ic.InfoCBNV.Branch.BranchName
+                    CollateralType = ic.Collateral.PropertyType,
+                    ValueCollateral = ic.Collateral.ValueCollateral,
+                    AddressCollateral = ic.Collateral.AddressCollateral,
+                    Relationship = ic.Collateral.Relationship,
+                    NameTVTT = ic.InfoCBNV.NameTVTT,
+                    BranchName = ic.InfoCBNV.Branch.BranchName
                 });
 
                 var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
@@ -157,87 +157,87 @@ namespace BackendServer.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpPost("CreateInsuranceContract")]
-        public async Task<IActionResult> CreateInsurance([FromBody] InsuranceContractNewRequest request)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
+        //[AllowAnonymous]
+        //[HttpPost("CreateInsuranceContract")]
+        //public async Task<IActionResult> CreateInsurance([FromBody] InsuranceContractNewRequest request)
+        //{
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //        {
+        //            return BadRequest(ModelState);
+        //        }
 
-                var validator = new InsuranceContractValidator();
-                var validationResult = validator.Validate(request);
-                if (!validationResult.IsValid)
-                {
-                    return BadRequest(validationResult.Errors);
-                }
+        //        var validator = new InsuranceContractValidator();
+        //        var validationResult = validator.Validate(request);
+        //        if (!validationResult.IsValid)
+        //        {
+        //            return BadRequest(validationResult.Errors);
+        //        }
 
-                var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
-                if (customer == null)
-                {
-                    return BadRequest("Customer not found");
-                }
+        //        var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
+        //        if (customer == null)
+        //        {
+        //            return BadRequest("Customer not found");
+        //        }
 
-                var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
-                if (CBNV == null)
-                {
-                    return BadRequest("CBNV not found");
-                }
+        //        var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
+        //        if (CBNV == null)
+        //        {
+        //            return BadRequest("CBNV not found");
+        //        }
 
-                var partner = await _context.Partners.FirstOrDefaultAsync(x => x.PartnerCode == request.InsurancePartnerCode);
-                if (partner == null)
-                {
-                    return BadRequest("Partner not found");
-                }
+        //        var partner = await _context.Partners.FirstOrDefaultAsync(x => x.PartnerCode == request.InsurancePartnerCode);
+        //        if (partner == null)
+        //        {
+        //            return BadRequest("Partner not found");
+        //        }
 
-                var collateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.CollateralRef);
-                if (collateral == null)
-                {
-                    return BadRequest("Collateral not found");
-                }
+        //        var collateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.CollateralRef);
+        //        if (collateral == null)
+        //        {
+        //            return BadRequest("Collateral not found");
+        //        }
 
-                var insurance = new InsuranceContract()
-                {
-                    HDBH = request.HDBH,
-                    NewOrRenewed = request.NewOrRenewed,
-                    STBH = request.STBH,
-                    InsuranceFee = request.InsuranceFee,
-                    NumberOfPayments = request.NumberOfPayments ?? null,
-                    FromDate = request.FromDate,
-                    ToDate = request.ToDate,
-                    Exception = request.Exception ?? "",
-                    Beneficiaries = request.Beneficiaries,
-                    InsuranceType = request.InsuranceType,
-                    OtherInsuranceType = request.OtherInsuranceType ?? "",
-                    InsuranceBeneficiary = request.InsuranceBeneficiary,
-                    Status = Insuranceapprove.DontSeedapproval.ToString(),
-                    Cif = request.Cif,
-                    TVTTCode = request.TVTTCode,
-                    InsurancePartnerCode = request.InsurancePartnerCode,
-                    Ref = request.CollateralRef,
-                    Customer = customer,
-                    InfoCBNV = CBNV,
-                    Partner = partner,
-                    Collateral = collateral
-                };
+        //        var insurance = new InsuranceContract()
+        //        {
+        //            HDBH = request.HDBH,
+        //            NewOrRenewed = request.NewOrRenewed,
+        //            STBH = request.STBH,
+        //            InsuranceFee = request.InsuranceFee,
+        //            NumberOfPayments = request.NumberOfPayments ?? null,
+        //            FromDate = request.FromDate,
+        //            ToDate = request.ToDate,
+        //            Exception = request.Exception ?? "",
+        //            Beneficiaries = request.Beneficiaries,
+        //            InsuranceType = request.InsuranceType,
+        //            OtherInsuranceType = request.OtherInsuranceType ?? "",
+        //            InsuranceBeneficiary = request.InsuranceBeneficiary,
+        //            Status = Insuranceapprove.DontSeedapproval.ToString(),
+        //            Cif = request.Cif,
+        //            TVTTCode = request.TVTTCode,
+        //            InsurancePartnerCode = request.InsurancePartnerCode,
+        //            Ref = request.CollateralRef,
+        //            Customer = customer,
+        //            InfoCBNV = CBNV,
+        //            Partner = partner,
+        //            Collateral = collateral
+        //        };
 
-                _context.InsuranceContracts.Add(insurance);
-                int result = await _context.SaveChangesAsync();
-                if (result <= 0)
-                {
-                    return BadRequest("Something went wrong, can't add it");
-                }
+        //        _context.InsuranceContracts.Add(insurance);
+        //        int result = await _context.SaveChangesAsync();
+        //        if (result <= 0)
+        //        {
+        //            return BadRequest("Something went wrong, can't add it");
+        //        }
 
-                return Ok(insurance);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //        return Ok(insurance);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
         [AllowAnonymous]
         [HttpPost("CreateInsuranceContracWithPeriod")]
@@ -340,7 +340,7 @@ namespace BackendServer.Controllers
                     }
                     return Ok(insurance);
                 }
-                return Ok("The amount of the premium is not equal to the premium");
+                return BadRequest("The amount of the premium is not equal to the premium");
             }
             catch (Exception ex)
             {

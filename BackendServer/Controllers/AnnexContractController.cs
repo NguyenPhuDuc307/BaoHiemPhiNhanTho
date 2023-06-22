@@ -51,6 +51,7 @@ namespace BackendServer.Controllers
                     ToDate = ic.ToDate,
                     Beneficiaries = ic.Beneficiaries,
                     Status = ic.Status,
+                    AnnexBeneficiary = ic.InsuranceContract.InsuranceBeneficiary,
                     TVTTCode = ic.TVTTCode,
                     NameTVTT = ic.InfoCBNV.NameTVTT,
                     BranchName = ic.InfoCBNV.Branch.BranchName,
@@ -96,6 +97,7 @@ namespace BackendServer.Controllers
                         ToDate = AnnexContract.ToDate,
                         Beneficiaries = AnnexContract.Beneficiaries,
                         Status = AnnexContract.Status,
+                        AnnexBeneficiary = AnnexContract.InsuranceContract.InsuranceBeneficiary,
                         TVTTCode = AnnexContract.TVTTCode,
                         NameTVTT = AnnexContract.InfoCBNV.NameTVTT,
                         BranchName = AnnexContract.InfoCBNV.Branch.BranchName,
@@ -139,7 +141,7 @@ namespace BackendServer.Controllers
                 var insurance = await _context.InsuranceContracts
                     .Include(c => c.AnnexContract)
                     .FirstOrDefaultAsync(x => x.HDBH == request.HDBH);
-                if (insurance == null )
+                if (insurance == null)
                 {
                     return BadRequest("InsuranceContracts not found");
                 }
@@ -147,11 +149,13 @@ namespace BackendServer.Controllers
                 {
                     return BadRequest("InsuranceContracts Already");
                 }
+
                 var checkAnnex = await _context.AnnexContracts.FirstOrDefaultAsync(x => x.HDPL == request.HDPL);
                 if (checkAnnex != null)
                 {
                     return BadRequest("AnnexContracts đã tồn tại");
                 }
+
                 var annexContract = new AnnexContract()
                 {
                     HDPL = request.HDPL,
@@ -250,7 +254,6 @@ namespace BackendServer.Controllers
                 return Ok(new { Message = "Hồ sơ đã gửi phê duyệt, không gửi nhiều lần", MessageStatus = "alreadyApproveProcess", Contract = innexContractsId });
             }
 
-            
             if (innexContractsId.Status == Insuranceapprove.Rejected.ToString())
             {
                 return BadRequest(new { Message = "Hồ sơ có trạng thái là từ chối, không thể duyệt" });

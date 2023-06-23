@@ -2,6 +2,7 @@
 using BackendServer.Data.Enums;
 using BackendServer.DTO;
 using BackendServer.Models.InsuranceContractViewModel;
+using BackendServer.Models.PaymentPeriodViewModel;
 using BackendServer.Validator.InsuranceContract;
 using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -113,6 +114,25 @@ namespace BackendServer.Controllers
                 .Include(c => c.PaymentPeriods)
                 .FirstOrDefaultAsync(x => x.HDBH == HDBH);
 
+                var paymentperiods = await _context.PaymentPeriods
+                    .Include(c => c.InsuranceContract)
+                    .Where(c => c.HDBH == HDBH)
+                    .ToListAsync();
+
+                var payments = new List<PaymentPeriodRequest>();
+
+                foreach (var item in paymentperiods)
+                {
+                    var p = new PaymentPeriodRequest()
+                    {
+                        FeePaymentDate = item.FeePaymentDate,
+                        Money = item.Money,
+                        HDBH = item.HDBH,
+                    };
+                    payments.Add(p);
+                }
+
+
                 if (InsuranceContract != null)
                 {
                     var InsuranceRequset = new InsuranceContractRequest
@@ -144,7 +164,8 @@ namespace BackendServer.Controllers
                         AddressCollateral = InsuranceContract.Collateral.AddressCollateral,
                         Relationship = InsuranceContract.Collateral.Relationship,
                         NameTVTT = InsuranceContract.InfoCBNV.NameTVTT,
-                        BranchName = InsuranceContract.InfoCBNV.Branch.BranchName
+                        BranchName = InsuranceContract.InfoCBNV.Branch.BranchName,
+                        lstPaymentPeriod = payments
                     };
                     return Ok(InsuranceRequset);
                 }

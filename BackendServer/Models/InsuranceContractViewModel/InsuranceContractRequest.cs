@@ -1,5 +1,6 @@
 using BaoHiemPhiNhanTho.BackendServer.Models;
 using BackendServer.Data.Enums;
+using BackendServer.Models.PaymentPeriodViewModel;
 
 namespace BackendServer.Models.InsuranceContractViewModel
 {
@@ -33,5 +34,6 @@ namespace BackendServer.Models.InsuranceContractViewModel
         public string? Relationship { get; set; }
         public string? NameTVTT { get; set; }
         public string? BranchName { get; set; }
+        public List<PaymentPeriodRequest> lstPaymentPeriod { get; set; }
     }
 }

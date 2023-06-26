@@ -13,6 +13,7 @@ namespace BackendServer.Models.InsuranceContractViewModel
         public int? NumberOfPayments { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
+        public DateTime? DateFee { get; set; }
         public string? Exception { get; set; }
         public string? Beneficiaries { get; set; }
         public string? InsuranceType { get; set; }

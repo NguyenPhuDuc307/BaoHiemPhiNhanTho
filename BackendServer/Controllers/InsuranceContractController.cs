@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using NgrokApi;
 using Exception = System.Exception;
 
 namespace BackendServer.Controllers
@@ -35,6 +36,7 @@ namespace BackendServer.Controllers
                 var totalCount = await _context.InsuranceContracts.CountAsync();
                 var pagedData = await _context.InsuranceContracts
                     .Include(c => c.Customer)
+                    .Include(c => c.PaymentPeriods)
                     .Include(c => c.Collateral)
                     .Include(c => c.InfoCBNV)
                     .ThenInclude(c => c.Branch)
@@ -44,6 +46,25 @@ namespace BackendServer.Controllers
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
+
+                var paymentperiods = await _context.PaymentPeriods
+                     .Where(pp => pp.HDBH == pp.InsuranceContract.HDBH)
+                .ToListAsync();
+
+
+                var payments = new List<PaymentPeriodRequest>();
+
+                foreach (var item in paymentperiods)
+                {
+                    var p = new PaymentPeriodRequest()
+                    {
+                        FeePaymentDate = item.FeePaymentDate,
+                        Money = item.Money,
+                        HDBH = item.HDBH,
+                    };
+                    payments.Add(p);
+                }
+
                 if (pagedData == null)
                 {
                     return new ApiErrorResult<PagedList<InsuranceContractRequest>>("Không tìm thấy");
@@ -58,6 +79,7 @@ namespace BackendServer.Controllers
                     NumberOfPayments = ic.NumberOfPayments ?? null,
                     FromDate = ic.FromDate ?? null,
                     ToDate = ic.ToDate ?? null,
+                    DateFee = ic.NumberOfPayments == 1 ? ic.ToDate : null,
                     Exception = ic.Exception ?? null,
                     Beneficiaries = ic.Beneficiaries ?? null,
                     InsuranceType = ic.InsuranceType ?? null,
@@ -78,7 +100,8 @@ namespace BackendServer.Controllers
                     AddressCollateral = ic.Collateral.AddressCollateral,
                     Relationship = ic.Collateral.Relationship,
                     NameTVTT = ic.InfoCBNV.NameTVTT,
-                    BranchName = ic.InfoCBNV.Branch.BranchName
+                    BranchName = ic.InfoCBNV.Branch.BranchName,
+                    lstPaymentPeriod = payments.Where(x => x.HDBH == ic.HDBH).ToList()
                 });
 
                 var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
@@ -133,7 +156,6 @@ namespace BackendServer.Controllers
                     payments.Add(p);
                 }
 
-
                 if (InsuranceContract != null)
                 {
                     var InsuranceRequset = new InsuranceContractRequest
@@ -145,6 +167,7 @@ namespace BackendServer.Controllers
                         NumberOfPayments = InsuranceContract.NumberOfPayments,
                         FromDate = InsuranceContract.FromDate,
                         ToDate = InsuranceContract.ToDate,
+                        DateFee = InsuranceContract.NumberOfPayments == 1 ? InsuranceContract.ToDate : null,
                         Exception = InsuranceContract.Exception,
                         Beneficiaries = InsuranceContract.Beneficiaries,
                         InsuranceType = InsuranceContract.InsuranceType,

@@ -40,6 +40,7 @@ namespace BackendServer.Controllers
                     .ThenInclude(c => c.Branch)
                     .Include(c => c.AnnexContract)
                     .Include(c => c.Partner)
+                    .OrderBy(ic => ic.HDBH)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -274,7 +275,7 @@ namespace BackendServer.Controllers
                 var checkInsurance = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == request.HDBH);
                 if (checkInsurance != null)
                 {
-                    return BadRequest("Mã bảo hiểm đã tồn tại");
+                    return BadRequest(new { Message = "insurance đã tồn tại", MessageStatus = "InsuranceAlready" });
                 }
 
                 var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);

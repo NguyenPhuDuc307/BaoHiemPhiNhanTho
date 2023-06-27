@@ -95,13 +95,13 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetSingleInsurance")]
-        public async Task<IActionResult> GetOneInsurance(string HDBH)
+        public async Task<ApiResult<InsuranceContractRequest>> GetOneInsurance(string HDBH)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return new ApiErrorResult<InsuranceContractRequest>(ModelState.ToString());
                 }
 
                 var InsuranceContract = await _context.InsuranceContracts
@@ -167,14 +167,14 @@ namespace BackendServer.Controllers
                         BranchName = InsuranceContract.InfoCBNV.Branch.BranchName,
                         lstPaymentPeriod = payments
                     };
-                    return Ok(InsuranceRequset);
+                    return new ApiSuccessResult<InsuranceContractRequest> { IsSuccess = true, Message = "Success", ResultObj = InsuranceRequset };
                 }
 
-                return BadRequest("InsuranceContract Not Found");
+                return new ApiErrorResult<InsuranceContractRequest>("Không tìm thấy hợp đồng bảo hiểm");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ApiErrorResult<InsuranceContractRequest>(ex.Message);
             }
         }
 
@@ -262,49 +262,49 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpPost("CreateInsuranceContracWithPeriod")]
-        public async Task<IActionResult> CreateInsurancePeriod([FromBody] InsuranceNewWithPeriodsNewRequest request)
+        public async Task<ApiResult<InsuranceContract>> CreateInsurancePeriod([FromBody] InsuranceNewWithPeriodsNewRequest request)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return new ApiErrorResult<InsuranceContract>(ModelState.ToString());
                 }
 
                 var checkInsurance = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDBH == request.HDBH);
                 if (checkInsurance != null)
                 {
-                    return BadRequest("Mã bảo hiểm đã tồn tại");
+                    return new ApiErrorResult<InsuranceContract>("Hợp đồng bảo hiểm đã tồn tại");
                 }
 
                 var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
                 if (customer == null)
                 {
-                    return BadRequest("Customer not found");
+                    return new ApiErrorResult<InsuranceContract>("Không tìm thấy khách hàng");
                 }
 
                 var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
                 if (CBNV == null)
                 {
-                    return BadRequest("CBNV not found");
+                    return new ApiErrorResult<InsuranceContract>("Không tìm thấy cán bộ nhân viên");
                 }
 
                 var partner = await _context.Partners.FirstOrDefaultAsync(x => x.PartnerCode == request.InsurancePartnerCode);
                 if (partner == null)
                 {
-                    return BadRequest("Partner not found");
+                    return new ApiErrorResult<InsuranceContract>("Không tìm thấy đối tác");
                 }
 
                 var collateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.CollateralRef);
                 if (collateral == null)
                 {
-                    return BadRequest("Collateral not found");
+                    return new ApiErrorResult<InsuranceContract>("Không tìm thấy tài sản đảm bảo");
                 }
 
                 var checkCollateral = await _context.InsuranceContracts.FirstOrDefaultAsync(c => c.Ref == request.CollateralRef);
                 if (checkCollateral != null)
                 {
-                    return BadRequest("Tài sản đảm bảo này đã thuộc hợp đồng khác");
+                    return new ApiErrorResult<InsuranceContract>("Tài sản đảm bảo này đã thuộc hợp đồng khác");
                 }
 
                 decimal? sum = 0;
@@ -357,27 +357,27 @@ namespace BackendServer.Controllers
                     int result = await _context.SaveChangesAsync();
                     if (result <= 0)
                     {
-                        return BadRequest("Something went wrong, can't add it");
+                        return new ApiErrorResult<InsuranceContract>("Something went wrong, can't add it");
                     }
-                    return Ok(insurance);
+                    return new ApiSuccessResult<InsuranceContract> { IsSuccess = true, Message = "Success", ResultObj = insurance };
                 }
-                return Ok("The amount of the premium is not equal to the premium");
+                return new ApiErrorResult<InsuranceContract>("Số tiền các kỳ không bằng số tiền bảo hiểm");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ApiErrorResult<InsuranceContract>(ex.Message);
             }
         }
 
         [AllowAnonymous]
         [HttpPut("EditInsuranceContrac")]
-        public async Task<IActionResult> EditInsurance(string HDBH, [FromBody] InsuranceContractNewRequest request)
+        public async Task<ApiResult<InsuranceContract>> EditInsurance(string HDBH, [FromBody] InsuranceContractNewRequest request)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return new ApiErrorResult<InsuranceContract>(ModelState.ToString());
                 }
                 var insurance = await _context.InsuranceContracts.Include(c => c.Customer)
                     .Include(c => c.Collateral)
@@ -388,30 +388,30 @@ namespace BackendServer.Controllers
                     .FirstOrDefaultAsync(x => x.HDBH == HDBH);
                 if (insurance == null)
                 {
-                    return BadRequest("insurance not found");
+                    return new ApiErrorResult<InsuranceContract>("Không tìm thấy hợp đồng bảo hiểm");
                 }
                 var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
                 if (customer == null)
                 {
-                    return BadRequest("Customer not found");
+                    return new ApiErrorResult<InsuranceContract>("Không tìm thấy khách hàng");
                 }
 
                 var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
                 if (CBNV == null)
                 {
-                    return BadRequest("CBNV not found");
+                    return new ApiErrorResult<InsuranceContract>("Không tìm thấy cán bộ nhân viên");
                 }
 
                 var partner = await _context.Partners.FirstOrDefaultAsync(x => x.PartnerCode == request.InsurancePartnerCode);
                 if (partner == null)
                 {
-                    return BadRequest("Partner not found");
+                    return new ApiErrorResult<InsuranceContract>("Không tìm thấy đối tác");
                 }
 
                 var collateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.CollateralRef);
                 if (collateral == null)
                 {
-                    return BadRequest("Collateral not found");
+                    return new ApiErrorResult<InsuranceContract>("Không tìm thấy tài sản đảm bảo");
                 }
 
                 insurance.HDBH = request.HDBH;
@@ -440,14 +440,14 @@ namespace BackendServer.Controllers
                 int result = await _context.SaveChangesAsync();
                 if (result <= 0)
                 {
-                    return BadRequest("Something went wrongHDBH, can't add it");
+                    return new ApiErrorResult<InsuranceContract>("Something went wrongHDBH, can't add it");
                 }
 
-                return Ok(insurance);
+                return new ApiSuccessResult<InsuranceContract> { IsSuccess = true, Message = "Success", ResultObj = insurance };
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ApiErrorResult<InsuranceContract>(ex.Message);
             }
         }
 

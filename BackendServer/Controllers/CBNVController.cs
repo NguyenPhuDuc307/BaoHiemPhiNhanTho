@@ -25,13 +25,13 @@ namespace BackendServer.Models
 
         [AllowAnonymous]
         [HttpGet("get/CBNV")]
-        public async Task<IActionResult> GetOneCBNV(string TVTT)
+        public async Task<ApiResult<CBNVRequest>> GetOneCBNV(string TVTT)
         {
             try
             {
                 var infoCBNV = await _context.InfoCBNVs
                     .Include(c => c.Branch)
-                    .FirstOrDefaultAsync(c => c.InfoCBNVBranchCode == c.Branch.BranchCode);
+                    .FirstOrDefaultAsync(c => c.TVTTCode == TVTT);
 
 
                 if (infoCBNV != null)
@@ -43,15 +43,15 @@ namespace BackendServer.Models
                         BranchCode = infoCBNV.InfoCBNVBranchCode,
                         BranchName = infoCBNV.Branch.BranchName,
                     };
-                    return Ok(result);
+                    return new ApiSuccessResult<CBNVRequest> { IsSuccess = true, Message = "Success", ResultObj = result };
                 }
 
-                return BadRequest("infoCBNV not found");
+                return new ApiErrorResult<CBNVRequest>("Không tìm thấy CBNV");
 
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ApiErrorResult<CBNVRequest>(ex.Message);
             }
         }
 

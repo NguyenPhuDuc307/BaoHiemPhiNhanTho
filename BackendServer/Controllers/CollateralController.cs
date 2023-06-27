@@ -4,6 +4,7 @@ using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models;
 
 namespace BackendServer.Models
 {
@@ -22,7 +23,7 @@ namespace BackendServer.Models
 
         [AllowAnonymous]
         [HttpGet("get/Collaterals")]
-        public async Task<IActionResult> GetCollateral()
+        public async Task<ApiResult<IEnumerable<CollateralRequest>>> GetCollateral()
         {
             try
             {
@@ -39,22 +40,27 @@ namespace BackendServer.Models
                         PropertyType = s.PropertyType,
                         HDBH = s.HDBH,
                     });
-                    return Ok(result);
+                    return new ApiSuccessResult<IEnumerable<CollateralRequest>> { IsSuccess = true, Message = "Success", ResultObj = result };
                 }
-                return BadRequest("Collaterals not found");
+                return new ApiErrorResult<IEnumerable<CollateralRequest>>("Không tìm thấy tài sản đảm bảo");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ApiErrorResult<IEnumerable<CollateralRequest>>(ex.Message);
             }
         }
 
         [AllowAnonymous]
         [HttpGet("get/SingleCollateral")]
-        public async Task<IActionResult> GetOneCollateral(string Ref)
+        public async Task<ApiResult<CollateralRequest>> GetOneCollateral(string Ref)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return new ApiErrorResult<CollateralRequest>(ModelState.ToString());
+                }
+
                 var collaterals = await _context.Collaterals.FindAsync(Ref);
                 if (collaterals != null)
                 {
@@ -68,32 +74,32 @@ namespace BackendServer.Models
                         PropertyType = collaterals.PropertyType,
                         HDBH = collaterals.HDBH,
                     };
-                    return Ok(result);
+                    return new ApiSuccessResult<CollateralRequest> { IsSuccess = true, Message = "Success", ResultObj = result };
                 }
-                return BadRequest("Collateral not found");
+                return new ApiErrorResult<CollateralRequest>("Không tìm thấy tài sản đảm bảo");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ApiErrorResult<CollateralRequest>(ex.Message);
             }
         }
 
         [AllowAnonymous]
         [HttpPost("Collateral")]
-        public async Task<IActionResult> CreateNewCollateral([FromBody] CollateralRequest request)
+        public async Task<ApiResult<Collateral>> CreateNewCollateral([FromBody] CollateralRequest request)
         {
             try
             {
                 var checkCollateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.Ref);
                 if (checkCollateral != null)
                 {
-                    return BadRequest("đã tồn tại tài sản đảm bảo này rồi");
+                    return new ApiErrorResult<Collateral>("đã tồn tại tài sản đảm bảo này rồi");
                 }
 
                 var checkCollateral1 = await _context.Collaterals.FindAsync(request.HDBH);
                 if (checkCollateral1 != null)
                 {
-                    return BadRequest("đã tồn tại tài sản đảm bảo cho hợp đồng này rồi");
+                    return new ApiErrorResult<Collateral>("đã tồn tại tài sản đảm bảo cho hợp đồng này rồi");
                 }
 
                 var collaterals = new Collateral()
@@ -109,11 +115,11 @@ namespace BackendServer.Models
 
                 _context.Collaterals.Add(collaterals);
                 await _context.SaveChangesAsync();
-                return Ok(collaterals);
+                return new ApiSuccessResult<Collateral> { IsSuccess = true, Message = "Success", ResultObj = collaterals };
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ApiErrorResult<Collateral>(ex.Message);
             }
         }
     }

@@ -3,6 +3,7 @@ using BackendServer.Models.PartnerViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models;
 
 namespace BackendServer.Models
 {
@@ -23,7 +24,7 @@ namespace BackendServer.Models
 
         [AllowAnonymous]
         [HttpGet("get/Partners")]
-        public async Task<IActionResult> GetCBNV()
+        public async Task<ApiResult<IEnumerable<PartnerRequest>>> GetCBNV()
         {
             try
             {
@@ -35,19 +36,19 @@ namespace BackendServer.Models
                         PartnerCode = s.PartnerCode,
                         Name = s.Name,
                     });
-                    return Ok(result);
+                    return new ApiSuccessResult<IEnumerable<PartnerRequest>> { IsSuccess = true, Message = "Success", ResultObj = result };
                 }
-                return BadRequest("infoCBNV not found");
+                return new ApiErrorResult<IEnumerable<PartnerRequest>>("Branches not found");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ApiErrorResult<IEnumerable<PartnerRequest>>(ex.Message);
             }
         }
 
         [AllowAnonymous]
         [HttpGet("get/SinglePartners")]
-        public async Task<IActionResult> GetOneCBNV(string PartnerCode)
+        public async Task<ApiResult<PartnerRequest>> GetOneCBNV(string PartnerCode)
         {
             try
             {
@@ -59,13 +60,13 @@ namespace BackendServer.Models
                         PartnerCode = partner.PartnerCode,
                         Name = partner.Name,
                     };
-                    return Ok(result);
+                    return new ApiSuccessResult<PartnerRequest> { IsSuccess = true, Message = "Success", ResultObj = result };
                 }
-                return BadRequest("infoCBNV not found");
+                return new ApiErrorResult<PartnerRequest>("Không tìm thấy chi nhánh");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ApiErrorResult<PartnerRequest>(ex.Message);
             }
         }
     }

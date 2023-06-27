@@ -23,7 +23,7 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpGet("get/Customer")]
-        public async Task<IActionResult> GetOneCustomer(string cif)
+        public async Task<ApiResult<Customer>> GetOneCustomer(string cif)
         {
             try
             {
@@ -31,14 +31,14 @@ namespace BackendServer.Controllers
 
                 if (customer != null)
                 {
-                    return Ok(customer);
+                    return new ApiSuccessResult<Customer> { IsSuccess = true, Message = "Success", ResultObj = customer };
                 }
 
-                return BadRequest("Customer not found");
+                return new ApiErrorResult<Customer>("Không tìm thấy khách hàng");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ApiErrorResult<Customer>(ex.Message);
             }
         }
     }

@@ -64,8 +64,8 @@ namespace BackendServer.Controllers
                     InsuranceType = ic.InsuranceContract.InsuranceType
                 });
 
-                var pagedList = new PagedList<AnnexContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
-                return Ok(new ApiSuccessResult<PagedList<AnnexContractRequest>>(pagedList));
+                var pagedList = new PagedList<AnnexContractRequest>(true, "Success", pagedDataRequest.ToList(), totalCount, page, pageSize);
+                return Ok(pagedList);
             }
             catch (Exception ex)
             {

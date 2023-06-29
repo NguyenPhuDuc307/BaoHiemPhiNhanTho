@@ -1,6 +1,7 @@
 ﻿using BackendServer.Data.EF;
 using BackendServer.Data.Enums;
 using BackendServer.DTO;
+using BackendServer.Models.AnnexContractViewModel;
 using BackendServer.Models.InsuranceContractViewModel;
 using BackendServer.Models.PaymentPeriodViewModel;
 using BaoHiemPhiNhanTho.BackendServer.Models;
@@ -27,97 +28,73 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetList")]
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> List(int page = 1, int pageSize = 10)
         {
             try
             {
+                // lấy tổng phần tử trong list
                 var totalCount = await _context.InsuranceContracts.CountAsync();
-                var pagedData = await _context.InsuranceContracts
-                    .Include(c => c.Customer)
-                    .Include(c => c.PaymentPeriods)
-                    .Include(c => c.Collateral)
-                    .Include(c => c.InfoCBNV)
-                    .ThenInclude(c => c.Branch)
-                    .Include(c => c.AnnexContract)
-                    .Include(c => c.Partner)
-                    .OrderBy(ic => ic.HDBH)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
 
-                var paymentperiods = await _context.PaymentPeriods
-                     .Where(pp => pp.HDBH == pp.InsuranceContract.HDBH)
-                .ToListAsync();
+                // query
+                var query = from j in _context.InsuranceContracts
+                            join j1 in _context.Customers on j.Cif equals j1.Cif
+                            join j2 in _context.Collaterals on j.Ref equals j2.Ref
+                            join j3 in _context.Partners on j.InsurancePartnerCode equals j3.PartnerCode
+                            join j4 in _context.InfoCBNVs on j.TVTTCode equals j4.TVTTCode
+                            join j5 in _context.Branches on j4.InfoCBNVBranchCode equals j5.BranchCode
+                            where j.HDBH == j2.HDBH
+                            select new InsuranceContractRequest()
+                            {
+                                HDBH = j.HDBH ?? null,
+                                NewOrRenewed = j.NewOrRenewed ?? null,
+                                STBH = j.STBH ?? null,
+                                InsuranceFee = j.InsuranceFee ?? null,
+                                NumberOfPayments = j.NumberOfPayments ?? null,
+                                FromDate = j.FromDate ?? null,
+                                ToDate = j.ToDate ?? null,
+                                DateFee = j.NumberOfPayments == 1 ? j.ToDate : null,
+                                Exception = j.Exception ?? null,
+                                Beneficiaries = j.Beneficiaries ?? null,
+                                InsuranceType = j.InsuranceType ?? null,
+                                OtherInsuranceType = j.OtherInsuranceType ?? null,
+                                InsuranceBeneficiary = j.InsuranceBeneficiary ?? null,
+                                Status = j.Status ?? null,
+                                Cif = j.Cif ?? null,
+                                TVTTCode = j.TVTTCode ?? null,
+                                InsurancePartnerCode = j.InsurancePartnerCode,
+                                CustomerName = j1.Name,
+                                CustomerType = j1.CustomerType,
+                                CCCD = j1.CCCD,
+                                PartnerName = j3.Name,
+                                StatusCollateral = j2.StatusCollateral ?? null,
+                                CollateralRef = j2.Ref,
+                                CollateralType = j2.PropertyType,
+                                ValueCollateral = j2.ValueCollateral,
+                                AddressCollateral = j2.AddressCollateral,
+                                Relationship = j2.Relationship,
+                                NameTVTT = j4.NameTVTT,
+                                BranchName = j5.BranchName,
+                                lstPaymentPeriod = _context.PaymentPeriods
+                                    .Where(pp => pp.HDBH == j.HDBH)
+                                    .Select(pp => new PaymentPeriodRequest()
+                                    {
+                                        FeePaymentDate = pp.FeePaymentDate,
+                                        Money = pp.Money,
+                                        HDBH = pp.HDBH
+                                    })
+                                    .ToList()
+                            };
 
-                if (pagedData == null)
-                {
+                var pagedListTotal = new PagedList<InsuranceContractRequest>(query.Skip((page - 1) * pageSize).Take(pageSize).ToList(), totalCount, page, pageSize);
 
-                }
-
-                var payments = new List<PaymentPeriodRequest>();
-
-                foreach (var item in paymentperiods)
-                {
-                    var p = new PaymentPeriodRequest()
-                    {
-                        FeePaymentDate = item.FeePaymentDate,
-                        Money = item.Money,
-                        HDBH = item.HDBH,
-                    };
-                    payments.Add(p);
-                }
-
-                if (pagedData == null)
-                {
-                    return BadRequest(new ApiErrorResult<PagedList<InsuranceContractRequest>>("Không tìm thấy"));
-                }
-
-                var pagedDataRequest = pagedData.Select(ic => new InsuranceContractRequest
-                {
-                    HDBH = ic.HDBH ?? null,
-                    NewOrRenewed = ic.NewOrRenewed ?? null,
-                    STBH = ic.STBH ?? null,
-                    InsuranceFee = ic.InsuranceFee ?? null,
-                    NumberOfPayments = ic.NumberOfPayments ?? null,
-                    FromDate = ic.FromDate ?? null,
-                    ToDate = ic.ToDate ?? null,
-                    DateFee = ic.NumberOfPayments == 1 ? ic.ToDate : null,
-                    Exception = ic.Exception ?? null,
-                    Beneficiaries = ic.Beneficiaries ?? null,
-                    InsuranceType = ic.InsuranceType ?? null,
-                    OtherInsuranceType = ic.OtherInsuranceType ?? null,
-                    InsuranceBeneficiary = ic.InsuranceBeneficiary ?? null,
-                    Status = ic.Status ?? null,
-                    Cif = ic.Cif ?? null,
-                    TVTTCode = ic.TVTTCode ?? null,
-                    InsurancePartnerCode = ic.InsurancePartnerCode,
-                    CustomerName = ic.Customer.Name,
-                    CustomerType = ic.Customer.CustomerType,
-                    CCCD = ic.Customer.CCCD,
-                    PartnerName = ic.Partner.Name,
-                    StatusCollateral = ic.Collateral.StatusCollateral,
-                    CollateralRef = ic.Collateral.Ref,
-                    CollateralType = ic.Collateral.PropertyType,
-                    ValueCollateral = ic.Collateral.ValueCollateral,
-                    AddressCollateral = ic.Collateral.AddressCollateral,
-                    Relationship = ic.Collateral.Relationship,
-                    NameTVTT = ic.InfoCBNV.NameTVTT,
-                    BranchName = ic.InfoCBNV.Branch.BranchName,
-                    lstPaymentPeriod = payments.Where(x => x.HDBH == ic.HDBH).ToList()
-                });
-
-                var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
-                if (pagedList == null)
-                {
-                    return BadRequest(new ApiErrorResult<PagedList<InsuranceContractRequest>>("Gán vào list bị sai"));
-                }
-                return Ok(new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedList));
+                return Ok(new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedListTotal));
             }
             catch (Exception ex)
             {
                 return BadRequest(new ApiErrorResult<PagedList<InsuranceContractRequest>>());
             }
         }
+
 
         [AllowAnonymous]
         [HttpGet("GetSingleInsurance")]
@@ -204,87 +181,6 @@ namespace BackendServer.Controllers
             }
         }
 
-        //[AllowAnonymous]
-        //[HttpPost("CreateInsuranceContract")]
-        //public async Task<IActionResult> CreateInsurance([FromBody] InsuranceContractNewRequest request)
-        //{
-        //    try
-        //    {
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return BadRequest(ModelState);
-        //        }
-
-        //        var validator = new InsuranceContractValidator();
-        //        var validationResult = validator.Validate(request);
-        //        if (!validationResult.IsValid)
-        //        {
-        //            return BadRequest(validationResult.Errors);
-        //        }
-
-        //        var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Cif == request.Cif);
-        //        if (customer == null)
-        //        {
-        //            return BadRequest("Customer not found");
-        //        }
-
-        //        var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
-        //        if (CBNV == null)
-        //        {
-        //            return BadRequest("CBNV not found");
-        //        }
-
-        //        var partner = await _context.Partners.FirstOrDefaultAsync(x => x.PartnerCode == request.InsurancePartnerCode);
-        //        if (partner == null)
-        //        {
-        //            return BadRequest("Partner not found");
-        //        }
-
-        //        var collateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.CollateralRef);
-        //        if (collateral == null)
-        //        {
-        //            return BadRequest("Collateral not found");
-        //        }
-
-        //        var insurance = new InsuranceContract()
-        //        {
-        //            HDBH = request.HDBH,
-        //            NewOrRenewed = request.NewOrRenewed,
-        //            STBH = request.STBH,
-        //            InsuranceFee = request.InsuranceFee,
-        //            NumberOfPayments = request.NumberOfPayments ?? null,
-        //            FromDate = request.FromDate,
-        //            ToDate = request.ToDate,
-        //            Exception = request.Exception ?? "",
-        //            Beneficiaries = request.Beneficiaries,
-        //            InsuranceType = request.InsuranceType,
-        //            OtherInsuranceType = request.OtherInsuranceType ?? "",
-        //            InsuranceBeneficiary = request.InsuranceBeneficiary,
-        //            Status = Insuranceapprove.DontSeedapproval.ToString(),
-        //            Cif = request.Cif,
-        //            TVTTCode = request.TVTTCode,
-        //            InsurancePartnerCode = request.InsurancePartnerCode,
-        //            Ref = request.CollateralRef,
-        //            Customer = customer,
-        //            InfoCBNV = CBNV,
-        //            Partner = partner,
-        //            Collateral = collateral
-        //        };
-
-        //        _context.InsuranceContracts.Add(insurance);
-        //        int result = await _context.SaveChangesAsync();
-        //        if (result <= 0)
-        //        {
-        //            return BadRequest("Something went wrong, can't add it");
-        //        }
-
-        //        return Ok(insurance);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
 
         [AllowAnonymous]
         [HttpPost("CreateInsuranceContracWithPeriod")]

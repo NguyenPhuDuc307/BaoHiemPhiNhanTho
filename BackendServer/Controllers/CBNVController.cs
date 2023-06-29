@@ -54,40 +54,5 @@ namespace BackendServer.Models
                 return BadRequest(new ApiErrorResult<CBNVRequest>(ex.Message));
             }
         }
-
-        // [HttpPost("post/CBNV")]
-        // public async Task<IActionResult> CreateCBNV(InfoCBNV InfoCBNV)
-        // {
-
-        //     try
-        //     {
-        //         if (!ModelState.IsValid)
-        //         {
-        //             return BadRequest(ModelState);
-        //         }
-
-        //         var Branch = await _context.Branches.FirstOrDefaultAsync(b => b.BranchCode == InfoCBNV.InfoCBNVBranchCode);
-        //         if (Branch == null)
-        //         {
-        //             return NotFound();
-        //         }
-        //         var CBNV = new InfoCBNV()
-        //         {
-        //             TVTTCode = InfoCBNV.TVTTCode,
-        //             NameTVTT = InfoCBNV.NameTVTT,
-        //             InfoCBNVBranchCode = InfoCBNV.InfoCBNVBranchCode,
-        //             Branch = Branch
-        //         };
-        //         _context.InfoCBNVs.Add(CBNV);
-        //         await _context.SaveChangesAsync();
-
-        //         return Ok(InfoCBNV);
-
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return BadRequest(ex);
-        //     }
-        // }
     }
 }

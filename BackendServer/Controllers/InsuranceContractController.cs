@@ -85,7 +85,7 @@ namespace BackendServer.Controllers
                                     .ToList()
                             };
 
-                var pagedListTotal = new PagedList<InsuranceContractRequest>(query.Skip((page - 1) * pageSize).Take(pageSize).ToList(), totalCount, page, pageSize);
+                var pagedListTotal = new PagedList<InsuranceContractRequest>(true, "Success", query.Skip((page - 1) * pageSize).Take(pageSize).ToList(), totalCount, page, pageSize);
 
                 return Ok(new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedListTotal));
             }
@@ -293,7 +293,7 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpPut("EditInsuranceContrac")]
-        public async Task<ApiResult<InsuranceContract>> EditInsurance(string HDBH, [FromBody] InsuranceContractNewRequest request)
+        public async Task<ApiResult<InsuranceContract>> EditInsurance(string HDBH, [FromBody] InsuranceNewWithPeriodsNewRequest request)
         {
             try
             {
@@ -335,6 +335,14 @@ namespace BackendServer.Controllers
                 {
                     return new ApiErrorResult<InsuranceContract>("Không tìm thấy tài sản đảm bảo");
                 }
+
+                decimal? sum = 0;
+                foreach (var item in request.lstPaymentPeriod)
+                {
+                    sum += item.Money;
+                }
+
+
 
                 insurance.HDBH = request.HDBH;
                 insurance.NewOrRenewed = request.NewOrRenewed;

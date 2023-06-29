@@ -137,7 +137,7 @@ namespace BackendServer.Controllers
                     });
                     return Ok(result);
                 }
-                return BadRequest("infoCBNV not found");
+                return BadRequest("paymentPeriods not found");
             }
             catch (Exception ex)
             {

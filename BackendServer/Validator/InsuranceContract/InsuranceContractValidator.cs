@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace BackendServer.Validator.InsuranceContract
 {
-    public class InsuranceContractValidator : AbstractValidator<InsuranceContractNewRequest>
+    public class InsuranceContractValidator : AbstractValidator<InsuranceNewWithPeriodsNewRequest>
     {
         public InsuranceContractValidator()
         {

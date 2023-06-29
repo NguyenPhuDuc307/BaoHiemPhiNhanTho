@@ -87,7 +87,7 @@ namespace BackendServer.Controllers
 
                 var pagedListTotal = new PagedList<InsuranceContractRequest>(true, "Success", query.Skip((page - 1) * pageSize).Take(pageSize).ToList(), totalCount, page, pageSize);
 
-                return Ok(new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedListTotal));
+                return Ok(pagedListTotal);
             }
             catch (Exception ex)
             {

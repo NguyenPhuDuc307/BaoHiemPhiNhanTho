@@ -92,7 +92,7 @@ namespace BackendServer.Controllers
 
                 if (AnnexContract != null)
                 {
-                    var AnnexRequset = new AnnexContractRequest
+                    var AnnexRequest = new AnnexContractRequest
                     {
                         HDPL = AnnexContract.HDPL,
                         AnnexPerson = AnnexContract.AnnexPerson,
@@ -109,7 +109,7 @@ namespace BackendServer.Controllers
                         HDBH = AnnexContract.HDBH,
                         InsuranceType = AnnexContract.InsuranceContract.InsuranceType
                     };
-                    return Ok(new ApiSuccessResult<AnnexContractRequest> { IsSuccess = true, Message = "Success", ResultObj = AnnexRequset });
+                    return Ok(new ApiSuccessResult<AnnexContractRequest> { IsSuccess = true, Message = "Success", ResultObj = AnnexRequest });
                 }
 
                 return BadRequest(new ApiErrorResult<AnnexContractRequest>("Không tìm thấy hợp đồng phụ lục"));

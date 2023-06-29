@@ -3,13 +3,11 @@ using BackendServer.Data.Enums;
 using BackendServer.DTO;
 using BackendServer.Models.InsuranceContractViewModel;
 using BackendServer.Models.PaymentPeriodViewModel;
-using BackendServer.Validator.InsuranceContract;
 using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using NgrokApi;
 using Exception = System.Exception;
 
 namespace BackendServer.Controllers
@@ -29,7 +27,7 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetList")]
-        public async Task<ApiResult<PagedList<InsuranceContractRequest>>> Index(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
         {
             try
             {
@@ -51,6 +49,10 @@ namespace BackendServer.Controllers
                      .Where(pp => pp.HDBH == pp.InsuranceContract.HDBH)
                 .ToListAsync();
 
+                if (pagedData == null)
+                {
+
+                }
 
                 var payments = new List<PaymentPeriodRequest>();
 
@@ -67,7 +69,7 @@ namespace BackendServer.Controllers
 
                 if (pagedData == null)
                 {
-                    return new ApiErrorResult<PagedList<InsuranceContractRequest>>("Không tìm thấy");
+                    return BadRequest(new ApiErrorResult<PagedList<InsuranceContractRequest>>("Không tìm thấy"));
                 }
 
                 var pagedDataRequest = pagedData.Select(ic => new InsuranceContractRequest
@@ -107,13 +109,13 @@ namespace BackendServer.Controllers
                 var pagedList = new PagedList<InsuranceContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
                 if (pagedList == null)
                 {
-                    return new ApiErrorResult<PagedList<InsuranceContractRequest>>("Gán vào list bị sai");
+                    return BadRequest(new ApiErrorResult<PagedList<InsuranceContractRequest>>("Gán vào list bị sai"));
                 }
-                return new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedList);
+                return Ok(new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedList));
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<PagedList<InsuranceContractRequest>>();
+                return BadRequest(new ApiErrorResult<PagedList<InsuranceContractRequest>>());
             }
         }
 

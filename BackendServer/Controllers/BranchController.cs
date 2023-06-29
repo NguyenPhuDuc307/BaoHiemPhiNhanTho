@@ -25,7 +25,7 @@ namespace BackendServer.Models
         [HttpGet("get/Branches")]
         [Authorize]
         [ServiceFilter(typeof(AuthorizeCustomFilter))]
-        public async Task<ApiResult<IEnumerable<BranchRequest>>> GetCBNV()
+        public async Task<IActionResult> GetCBNV()
         {
             try
             {
@@ -37,25 +37,25 @@ namespace BackendServer.Models
                         BranchCode = s.BranchCode,
                         BranchName = s.BranchName,
                     });
-                    return new ApiSuccessResult<IEnumerable<BranchRequest>> { IsSuccess = true, Message = "Success", ResultObj = result };
+                    return Ok(new ApiSuccessResult<IEnumerable<BranchRequest>> { IsSuccess = true, Message = "Success", ResultObj = result });
                 }
-                return new ApiErrorResult<IEnumerable<BranchRequest>>("Branches not found");
+                return BadRequest(new ApiErrorResult<IEnumerable<BranchRequest>>("Branches not found"));
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<IEnumerable<BranchRequest>>(ex.Message);
+                return BadRequest(new ApiErrorResult<IEnumerable<BranchRequest>>(ex.Message));
             }
         }
 
         [AllowAnonymous]
         [HttpGet("get/SingleBranch")]
-        public async Task<ApiResult<BranchRequest>> GetOneCBNV(string BranchCode)
+        public async Task<IActionResult> GetOneCBNV(string BranchCode)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return new ApiErrorResult<BranchRequest>(ModelState.ToString());
+                    return BadRequest(new ApiErrorResult<BranchRequest>(ModelState.ToString()));
                 }
                 var branch = await _context.Branches.FindAsync(BranchCode);
                 if (branch != null)
@@ -65,14 +65,14 @@ namespace BackendServer.Models
                         BranchCode = branch.BranchCode,
                         BranchName = branch.BranchName,
                     };
-                    return new ApiSuccessResult<BranchRequest> { IsSuccess = true, Message = "Success", ResultObj = result };
+                    return Ok(new ApiSuccessResult<BranchRequest> { IsSuccess = true, Message = "Success", ResultObj = result });
                 }
-                return new ApiErrorResult<BranchRequest>("Không tìm thấy chi nhánh");
+                return BadRequest(new ApiErrorResult<BranchRequest>("Không tìm thấy chi nhánh"));
 
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<BranchRequest>(ex.Message);
+                return BadRequest(new ApiErrorResult<BranchRequest>(ex.Message));
             }
         }
     }

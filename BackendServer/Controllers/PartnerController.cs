@@ -24,7 +24,7 @@ namespace BackendServer.Models
 
         [AllowAnonymous]
         [HttpGet("get/Partners")]
-        public async Task<ApiResult<IEnumerable<PartnerRequest>>> GetCBNV()
+        public async Task<IActionResult> GetCBNV()
         {
             try
             {
@@ -36,19 +36,19 @@ namespace BackendServer.Models
                         PartnerCode = s.PartnerCode,
                         Name = s.Name,
                     });
-                    return new ApiSuccessResult<IEnumerable<PartnerRequest>> { IsSuccess = true, Message = "Success", ResultObj = result };
+                    return Ok(new ApiSuccessResult<IEnumerable<PartnerRequest>> { IsSuccess = true, Message = "Success", ResultObj = result });
                 }
-                return new ApiErrorResult<IEnumerable<PartnerRequest>>("Branches not found");
+                return BadRequest(new ApiErrorResult<IEnumerable<PartnerRequest>>("Branches not found"));
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<IEnumerable<PartnerRequest>>(ex.Message);
+                return BadRequest(new ApiErrorResult<IEnumerable<PartnerRequest>>(ex.Message));
             }
         }
 
         [AllowAnonymous]
         [HttpGet("get/SinglePartners")]
-        public async Task<ApiResult<PartnerRequest>> GetOneCBNV(string PartnerCode)
+        public async Task<IActionResult> GetOneCBNV(string PartnerCode)
         {
             try
             {
@@ -60,13 +60,13 @@ namespace BackendServer.Models
                         PartnerCode = partner.PartnerCode,
                         Name = partner.Name,
                     };
-                    return new ApiSuccessResult<PartnerRequest> { IsSuccess = true, Message = "Success", ResultObj = result };
+                    return Ok(new ApiSuccessResult<PartnerRequest> { IsSuccess = true, Message = "Success", ResultObj = result });
                 }
-                return new ApiErrorResult<PartnerRequest>("Không tìm thấy chi nhánh");
+                return BadRequest(new ApiErrorResult<PartnerRequest>("Không tìm thấy chi nhánh"));
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<PartnerRequest>(ex.Message);
+                return BadRequest(new ApiErrorResult<PartnerRequest>(ex.Message));
             }
         }
     }

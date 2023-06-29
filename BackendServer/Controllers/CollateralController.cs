@@ -23,7 +23,7 @@ namespace BackendServer.Models
 
         [AllowAnonymous]
         [HttpGet("get/Collaterals")]
-        public async Task<ApiResult<IEnumerable<CollateralRequest>>> GetCollateral()
+        public async Task<IActionResult> GetCollateral()
         {
             try
             {
@@ -40,25 +40,25 @@ namespace BackendServer.Models
                         PropertyType = s.PropertyType,
                         HDBH = s.HDBH,
                     });
-                    return new ApiSuccessResult<IEnumerable<CollateralRequest>> { IsSuccess = true, Message = "Success", ResultObj = result };
+                    return Ok(new ApiSuccessResult<IEnumerable<CollateralRequest>> { IsSuccess = true, Message = "Success", ResultObj = result });
                 }
-                return new ApiErrorResult<IEnumerable<CollateralRequest>>("Không tìm thấy tài sản đảm bảo");
+                return BadRequest(new ApiErrorResult<IEnumerable<CollateralRequest>>("Không tìm thấy tài sản đảm bảo"));
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<IEnumerable<CollateralRequest>>(ex.Message);
+                return BadRequest(new ApiErrorResult<IEnumerable<CollateralRequest>>(ex.Message));
             }
         }
 
         [AllowAnonymous]
         [HttpGet("get/SingleCollateral")]
-        public async Task<ApiResult<CollateralRequest>> GetOneCollateral(string Ref)
+        public async Task<IActionResult> GetOneCollateral(string Ref)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return new ApiErrorResult<CollateralRequest>(ModelState.ToString());
+                    return BadRequest(new ApiErrorResult<CollateralRequest>(ModelState.ToString()));
                 }
 
                 var collaterals = await _context.Collaterals.FindAsync(Ref);
@@ -74,32 +74,32 @@ namespace BackendServer.Models
                         PropertyType = collaterals.PropertyType,
                         HDBH = collaterals.HDBH,
                     };
-                    return new ApiSuccessResult<CollateralRequest> { IsSuccess = true, Message = "Success", ResultObj = result };
+                    return Ok(new ApiSuccessResult<CollateralRequest> { IsSuccess = true, Message = "Success", ResultObj = result });
                 }
-                return new ApiErrorResult<CollateralRequest>("Không tìm thấy tài sản đảm bảo");
+                return BadRequest(new ApiErrorResult<CollateralRequest>("Không tìm thấy tài sản đảm bảo"));
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<CollateralRequest>(ex.Message);
+                return BadRequest(new ApiErrorResult<CollateralRequest>(ex.Message));
             }
         }
 
         [AllowAnonymous]
         [HttpPost("Collateral")]
-        public async Task<ApiResult<Collateral>> CreateNewCollateral([FromBody] CollateralRequest request)
+        public async Task<IActionResult> CreateNewCollateral([FromBody] CollateralRequest request)
         {
             try
             {
                 var checkCollateral = await _context.Collaterals.FirstOrDefaultAsync(x => x.Ref == request.Ref);
                 if (checkCollateral != null)
                 {
-                    return new ApiErrorResult<Collateral>("đã tồn tại tài sản đảm bảo này rồi");
+                    return BadRequest(new ApiErrorResult<Collateral>("đã tồn tại tài sản đảm bảo này rồi"));
                 }
 
                 var checkCollateral1 = await _context.Collaterals.FindAsync(request.HDBH);
                 if (checkCollateral1 != null)
                 {
-                    return new ApiErrorResult<Collateral>("đã tồn tại tài sản đảm bảo cho hợp đồng này rồi");
+                    return BadRequest(new ApiErrorResult<Collateral>("đã tồn tại tài sản đảm bảo cho hợp đồng này rồi"));
                 }
 
                 var collaterals = new Collateral()
@@ -115,11 +115,11 @@ namespace BackendServer.Models
 
                 _context.Collaterals.Add(collaterals);
                 await _context.SaveChangesAsync();
-                return new ApiSuccessResult<Collateral> { IsSuccess = true, Message = "Success", ResultObj = collaterals };
+                return Ok(new ApiSuccessResult<Collateral> { IsSuccess = true, Message = "Success", ResultObj = collaterals });
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<Collateral>(ex.Message);
+                return BadRequest(new ApiErrorResult<Collateral>(ex.Message));
             }
         }
     }

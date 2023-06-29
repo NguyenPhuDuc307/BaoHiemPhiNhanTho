@@ -27,7 +27,7 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetList")]
-        public async Task<ApiResult<PagedList<AnnexContractRequest>>> Index(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
         {
             try
             {
@@ -40,6 +40,11 @@ namespace BackendServer.Controllers
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
+
+                if (pagedData == null)
+                {
+                    return BadRequest(new ApiErrorResult<AnnexContractRequest>("Không tồn tại hợp đồng phụ lục nào cả"));
+                }
 
                 var pagedDataRequest = pagedData.Select(ic => new AnnexContractRequest
                 {
@@ -60,23 +65,23 @@ namespace BackendServer.Controllers
                 });
 
                 var pagedList = new PagedList<AnnexContractRequest>(pagedDataRequest.ToList(), totalCount, page, pageSize);
-                return new ApiSuccessResult<PagedList<AnnexContractRequest>>(pagedList);
+                return Ok(new ApiSuccessResult<PagedList<AnnexContractRequest>>(pagedList));
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<PagedList<AnnexContractRequest>>();
+                return BadRequest(new ApiErrorResult<AnnexContractRequest>(ex.Message));
             }
         }
 
         [AllowAnonymous]
         [HttpGet("GetSingleAnnex")]
-        public async Task<ApiResult<AnnexContractRequest>> GetOneInsurance(string HDPL)
+        public async Task<IActionResult> GetOneInsurance(string HDPL)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return new ApiErrorResult<AnnexContractRequest>(ModelState.ToString());
+                    return BadRequest(new ApiErrorResult<AnnexContractRequest>(ModelState.ToString()));
                 }
 
                 var AnnexContract = await _context.AnnexContracts
@@ -104,56 +109,56 @@ namespace BackendServer.Controllers
                         HDBH = AnnexContract.HDBH,
                         InsuranceType = AnnexContract.InsuranceContract.InsuranceType
                     };
-                    return new ApiSuccessResult<AnnexContractRequest> { IsSuccess = true, Message = "Success", ResultObj = AnnexRequset };
+                    return Ok(new ApiSuccessResult<AnnexContractRequest> { IsSuccess = true, Message = "Success", ResultObj = AnnexRequset });
                 }
 
-                return new ApiErrorResult<AnnexContractRequest>("Không tìm thấy hợp đồng phụ lục");
+                return BadRequest(new ApiErrorResult<AnnexContractRequest>("Không tìm thấy hợp đồng phụ lục"));
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<AnnexContractRequest>(ex.Message);
+                return BadRequest(new ApiErrorResult<AnnexContractRequest>(ex.Message));
             }
         }
 
         [AllowAnonymous]
         [HttpPost("CreateAnnexContract")]
-        public async Task<ApiResult<AnnexContract>> CreateInsurance([FromBody] AnnexContractNewRequest request)
+        public async Task<IActionResult> CreateInsurance([FromBody] AnnexContractNewRequest request)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return new ApiErrorResult<AnnexContract>(ModelState.ToString());
+                    return BadRequest(new ApiErrorResult<AnnexContract>(ModelState.ToString()));
                 }
 
                 var validator = new AnnexContractValidator();
                 var validationResult = validator.Validate(request);
                 if (!validationResult.IsValid)
                 {
-                    return new ApiErrorResult<AnnexContract>(validationResult.Errors.ToString());
+                    return BadRequest(new ApiErrorResult<AnnexContract>(validationResult.Errors.ToString()));
                 }
 
                 var CBNV = await _context.InfoCBNVs.FirstOrDefaultAsync(x => x.TVTTCode == request.TVTTCode);
                 if (CBNV == null)
                 {
-                    return new ApiErrorResult<AnnexContract>("Không tìm thấy cán bộ nhân viên");
+                    return BadRequest(new ApiErrorResult<AnnexContract>("Không tìm thấy cán bộ nhân viên"));
                 }
                 var insurance = await _context.InsuranceContracts
                     .Include(c => c.AnnexContract)
                     .FirstOrDefaultAsync(x => x.HDBH == request.HDBH);
                 if (insurance == null)
                 {
-                    return new ApiErrorResult<AnnexContract>("Không tìm thấy hợp đồng bảo hiểm");
+                    return BadRequest(new ApiErrorResult<AnnexContract>("Không tìm thấy hợp đồng bảo hiểm"));
                 }
                 if (insurance.HDPL != null)
                 {
-                    return new ApiErrorResult<AnnexContract>("Hợp đồng bảo hiểm đã có hợp đồng phụ lục");
+                    return BadRequest(new ApiErrorResult<AnnexContract>("Hợp đồng bảo hiểm đã có hợp đồng phụ lục"));
                 }
 
                 var checkAnnex = await _context.AnnexContracts.FirstOrDefaultAsync(x => x.HDPL == request.HDPL);
                 if (checkAnnex != null)
                 {
-                    return new ApiErrorResult<AnnexContract>("AnnexContracts đã tồn tại");
+                    return BadRequest(new ApiErrorResult<AnnexContract>("AnnexContracts đã tồn tại"));
                 }
 
                 var annexContract = new AnnexContract()
@@ -176,26 +181,26 @@ namespace BackendServer.Controllers
                 int result = await _context.SaveChangesAsync();
                 if (result <= 0)
                 {
-                    return new ApiErrorResult<AnnexContract>("Something went wrong, can't add it");
+                    return BadRequest(new ApiErrorResult<AnnexContract>("Something went wrong, can't add it"));
                 }
 
-                return new ApiSuccessResult<AnnexContract> { IsSuccess = true, Message = "Success", ResultObj = annexContract };
+                return Ok(new ApiSuccessResult<AnnexContract> { IsSuccess = true, Message = "Success", ResultObj = annexContract });
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<AnnexContract>(ex.Message);
+                return BadRequest(new ApiErrorResult<AnnexContract>(ex.Message));
             }
         }
 
         [AllowAnonymous]
         [HttpPut("EditAnnexContract")]
-        public async Task<ApiResult<AnnexContract>> EditInsurance(string HDPL, [FromBody] AnnexContractNewRequest request)
+        public async Task<IActionResult> EditInsurance(string HDPL, [FromBody] AnnexContractNewRequest request)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return new ApiErrorResult<AnnexContract>(ModelState.ToString());
+                    return BadRequest(new ApiErrorResult<AnnexContract>(ModelState.ToString()));
                 }
                 var AnnexContract = await _context.AnnexContracts
                     .Include(c => c.InfoCBNV)
@@ -206,15 +211,15 @@ namespace BackendServer.Controllers
                 var insurance = await _context.InsuranceContracts.FirstOrDefaultAsync(x => x.HDPL == HDPL);
                 if (CBNV == null)
                 {
-                    return new ApiErrorResult<AnnexContract>("Không tìm thấy cán bộ nhân viên");
+                    return BadRequest(new ApiErrorResult<AnnexContract>("Không tìm thấy cán bộ nhân viên"));
                 }
                 if (insurance == null)
                 {
-                    return new ApiErrorResult<AnnexContract>("Không tìm thấy hợp đồng bảo hiểm");
+                    return BadRequest(new ApiErrorResult<AnnexContract>("Không tìm thấy hợp đồng bảo hiểm"));
                 }
                 if (AnnexContract == null)
                 {
-                    return new ApiErrorResult<AnnexContract>("Không tìm thấy hợp đồng phụ lục");
+                    return BadRequest(new ApiErrorResult<AnnexContract>("Không tìm thấy hợp đồng phụ lục"));
                 }
 
                 AnnexContract.HDPL = request.HDPL;
@@ -234,14 +239,14 @@ namespace BackendServer.Controllers
                 int result = await _context.SaveChangesAsync();
                 if (result <= 0)
                 {
-                    return new ApiErrorResult<AnnexContract>("Something went wrong, can't add it");
+                    return BadRequest(new ApiErrorResult<AnnexContract>("Something went wrong, can't add it"));
                 }
 
-                return new ApiSuccessResult<AnnexContract> { IsSuccess = true, Message = "Success", ResultObj = AnnexContract };
+                return Ok(new ApiSuccessResult<AnnexContract> { IsSuccess = true, Message = "Success", ResultObj = AnnexContract });
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<AnnexContract>(ex.Message);
+                return BadRequest(new ApiErrorResult<AnnexContract>(ex.Message));
             }
         }
 

@@ -85,7 +85,7 @@ namespace BackendServer.Controllers
                                     .ToList()
                             };
 
-                var pagedListTotal = new PagedList<InsuranceContractRequest>(true, "Success", query.Skip((page - 1) * pageSize).Take(pageSize).ToList(), totalCount, page, pageSize);
+                var pagedListTotal = new PagedList<InsuranceContractRequest>(true, "Success", query.Skip((page) * pageSize).Take(pageSize).ToList(), totalCount, page, pageSize);
 
                 return Ok(pagedListTotal);
             }

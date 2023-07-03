@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BackendServer.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BaoHiemPhiNhanTho.BackendServer.Models;
@@ -17,6 +18,7 @@ public class AnnexContract
     public InfoCBNV? InfoCBNV { set; get; }
     public string? HDBH { get; set; }
     public InsuranceContract? InsuranceContract { set; get; }
+    public IList<AnnexContractBrowse> annexContractBrowses { set; get; }
 }
 
 public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract>

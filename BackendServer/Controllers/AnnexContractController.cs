@@ -37,7 +37,7 @@ namespace BackendServer.Controllers
                         .ThenInclude(c => c.Branch)
                     .Include(c => c.InsuranceContract)
                     .OrderBy(ic => ic.HDPL)
-                    .Skip((page - 1) * pageSize)
+                    .Skip((page) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
 

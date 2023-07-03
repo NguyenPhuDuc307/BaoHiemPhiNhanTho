@@ -3,6 +3,7 @@ using System;
 using BackendServer.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendServer.Migrations
 {
     [DbContext(typeof(BHPNTDbContext))]
-    partial class BHPNTDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230703034551_addnewtable")]
+    partial class addnewtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,36 +23,6 @@ namespace BackendServer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("BackendServer.Data.Entities.AnnexContractBrowse", b =>
-                {
-                    b.Property<int>("browserInformationId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("HDPL")
-                        .HasColumnType("text");
-
-                    b.Property<string>("browserInformationId1")
-                        .HasColumnType("text");
-
-                    b.Property<int>("id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("message")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("timeSpace")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("browserInformationId", "HDPL");
-
-                    b.HasIndex("HDPL");
-
-                    b.HasIndex("browserInformationId1");
-
-                    b.ToTable("annexContractBrowses");
-                });
 
             modelBuilder.Entity("BackendServer.Data.Entities.BrowserInformation", b =>
                 {
@@ -361,27 +333,10 @@ namespace BackendServer.Migrations
                     b.ToTable("PaymentPeriods");
                 });
 
-            modelBuilder.Entity("BackendServer.Data.Entities.AnnexContractBrowse", b =>
-                {
-                    b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.AnnexContract", "annexContract")
-                        .WithMany("annexContractBrowses")
-                        .HasForeignKey("HDPL")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BackendServer.Data.Entities.BrowserInformation", "BrowserInformation")
-                        .WithMany("annexContractBrowses")
-                        .HasForeignKey("browserInformationId1");
-
-                    b.Navigation("BrowserInformation");
-
-                    b.Navigation("annexContract");
-                });
-
             modelBuilder.Entity("BackendServer.Data.Entities.InsuranceContractBrowse", b =>
                 {
                     b.HasOne("BaoHiemPhiNhanTho.BackendServer.Models.InsuranceContract", "InsuranceContract")
-                        .WithMany()
+                        .WithMany("insuranceContractBrowses")
                         .HasForeignKey("HDBH")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -462,14 +417,7 @@ namespace BackendServer.Migrations
 
             modelBuilder.Entity("BackendServer.Data.Entities.BrowserInformation", b =>
                 {
-                    b.Navigation("annexContractBrowses");
-
                     b.Navigation("insuranceContractBrowses");
-                });
-
-            modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.AnnexContract", b =>
-                {
-                    b.Navigation("annexContractBrowses");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Branch", b =>
@@ -496,6 +444,8 @@ namespace BackendServer.Migrations
                     b.Navigation("Collateral");
 
                     b.Navigation("PaymentPeriods");
+
+                    b.Navigation("insuranceContractBrowses");
                 });
 
             modelBuilder.Entity("BaoHiemPhiNhanTho.BackendServer.Models.Partner", b =>

@@ -1,3 +1,4 @@
+using BackendServer.Data.Entities;
 using BaoHiemPhiNhanTho.BackendServer.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,9 @@ public class BHPNTDbContext : DbContext
             .HasOne<AnnexContract>(s => s.AnnexContract)
             .WithOne(ad => ad.InsuranceContract)
             .HasForeignKey<AnnexContract>(ad => ad.HDBH);
+
+        modelBuilder.Entity<InsuranceContractBrowse>().HasKey(sc => new { sc.browserInformationId, sc.HDBH });
+        modelBuilder.Entity<AnnexContractBrowse>().HasKey(sc => new { sc.browserInformationId, sc.HDPL });
     }
 
     public DbSet<AnnexContract> AnnexContracts { get; set; }
@@ -40,4 +44,7 @@ public class BHPNTDbContext : DbContext
     public DbSet<InsuranceContract> InsuranceContracts { get; set; }
     public DbSet<Partner> Partners { get; set; }
     public DbSet<PaymentPeriod> PaymentPeriods { get; set; }
+    public DbSet<BrowserInformation> browserInformation { get; set; }
+    public DbSet<InsuranceContractBrowse> insuranceContractBrowses { get; set; }
+    public DbSet<AnnexContractBrowse> annexContractBrowses { get; set; }
 }

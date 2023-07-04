@@ -29,7 +29,7 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetList")]
-        public async Task<IActionResult> Index(int skipCount = 0, int maxResultCount = 10)
+        public async Task<IActionResult> Index(int SkipCount = 0, int MaxResultCount = 10)
         {
             try
             {
@@ -37,11 +37,11 @@ namespace BackendServer.Controllers
                 var pagedData = await _context.AnnexContracts
                         .Include(c => c.InfoCBNV)
                         .ThenInclude(c => c.Branch)
-                        .Include(c => c.InsuranceContract)
-                        .OrderBy(ic => ic.HDPL)
-                        .Skip(skipCount)
-                        .Take(maxResultCount)
-                        .ToListAsync();
+                    .Include(c => c.InsuranceContract)
+                    .OrderBy(ic => ic.HDPL)
+                    .Skip(SkipCount)
+                    .Take(MaxResultCount)
+                    .ToListAsync();
 
                 if (pagedData == null)
                 {
@@ -66,7 +66,7 @@ namespace BackendServer.Controllers
                     InsuranceType = ic.InsuranceContract.InsuranceType
                 });
 
-                var pagedList = new PagedList<AnnexContractRequest>(true, "Success", pagedDataRequest.ToList(), totalCount, skipCount, maxResultCount);
+                var pagedList = new PagedList<AnnexContractRequest>(true, "Success", pagedDataRequest.ToList(), totalCount, SkipCount, pagedDataRequest.Count());
                 return Ok(pagedList);
             }
             catch (Exception ex)

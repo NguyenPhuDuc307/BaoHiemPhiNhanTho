@@ -35,6 +35,7 @@ namespace BackendServer.Models.InsuranceContractViewModel
         public string? Relationship { get; set; }
         public string? NameTVTT { get; set; }
         public string? BranchName { get; set; }
+        public string? HDPL { get; set; }
         public List<PaymentPeriodRequest> lstPaymentPeriod { get; set; }
     }
 }

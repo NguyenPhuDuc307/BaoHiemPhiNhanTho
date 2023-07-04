@@ -28,7 +28,7 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetList")]
-        public async Task<IActionResult> List(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> List(int skipCount = 0, int maxResultCount = 10)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace BackendServer.Controllers
                                     .ToList()
                             };
 
-                var pagedListTotal = new PagedList<InsuranceContractRequest>(true, "Success", query.Skip((page) * pageSize).Take(pageSize).ToList(), totalCount, page, pageSize);
+                var pagedListTotal = new PagedList<InsuranceContractRequest>(true, "Success", query.Skip(skipCount).Take(maxResultCount).ToList(), totalCount - 1, skipCount, maxResultCount);
 
                 return Ok(pagedListTotal);
             }
@@ -94,7 +94,6 @@ namespace BackendServer.Controllers
                 return BadRequest(new ApiErrorResult<PagedList<InsuranceContractRequest>>());
             }
         }
-
 
         [AllowAnonymous]
         [HttpGet("GetSingleInsurance")]
@@ -180,7 +179,6 @@ namespace BackendServer.Controllers
                 return BadRequest(new ApiErrorResult<InsuranceContractRequest>(ex.Message));
             }
         }
-
 
         [AllowAnonymous]
         [HttpPost("CreateInsuranceContracWithPeriod")]
@@ -341,8 +339,6 @@ namespace BackendServer.Controllers
                 {
                     sum += item.Money;
                 }
-
-
 
                 insurance.HDBH = request.HDBH;
                 insurance.NewOrRenewed = request.NewOrRenewed;

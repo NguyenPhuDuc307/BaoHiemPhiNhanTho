@@ -13,8 +13,8 @@ namespace BackendServer.Data.Entities
         public string position { get; set; }
         public string area { get; set; }
         public string branch { get; set; }
-        public IList<InsuranceContractBrowse> insuranceContractBrowses { set; get; }
-        public IList<AnnexContractBrowse> annexContractBrowses { set; get; }
+        public IList<InsuranceContractBrowse>? insuranceContractBrowses { set; get; }
+        public IList<AnnexContractBrowse>? annexContractBrowses { set; get; }
     }
 }
 

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Exception = System.Exception;
 
 namespace BackendServer.Controllers
@@ -27,19 +29,19 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetList")]
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(int skipCount = 0, int maxResultCount = 10)
         {
             try
             {
                 var totalCount = await _context.AnnexContracts.CountAsync();
                 var pagedData = await _context.AnnexContracts
-                    .Include(c => c.InfoCBNV)
+                        .Include(c => c.InfoCBNV)
                         .ThenInclude(c => c.Branch)
-                    .Include(c => c.InsuranceContract)
-                    .OrderBy(ic => ic.HDPL)
-                    .Skip((page) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
+                        .Include(c => c.InsuranceContract)
+                        .OrderBy(ic => ic.HDPL)
+                        .Skip(skipCount)
+                        .Take(maxResultCount)
+                        .ToListAsync();
 
                 if (pagedData == null)
                 {
@@ -64,7 +66,7 @@ namespace BackendServer.Controllers
                     InsuranceType = ic.InsuranceContract.InsuranceType
                 });
 
-                var pagedList = new PagedList<AnnexContractRequest>(true, "Success", pagedDataRequest.ToList(), totalCount, page, pageSize);
+                var pagedList = new PagedList<AnnexContractRequest>(true, "Success", pagedDataRequest.ToList(), totalCount, skipCount, maxResultCount);
                 return Ok(pagedList);
             }
             catch (Exception ex)

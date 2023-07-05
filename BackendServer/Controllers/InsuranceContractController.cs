@@ -28,7 +28,7 @@ namespace BackendServer.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetList")]
-        public async Task<IActionResult> List(int skipCount = 0, int maxResultCount = 10)
+        public async Task<IActionResult> List(int SkipCount = 0, int MaxResultCount = 10)
         {
             try
             {
@@ -74,6 +74,7 @@ namespace BackendServer.Controllers
                                 Relationship = j2.Relationship,
                                 NameTVTT = j4.NameTVTT,
                                 BranchName = j5.BranchName,
+                                HDPL = j.HDPL,
                                 lstPaymentPeriod = _context.PaymentPeriods
                                     .Where(pp => pp.HDBH == j.HDBH)
                                     .Select(pp => new PaymentPeriodRequest()
@@ -85,9 +86,13 @@ namespace BackendServer.Controllers
                                     .ToList()
                             };
 
-                var pagedListTotal = new PagedList<InsuranceContractRequest>(true, "Success", query.Skip(skipCount).Take(maxResultCount).ToList(), totalCount - 1, skipCount, maxResultCount);
+                var pagedListTotal = new PagedList<InsuranceContractRequest>(true, "Success", query.Skip(SkipCount).Take(MaxResultCount).ToList(), totalCount, SkipCount, query.Skip(SkipCount).Take(MaxResultCount).Count());
 
-                return Ok(pagedListTotal);
+                if (pagedListTotal == null)
+                {
+                    return BadRequest(new ApiErrorResult<PagedList<InsuranceContractRequest>>("Không tìm thấy hợp đồng nào hết"));
+                }
+                return Ok(new ApiSuccessResult<PagedList<InsuranceContractRequest>>(pagedListTotal));
             }
             catch (Exception ex)
             {
@@ -114,6 +119,7 @@ namespace BackendServer.Controllers
                 .Include(c => c.AnnexContract)
                 .Include(c => c.Partner)
                 .Include(c => c.PaymentPeriods)
+                .Include(c => c.AnnexContract)
                 .FirstOrDefaultAsync(x => x.HDBH == HDBH);
 
                 var paymentperiods = await _context.PaymentPeriods
@@ -167,6 +173,7 @@ namespace BackendServer.Controllers
                         Relationship = InsuranceContract.Collateral.Relationship,
                         NameTVTT = InsuranceContract.InfoCBNV.NameTVTT,
                         BranchName = InsuranceContract.InfoCBNV.Branch.BranchName,
+                        HDPL = InsuranceContract.HDPL,
                         lstPaymentPeriod = payments
                     };
                     return Ok(new ApiSuccessResult<InsuranceContractRequest> { IsSuccess = true, Message = "Success", ResultObj = InsuranceRequset });

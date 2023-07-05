@@ -18,6 +18,7 @@ public class UserController : ControllerBase
         _config = config;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<string> Authencate()
     {

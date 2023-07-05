@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BackendServer.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BaoHiemPhiNhanTho.BackendServer.Models;
@@ -6,18 +7,18 @@ namespace BaoHiemPhiNhanTho.BackendServer.Models;
 public class AnnexContract
 {
     public string? HDPL { get; set; }
-    public bool? NewOrRenewed { get; set; }
-    public decimal? STBH { get; set; }
-    public decimal? InsuranceFee { get; set; }
-    public int? NumberOfPayments { get; set; }
+    public string? AnnexPerson { get; set; }
+    public decimal? AdditionalAnnexFee { get; set; }
+    public decimal? AnnexFeeVAT { get; set; }
     public DateTime? FromDate { get; set; }
     public DateTime? ToDate { get; set; }
-    public string? Exception { get; set; }
-    public string? HDBH { get; set; }
-    public InsuranceContract? InsuranceContract { set; get; }
+    public string? Beneficiaries { get; set; }
+    public string? Status { get; set; }
     public string? TVTTCode { get; set; }
     public InfoCBNV? InfoCBNV { set; get; }
-    public string? Status { get; set; }
+    public string? HDBH { get; set; }
+    public InsuranceContract? InsuranceContract { set; get; }
+    public IList<AnnexContractBrowse> annexContractBrowses { set; get; }
 }
 
 public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract>
@@ -32,14 +33,11 @@ public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract
                .IsRequired()
                .HasMaxLength(50);
 
-        builder.Property(x => x.NewOrRenewed)
+        builder.Property(x => x.AdditionalAnnexFee)
                .IsRequired();
 
-        builder.Property(x => x.STBH)
-               .IsRequired().HasColumnType("decimal(18,2)");
-
-        builder.Property(x => x.InsuranceFee)
-               .IsRequired().HasColumnType("decimal(18,2)");
+        builder.Property(x => x.AnnexFeeVAT)
+               .IsRequired();
 
         builder.Property(x => x.FromDate)
                .IsRequired();
@@ -47,19 +45,23 @@ public class AnnexContractConfiguration : IEntityTypeConfiguration<AnnexContract
         builder.Property(x => x.ToDate)
                .IsRequired();
 
-        builder.Property(x => x.Exception)
+        builder.Property(x => x.TVTTCode)
                .IsRequired()
-               .HasMaxLength(255);
+               .HasMaxLength(50);
+
+        builder.Property(x => x.HDBH)
+              .IsRequired()
+              .HasMaxLength(50);
+
+        builder.Property(x => x.Beneficiaries)
+              .IsRequired()
+              .HasMaxLength(255);
 
         builder.Property(x => x.Status)
                .IsRequired();
 
-        builder.HasOne(x => x.InsuranceContract)
-                   .WithMany(x => x.AnnexContracts)
-                   .HasForeignKey(x => x.HDBH);
-
         builder.HasOne(x => x.InfoCBNV)
-                   .WithMany(x => x.AnnexContracts)
-                   .HasForeignKey(x => x.TVTTCode);
+               .WithMany(x => x.AnnexContracts)
+               .HasForeignKey(x => x.TVTTCode);
     }
 }

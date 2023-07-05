@@ -7,10 +7,10 @@ public class InfoCBNV
 {
     public string? TVTTCode { get; set; }
     public string? NameTVTT { get; set; }
+    public string? InfoCBNVBranchCode { get; set; }
+    public Branch? Branch { set; get; }
     public ICollection<InsuranceContract>? InsuranceContracts { set; get; }
     public ICollection<AnnexContract>? AnnexContracts { set; get; }
-    public string? BranchCode { get; set; }
-    public Branch? Branch { set; get; }
 }
 
 public class InfoCBNVConfiguration : IEntityTypeConfiguration<InfoCBNV>
@@ -29,12 +29,12 @@ public class InfoCBNVConfiguration : IEntityTypeConfiguration<InfoCBNV>
                .IsRequired()
                .HasMaxLength(255);
 
-        builder.Property(x => x.BranchCode)
-              .IsRequired()
-              .HasMaxLength(50);
+        builder.Property(x => x.InfoCBNVBranchCode)
+               .IsRequired()
+               .HasMaxLength(50);
 
         builder.HasOne(x => x.Branch)
               .WithMany(x => x.InfoCBNVs)
-              .HasForeignKey(x => x.BranchCode);
+              .HasForeignKey(x => x.InfoCBNVBranchCode);
     }
 }

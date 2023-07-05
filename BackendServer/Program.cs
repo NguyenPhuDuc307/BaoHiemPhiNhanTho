@@ -1,10 +1,15 @@
 ﻿using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
 using Microsoft.EntityFrameworkCore;
 using BackendServer.Data.EF;
 using BackendServer.Data;
+using System.Text.Json.Serialization;
+using BackendServer.Validator.InsuranceContract;
+using FluentValidation.AspNetCore;
+using BackendServer.validator.CanBoNhanVien;
+using BackendServer.validator.HopDongPhuLuc;
+using BackendServer.validator.Customer;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -14,7 +19,8 @@ builder.Services.AddDbContextPool<BHPNTDbContext>(options =>
         configuration.GetConnectionString("BHPNTDb")));
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); ;
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -52,6 +58,26 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddTransient<DbInitializer>();
 
+// Fluent Validation
+builder.Services.AddMvc();
+// add fluent validation
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<InsuranceContractValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CBNVValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AnnexContractValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ChuyenDichVMValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CustomerValidator>());
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PaymentPeriodValidator>());
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 string issuer = builder.Configuration.GetValue<string>("Tokens:Issuer");
 string signingKey = builder.Configuration.GetValue<string>("Tokens:Key");
 byte[] signingKeyBytes = System.Text.Encoding.UTF8.GetBytes(signingKey);
@@ -78,6 +104,8 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddScoped<AuthorizeCustomFilter>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -87,6 +115,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseCors();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

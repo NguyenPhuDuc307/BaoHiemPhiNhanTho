@@ -14,7 +14,7 @@ public class BranchConfiguration : IEntityTypeConfiguration<Branch>
 {
     public void Configure(EntityTypeBuilder<Branch> builder)
     {
-        builder.ToTable("Branchs");
+        builder.ToTable("Branches");
 
         builder.HasKey(x => x.BranchCode);
 
